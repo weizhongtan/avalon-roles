@@ -1,0 +1,28 @@
+* {
+    font-family: Helvetica;
+}
+
+#form {
+    width: 100vw;
+    margin: auto;
+}
+
+#name, #character, #submit{
+    display: block;
+    margin: 10px auto 10px auto;
+    padding: 10px;
+    width: 90%;
+    overflow: hidden;
+    font-size: 1em;
+}
+
+#submit {
+    width: 90%;
+    padding: 10px;
+}
+
+#info {
+    margin: auto;
+    padding: 10px;
+    border: solid 2px black;
+}

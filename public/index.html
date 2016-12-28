@@ -2,25 +2,21 @@
 <html>
   <head>
     <title>Avalon</title>
-    <style>
-      input {	display: block; }
-      h1 { cursor: pointer; }
-      .info {	border: solid black 1px; margin-top: 10px;	padding: 10px; }
-      .hidden {	display: none; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <link rel="stylesheet" href="style.css" type="text/css" />
   </head>
   <body>
     <form id="form">
     	<input type="text" id="name">
     	<select id="character">
-    		<option id="default" value="" selected="selected"></option>
+    		<option id="default" value="SelectCharacter" selected="selected">Select Character</option>
     		<option value="GoodGuy">GoodGuy</option>
     		<option value="BadGuy">BadGuy</option>
     		<option value="Morgana">Morgana</option>
     		<option value="Merlin">Merlin</option>
     		<option value="Percival">Percival</option>
     	 </select>
-    	 <button>submit stuff to server</button>
+    	 <button id="submit">Submit Character</button>
     </form>
     <div id="info"></div>
 
@@ -29,7 +25,7 @@
     <script>
       var socket = io();
       $("#form").submit(function() {
-        if ($("#name").val().length > 0 && $("#character").val() != "") {
+        if ($("#name").val().length > 0 && $("#character").val() != "SelectCharacter") {
           socket.emit("join",
           {
             name: $("#name").val(),
@@ -38,6 +34,7 @@
           });
           $("#name").val("");
           $("#default").prop("selected", true);
+          $("#submit").prop("disabled", true);
           return false;
         }
       });

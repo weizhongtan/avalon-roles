@@ -1,16 +1,14 @@
 "use strict";
 
-var app = require("express")();
+var express = require("express");
+var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var Mustache = require("mustache");
 
 var players = [];
-var clients = [];
 
-app.get("/", function(req, res) {
-    res.sendFile(__dirname + "/index.html");
-});
+app.use(express.static('public'));
 
 var AddPlayer = function(socket, data) {
     /*  character name
@@ -40,8 +38,7 @@ var AddPlayer = function(socket, data) {
     Avalon.GoodGuy = AvalonChar("GoodGuy", "good", [], "");
     Avalon.BadGuy = AvalonChar("BadGuy", "bad", ["BadGuy", "Morgana"], "Bad too");
     Avalon.Morgana = AvalonChar("Morgana", "bad", ["BadGuy"], "Bad too");
-    
-    //players.push(new Avalon[data.character](data.name, data.id));
+
     socket.avalonData = new Avalon[data.character](data.name, data.id);
     players.push(socket);
 }
@@ -93,8 +90,9 @@ io.on("connection", function(socket) {
     });
     
     socket.on('disconnect', function () {
-      players.splice(players.indexOf(socket), 1);
-      UpdateClientData();
+        var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
+        console.log("Player Left: " + playerWhoLeft);
+        UpdateClientData();
     });
 });
 
