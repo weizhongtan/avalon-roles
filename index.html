@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Avalon</title>
+    <style>
+      input {	display: block; }
+      h1 { cursor: pointer; }
+      .info {	border: solid black 1px; margin-top: 10px;	padding: 10px; }
+      .hidden {	display: none; }
+    </style>
+  </head>
+  <body>
+    <form id="form">
+    	<input type="text" id="name">
+    	<select id="character">
+    		<option id="default" value="" selected="selected"></option>
+    		<option value="GoodGuy">GoodGuy</option>
+    		<option value="BadGuy">BadGuy</option>
+    		<option value="Morgana">Morgana</option>
+    		<option value="Merlin">Merlin</option>
+    		<option value="Percival">Percival</option>
+    	 </select>
+    	 <button>submit stuff to server</button>
+    </form>
+    <div id="info"></div>
+
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script>
+      var socket = io();
+      $("#form").submit(function() {
+        if ($("#name").val().length > 0 && $("#character").val() != "") {
+          socket.emit("join",
+          {
+            name: $("#name").val(),
+            character: $("#character").val(),
+            id: socket.id
+          });
+          $("#name").val("");
+          $("#default").prop("selected", true);
+          return false;
+        }
+      });
+      
+      socket.on("info", function(html) {
+        $("#info").html(html);
+        console.log("data received");
+      });
+    </script>
+  </body>
+</html>
