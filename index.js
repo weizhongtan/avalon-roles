@@ -90,9 +90,13 @@ io.on("connection", function(socket) {
     });
 
     socket.on('disconnect', function () {
+      try {
         var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
         console.log("Player Left: " + playerWhoLeft);
         UpdateClientData();
+      } catch (e) {
+        console.log("unidentified player left")
+      }
     });
 });
 
