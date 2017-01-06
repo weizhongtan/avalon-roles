@@ -30,7 +30,7 @@ var AddPlayer = function(socket, data) {
     		}
     	}
     }
-    
+
     // Avalon characters
     var Avalon = {};
     Avalon.Merlin = AvalonChar("Merlin", "good", ["BadGuy", "Morgana"], "Bad");
@@ -46,7 +46,7 @@ var AddPlayer = function(socket, data) {
 
 function EmitClientInfo() {
     for (let j = 0; j < players.length; j++) {
-    	var view = {name: players[j].name, name2: "'" + players[j].name + "'", intro: "You are " + players[j].character + " (" + players[j].whatIsMyFaction + "). This is what you know:"};
+    	var view = {name: players[j].name, name2: "'" + players[j].name + "'", intro: "You are " + players[j].character + " (" + players[j].whatIsMyFaction + "). This is what you know..."};
 
 	    for (let i = 0; i < players.length; i++) {
 		    if (i != j) {
@@ -65,7 +65,7 @@ function UpdateClientData() {
     players.forEach(function(socket) {
         var d = socket.avalonData;
         var view = {name: d.name, intro: "You are " + d.character + " (" + d.whatIsMyFaction + "). This is what you know:"};
-        
+
         var i = 0;
         players.forEach(function(otherSocket) {
             if (otherSocket != socket) {
@@ -88,7 +88,7 @@ io.on("connection", function(socket) {
         AddPlayer(socket, data);
         UpdateClientData();
     });
-    
+
     socket.on('disconnect', function () {
         var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
         console.log("Player Left: " + playerWhoLeft);
