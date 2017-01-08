@@ -48,17 +48,16 @@ var AddPlayer = function(socket, data) {
 
 function UpdateClientData() {
   players.forEach(function(socket) {
-      var d = socket.avalonData;
-      var view = {name: d.name, intro: "You are " + d.character + " (" + d.whatIsMyFaction + "). This is what you know:"};
+    var d = socket.avalonData;
+    var view = {name: d.name, intro: "You are " + d.character + " (" + d.whatIsMyFaction + "). This is what you know:"};
 
-      var i = 0;
-      players.forEach(function(otherSocket) {
-          if (otherSocket != socket) {
-              view[i] = d.whoIs(otherSocket.avalonData);
-              i++;
-          }
-      });
-
+    var i = 0;
+    players.forEach(function(otherSocket) {
+        if (otherSocket != socket) {
+            view[i] = d.whoIs(otherSocket.avalonData);
+            i++;
+        }
+    });
   	var template = "<h1>{{name}}</h1><h2>{{intro}}</h2>";
   	for (let k = 0; k < players.length; k++) {
   		template += "<p>{{" + k + "}}</p>";
@@ -68,6 +67,7 @@ function UpdateClientData() {
 }
 
 io.on("connection", function(socket) {
+
 console.log("New Client On Server")
   socket.on("join", function(data) {
       console.log("New Player Joined: " + data.name);
@@ -77,14 +77,14 @@ console.log("New Client On Server")
   });
 
   socket.on('disconnect', function () {
-  if (players.indexOf(socket) !== -1) {
-      var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
-      console.log("Player Left: " + playerWhoLeft);
-      UpdateClientData();
-  } else {
-      console.log("Unidentified Player Left");
-  }
-  logPlayerList();
+    if (players.indexOf(socket) !== -1) {
+        var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
+        console.log("Player Left: " + playerWhoLeft);
+        UpdateClientData();
+    } else {
+        console.log("Unidentified Player Left");
+    }
+    logPlayerList();
   });
 });
 
