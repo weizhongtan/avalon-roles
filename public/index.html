@@ -1,49 +1,53 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Avalon</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    <link rel="stylesheet" href="style.css" type="text/css" />
-  </head>
-  <body>
+<head>
+  <title>Avalon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+  <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+  <div class="container">
+    <div id="remove">
     <form id="form">
       <p>Enter your real name:</p>
-    	<input type="text" id="name">
-    	<select id="character">
-    		<option id="default" value="SelectCharacter" selected="selected">Select Character</option>
-    		<option value="GoodGuy">GoodGuy</option>
-    		<option value="BadGuy">BadGuy</option>
-    		<option value="Morgana">Morgana</option>
-    		<option value="Merlin">Merlin</option>
-    		<option value="Percival">Percival</option>
-    	 </select>
-    	 <button id="submit">Submit Character</button>
+      <input type="text" id="name" autocomplete="off">
+      <select id="character">
+        <option id="default" value="SelectCharacter" selected="selected">Select Character</option>
+        <option value="GoodGuy">GoodGuy</option>
+        <option value="Merlin">Merlin</option>
+        <option value="Percival">Percival</option>
+        <option value="BadGuy">BadGuy/Assassin</option>
+        <option value="Morgana">Morgana</option>
+        <option value="Mordred">Mordred</option>
+        <option value="Oberon">Oberon</option>
+      </select>
+      <button id="submit">Join Game</button>
     </form>
+    </div>
     <div id="info"></div>
+  </div>
 
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script>
-      var socket = io();
-      $("#form").submit(function() {
-        if ($("#name").val().length > 0 && $("#character").val() != "SelectCharacter") {
-          socket.emit("join",
-          {
-            name: $("#name").val(),
-            character: $("#character").val(),
-            id: socket.id
-          });
-          $("#name").val("");
-          $("#default").prop("selected", true);
-          $("#submit").prop("disabled", true);
-          return false;
-        }
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script>
+  var socket = io();
+  $("#form").submit(function() {
+    if ($("#name").val().length > 0 && $("#character").val() != "SelectCharacter") {
+      socket.emit("join",
+      {
+        name: $("#name").val(),
+        character: $("#character").val(),
+        id: socket.id
       });
-      
-      socket.on("info", function(html) {
-        $("#info").html(html);
-        console.log("data received");
-      });
-    </script>
-  </body>
+      $("#remove").addClass("hide");
+      return false;
+    }
+  });
+
+  socket.on("info", function(html) {
+    $("#info").html(html);
+    console.log("New data received");
+  });
+  </script>
+</body>
 </html>
