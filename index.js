@@ -83,6 +83,7 @@ function UpdateClientData() {
 }
 
 io.on("connection", function(socket) {
+  console.log("New Client On Server: ")
     socket.on("join", function(data) {
         console.log("New Player Joined: " + data.name);
         AddPlayer(socket, data);
@@ -95,7 +96,7 @@ io.on("connection", function(socket) {
         console.log("Player Left: " + playerWhoLeft);
         UpdateClientData();
       } catch (e) {
-        console.log("unidentified player left")
+        console.log("Unidentified Player Left")
       }
     });
 });
