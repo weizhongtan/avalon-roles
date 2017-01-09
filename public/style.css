@@ -4,6 +4,8 @@
 
 .container {
   margin: auto;
+  position: relative;
+  max-width: 600px;
 }
 
 #form {
@@ -34,4 +36,12 @@ option {
 
 .hide {
   display: none;
+}
+
+img {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  border: solid 2px #000;
+  border-radius: 50%;
 }

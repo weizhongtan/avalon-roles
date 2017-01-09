@@ -12,14 +12,24 @@ app.use(express.static('public'));
 
 var AddPlayer = function(socket, data) {
   /*  character name
-  good / bad
-  array containing names of characters i can see
-  string containing what i see them as */
+      long version of character name
+      good / bad
+      array containing names of characters i can see
+      string containing what i see them as
+  */
   var AvalonChar = function (character, goodOrBad, whoCanISee, howISeeThem) {
+    var characterLong;
+    if (character === "GoodGuy") {
+      characterLong = "a Loyal Servant of Arthur";
+    } else if (character === "BadGuy") {
+      characterLong = "a Minion of Mordred";
+    } else {characterLong = character;
+    }
   	return function(name, id) {
   		this.name = name;
   		this.id = id;
   		this.character = character;
+  		this.characterLong = characterLong;
   		this.whatIsMyFaction = goodOrBad;
   		this.whoIs = function(person) {
   			var known = false;
@@ -49,16 +59,16 @@ var AddPlayer = function(socket, data) {
 function UpdateClientData() {
   players.forEach(function(socket) {
     var d = socket.avalonData;
-    var view = {name: d.name, intro: "You are " + d.character + " (" + d.whatIsMyFaction + "). This is what you know:"};
+    var view = {name: d.name, image: d.whatIsMyFaction, intro: "You are " + d.characterLong + "."};
 
     var i = 0;
     players.forEach(function(otherSocket) {
-        if (otherSocket != socket) {
-            view[i] = d.whoIs(otherSocket.avalonData);
-            i++;
-        }
+      if (otherSocket != socket) {
+        view[i] = d.whoIs(otherSocket.avalonData);
+        i++;
+      }
     });
-  	var template = "<h1>{{name}}</h1><h2>{{intro}}</h2>";
+  	var template = "<img src='images/logo-{{image}}.png'><h1>{{name}}</h1><h2>{{intro}}</h2>";
   	for (let k = 0; k < players.length; k++) {
   		template += "<p>{{" + k + "}}</p>";
   	}
@@ -67,22 +77,21 @@ function UpdateClientData() {
 }
 
 io.on("connection", function(socket) {
-
-console.log("New Client On Server")
+  console.log("New Client On Server")
   socket.on("join", function(data) {
-      console.log("New Player Joined: " + data.name);
-      AddPlayer(socket, data);
-      UpdateClientData();
-      logPlayerList();
+    console.log("New Player Joined: " + data.name);
+    AddPlayer(socket, data);
+    UpdateClientData();
+    logPlayerList();
   });
 
   socket.on('disconnect', function () {
     if (players.indexOf(socket) !== -1) {
-        var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
-        console.log("Player Left: " + playerWhoLeft);
-        UpdateClientData();
+      var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
+      console.log("Player Left: " + playerWhoLeft);
+      UpdateClientData();
     } else {
-        console.log("Unidentified Player Left");
+      console.log("Unidentified Player Left");
     }
     logPlayerList();
   });
@@ -90,7 +99,7 @@ console.log("New Client On Server")
 
 function logPlayerList() {
   console.log("Current Player List: \n " + players.map(function(p) {
-      return p.avalonData.name
+    return p.avalonData.name
   }));
 }
 
