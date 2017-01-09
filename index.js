@@ -23,7 +23,10 @@ var AddPlayer = function(socket, data) {
       characterLong = "a Loyal Servant of Arthur";
     } else if (character === "BadGuy") {
       characterLong = "a Minion of Mordred";
-    } else {characterLong = character;
+    } else if (character === "Assassin") {
+      characterLong = "the Assassin";
+    } else {
+      characterLong = character;
     }
   	return function(name, id) {
   		this.name = name;
@@ -43,12 +46,13 @@ var AddPlayer = function(socket, data) {
 
   // Avalon characters
   var Avalon = {};
-  Avalon.Merlin = AvalonChar("Merlin", "good", ["BadGuy", "Morgana", "Oberon"], "Bad");
+  Avalon.Merlin = AvalonChar("Merlin", "good", ["BadGuy", "Assassin", "Morgana", "Oberon"], "Bad");
   Avalon.Percival = AvalonChar("Percival", "good", ["Merlin", "Morgana"], "Merlin or Morgana");
   Avalon.GoodGuy = AvalonChar("GoodGuy", "good", [], "");
-  Avalon.BadGuy = AvalonChar("BadGuy", "bad", ["BadGuy", "Morgana", "Mordred"], "Bad too");
-  Avalon.Morgana = AvalonChar("Morgana", "bad", ["BadGuy", "Mordred"], "Bad too");
-  Avalon.Mordred = AvalonChar("Mordred", "bad", ["BadGuy", "Morgana"], "Bad too");
+  Avalon.BadGuy = AvalonChar("BadGuy", "bad", ["BadGuy", "Assassin", "Morgana", "Mordred"], "Bad too");
+  Avalon.Assassin = AvalonChar("Assassin", "bad", ["BadGuy", "Morgana", "Mordred"], "Bad too");
+  Avalon.Morgana = AvalonChar("Morgana", "bad", ["BadGuy", "Assassin", "Mordred"], "Bad too");
+  Avalon.Mordred = AvalonChar("Mordred", "bad", ["BadGuy", "Assassin", "Morgana"], "Bad too");
   Avalon.Oberon = AvalonChar("Oberon", "bad", [], "");
 
   // add player client socket to the players list
