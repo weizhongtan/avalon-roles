@@ -34,14 +34,14 @@
   <template>
     <select class="character">
       <option id="default" value="SelectCharacter" selected="selected">Select Character</option>
-      <option value="GoodGuy">Loyal Servant of Arthur</option>
-      <option value="Merlin">Merlin</option>
-      <option value="Percival">Percival</option>
-      <option value="BadGuy">Minion of Mordred</option>
-      <option value="Assassin">Assassin</option>
-      <option value="Morgana">Morgana</option>
-      <option value="Mordred">Mordred</option>
-      <option value="Oberon">Oberon</option>
+      <option value="GoodGuy" style="color:green">Loyal Servant of Arthur</option>
+      <option value="Merlin" style="color:green">Merlin</option>
+      <option value="Percival" style="color:green">Percival</option>
+      <option value="BadGuy" style="color:red">Minion of Mordred</option>
+      <option value="Assassin" style="color:red">Assassin</option>
+      <option value="Morgana" style="color:red">Morgana</option>
+      <option value="Mordred" style="color:red">Mordred</option>
+      <option value="Oberon" style="color:red">Oberon</option>
     </select>
   </template>
 
@@ -78,15 +78,15 @@
     for (var i = 0; i < num; i++) {
       $("#characters").append($("template").html());
     }
-  })
+  });
   $("#stop-game").click(function() {
     socket.emit("stopgame", {});
     $("#randomize").addClass("hide");
-  })
+  });
   $("#randomize").click(function() {
     socket.emit("randomize", {});
     $("#randomize").addClass("hide");
-  })
+  });
   </script>
 </body>
 </html>
