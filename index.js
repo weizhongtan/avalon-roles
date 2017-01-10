@@ -77,6 +77,7 @@ var AddPlayer = function(socket, data) {
 }
 
 function namesToPlayers() {
+  if (names.length === game.characters.length);
   var c = shuffle(game.characters.slice(0));
   for (var i = 0; i < names.length; i++) {
     var p = names[i];
@@ -154,6 +155,7 @@ io.on("connection", function(socket) {
   socket.on("newgame", function(data) {
     console.log("new game created: " + data.numberOfPlayers + " players");
     players = [];
+    names = [];
     game.random = (data.random === "true") ? true : false;
     game.numTotal = data.numberOfPlayers;
     game.characters = data.characters || null;
@@ -165,6 +167,7 @@ io.on("connection", function(socket) {
   socket.on("stopgame", function(data) {
     console.log("stopped game");
     players = [];
+    names = [];
     game.started = false;
     sendGameStatus();
   })
