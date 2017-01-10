@@ -1,3 +1,9 @@
 # avalon-roles
-Allows Avalon players to learn the information for their role without the whole thumbs up thumbs down part of the game.
-Build using Express, Socket.io and Mustache.js.
+Allows Avalon players to learn the information for their role without the whole 'eyes closed' part of the game. Also allows randomizing character cards among players.
+
+Build using on Express.js and Socket.io.
+
+To do:
+* Support for multiple concurrent games
+* Better graphics
+* Less messy code
