@@ -5,17 +5,26 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var Mustache = require("mustache");
+var shuffle = require("knuth-shuffle").knuthShuffle;
 
 var port = process.env.PORT || 8000;
+// all named sockets that have no character assigned and are awaiting to be put into the game
+var names = [];
+// all named sockets that have character assigned and are in the game
 var players = [];
+// all sockets that have connected to the server, even those that have not joined the game
 var clients = [];
+
+// game.random is true if the players are to be assigned random characters
 var game = {
   started: false,
+  random: null,
   numJoined: null,
-  numTotal: null
+  numTotal: null,
+  characters: null
 };
 
-app.use(express.static('public'));
+app.use('/', express.static('public'));
 
 var AddPlayer = function(socket, data) {
   /*  character name
@@ -63,11 +72,16 @@ var AddPlayer = function(socket, data) {
   Avalon.Oberon = AvalonChar("Oberon", "bad", [], "");
 
   // add player client socket to the players list
-  if (players.length < game.numTotal) {
-    socket.avalonData = new Avalon[data.character](data.name, data.id);
-    players.push(socket);
-  } else {
-    console.log("New player attempted to join but player limit reached");
+  socket.avalonData = new Avalon[data.character](data.name, data.id);
+  players.push(socket);
+}
+
+function namesToPlayers() {
+  var c = shuffle(game.characters.slice(0));
+  for (var i = 0; i < names.length; i++) {
+    var p = names[i];
+    p.extraData.character = c[i];
+    AddPlayer(p, p.extraData);
   }
 }
 
@@ -97,11 +111,19 @@ function logPlayerList() {
 }
 
 function sendGameStatus() {
-  game.numJoined = players.length;
+  if (game.random) {
+    game.numJoined = names.length;
+  } else {
+    game.numJoined = players.length;
+  }
   clients.forEach(function(socket) {
     socket.emit("gamestarted", game);
   });
 }
+
+app.get("/:name", function(req, res) {
+
+});
 
 io.on("connection", function(socket) {
   console.log("New Client On Server")
@@ -110,18 +132,31 @@ io.on("connection", function(socket) {
 
   // when the server receives a join request, it will add that player to the player list and send the updated information to all players
   socket.on("join", function(data) {
-    console.log("New Player Joined: " + data.name);
-    AddPlayer(socket, data);
-    UpdateClientData();
-    sendGameStatus();
-    logPlayerList();
+    if (players.length < game.numTotal) {
+      if (game.random) {
+        socket.extraData = data;
+        names.push(socket);
+        sendGameStatus();
+        console.log("New Player Joined Random Game: " + data.name);
+      } else if (data.character !== "SelectCharacter") {
+        AddPlayer(socket, data);
+        UpdateClientData();
+        sendGameStatus();
+        logPlayerList();
+        console.log("New Player Joined Assigned Game: " + data.name);
+      }
+    } else {
+      console.log("New player attempted to join but player limit reached");
+    }
   });
 
   // when the server receives a newgame request (only from setup.html), it will setup a new game and notify all connected clients
   socket.on("newgame", function(data) {
     console.log("new game created: " + data.numberOfPlayers + " players");
     players = [];
+    game.random = (data.random === "true") ? true : false;
     game.numTotal = data.numberOfPlayers;
+    game.characters = data.characters || null;
     game.started = true;
     sendGameStatus();
   });
@@ -134,13 +169,23 @@ io.on("connection", function(socket) {
     sendGameStatus();
   })
 
+  socket.on("randomize", function(data) {
+    console.log("randomizing connected players");
+    namesToPlayers();
+    UpdateClientData();
+    logPlayerList();
+  })
+
   socket.on('disconnect', function () {
     if (players.indexOf(socket) !== -1) {
       var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
-      console.log("Player Left: " + playerWhoLeft);
+      console.log("Player Left Players: " + playerWhoLeft);
       UpdateClientData();
-    } else {
-      console.log("Unidentified Player Left");
+    }
+    if (names.indexOf(socket) !== -1) {
+      var playerWhoLeft = names.splice(names.indexOf(socket), 1)[0].extraData.name;
+      console.log("Player Left Players: " + playerWhoLeft);
+      UpdateClientData();
     }
     logPlayerList();
   });

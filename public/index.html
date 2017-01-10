@@ -34,7 +34,7 @@
   <script src="js/setup.js" type="text/javascript"></script>
   <script>
   $("#form").submit(function() {
-    if ($("#name").val().length > 0 && $("#character").val() != "SelectCharacter") {
+    if ($("#name").val().length > 0) {
       socket.emit("join",
       {
         name: $("#name").val(),
