@@ -7,31 +7,32 @@
 </head>
 <body>
   <div class="container">
+    <p>Game setup? <span id="setup"></span></p>
     <div id="remove">
-    <form id="form">
-      <p>Enter your real name:</p>
-      <input type="text" id="name" autocomplete="off">
-      <select id="character">
-        <option id="default" value="SelectCharacter" selected="selected">Select Character</option>
-        <option value="GoodGuy">Loyal Servant of Arthur</option>
-        <option value="Merlin">Merlin</option>
-        <option value="Percival">Percival</option>
-        <option value="BadGuy">Minion of Mordred</option>
-        <option value="Assassin">Assassin</option>
-        <option value="Morgana">Morgana</option>
-        <option value="Mordred">Mordred</option>
-        <option value="Oberon">Oberon</option>
-      </select>
-      <button id="submit">Join Game</button>
-    </form>
+      <form id="form">
+        <p>Enter your real name:</p>
+        <input type="text" id="name" autocomplete="off">
+        <select id="character">
+          <option id="default" value="SelectCharacter" selected="selected">Select Character</option>
+          <option value="GoodGuy">Loyal Servant of Arthur</option>
+          <option value="Merlin">Merlin</option>
+          <option value="Percival">Percival</option>
+          <option value="BadGuy">Minion of Mordred</option>
+          <option value="Assassin">Assassin</option>
+          <option value="Morgana">Morgana</option>
+          <option value="Mordred">Mordred</option>
+          <option value="Oberon">Oberon</option>
+        </select>
+        <button id="submit-player">Join Game</button>
+      </form>
     </div>
     <div id="info"></div>
   </div>
 
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="js/setup.js" type="text/javascript"></script>
   <script>
-  var socket = io();
   $("#form").submit(function() {
     if ($("#name").val().length > 0 && $("#character").val() != "SelectCharacter") {
       socket.emit("join",
@@ -47,7 +48,7 @@
 
   socket.on("info", function(html) {
     $("#info").html(html);
-    console.log("New data received");
+    console.log("Info updated");
   });
   </script>
 </body>

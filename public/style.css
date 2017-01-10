@@ -13,7 +13,7 @@
   margin: auto;
 }
 
-#name, #character, #submit{
+#name, select, button{
   text-align: center;
   display: block;
   margin: 10px auto 10px auto;
