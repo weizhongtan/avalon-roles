@@ -6,6 +6,8 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var Mustache = require("mustache");
 
+var port = process.env.PORT || 8000;
+
 var players = [];
 
 app.use(express.static('public'));
@@ -107,6 +109,6 @@ function logPlayerList() {
   }));
 }
 
-http.listen(process.env.PORT, function() {
-  console.log("listening on ", process.env.PORT);
+http.listen(port, function() {
+  console.log("listening on ", port);
 });
