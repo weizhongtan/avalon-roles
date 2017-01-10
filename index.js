@@ -13,7 +13,7 @@ var game = {
   started: false,
   numJoined: null,
   numTotal: null
-}
+};
 
 app.use(express.static('public'));
 
