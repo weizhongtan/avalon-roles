@@ -137,6 +137,11 @@ io.on("connection", function(socket) {
       if (game.random) {
         socket.extraData = data;
         names.push(socket);
+        if (names.length === game.numTotal) {
+          NamesToPlayers();
+          SendInfoTo(players);
+          LogPlayerList();
+        }
         console.log("New Player Joined Random Game: " + data.name);
       } else if (data.character !== "SelectCharacter") {
         players.push(NewPlayer(socket, data));
@@ -156,7 +161,7 @@ io.on("connection", function(socket) {
     players = [];
     names = [];
     game.random = (data.random === "true") ? true : false;
-    game.numTotal = data.numberOfPlayers;
+    game.numTotal = Number(data.numberOfPlayers);
     game.characters = data.characters || null;
     game.started = true;
     SendGameStatusTo(clients);
@@ -169,13 +174,6 @@ io.on("connection", function(socket) {
     names = [];
     game.started = false;
     SendGameStatusTo(clients);
-  })
-
-  socket.on("randomize", function(data) {
-    console.log("randomizing connected players");
-    NamesToPlayers();
-    SendInfoTo(players);
-    LogPlayerList();
   })
 
   socket.on("disconnect", function () {

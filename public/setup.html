@@ -28,7 +28,6 @@
         <button id="create-game">Create Game</button>
       </form>
       <button id="stop-game">Stop Game</button>
-      <button id="randomize" class="hide">Randomize Characters</button>
     </div>
   </div>
   <template>
@@ -82,19 +81,12 @@
   });
   $("#stop-game").click(function() {
     socket.emit("stopgame", {});
-    $("#randomize").addClass("hide");
-  });
-  $("#randomize").click(function() {
-    socket.emit("randomize", {});
-    $("#randomize").addClass("hide");
   });
   function determineVisibility() {
     if ($("#random").val() == "true" && !gameStarted) {
       $(".character").removeClass("hide");
-      $("#randomize").removeClass("hide");
     } else {
       $(".character").addClass("hide");
-      $("#randomize").addClass("hide");
     }
   }
   </script>
