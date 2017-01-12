@@ -112,13 +112,18 @@ function LogPlayerList() {
 }
 
 function SendGameStatusTo(arr) {
+  var data = {
+    game: game,
+  }
   if (game.random) {
     game.numJoined = names.length;
+    data.names = names.map(function(s){ return s.extraData.name}).join(", ");
   } else {
     game.numJoined = players.length;
+    data.names = players.map(function(s){ return s.avalonData.name}).join(", ");
   }
   arr.forEach(function(socket) {
-    socket.emit("game-status", game);
+    socket.emit("game-status", data);
   });
 }
 
