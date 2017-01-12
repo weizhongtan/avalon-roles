@@ -1,6 +1,8 @@
 var socket = io();
+var gameStarted = null;
 // data received from setup will indicate whether a game has been setup or not
-socket.on("gamestarted", function(game) {
+socket.on("game-status", function(game) {
+  gameStarted = game.started;
   if (game.started) {
     $("#setup").html("<span style='color: green'>Online</span> - " + game.numJoined + " / " + game.numTotal + " players joined");
     if (game.numJoined == game.numTotal) {

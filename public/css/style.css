@@ -39,6 +39,10 @@ option {
   display: none;
 }
 
+.character {
+  width: 90%;
+}
+
 img {
   position: absolute;
   right: 10px;
