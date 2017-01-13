@@ -38,8 +38,7 @@
       socket.emit("join",
       {
         name: $("#name").val(),
-        character: $("#character").val(),
-        id: socket.id
+        character: $("#character").val()
       });
       $("#remove").addClass("hide");
       $("#info").removeClass("hide");

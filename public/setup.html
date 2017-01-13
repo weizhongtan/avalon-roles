@@ -19,7 +19,7 @@
           <option value="9">9</option>
           <option value="10">10</option>
         </select>
-        <select id="random">
+        <select id="is-random">
           <option id="default" value="none" selected="selected">Select game type</option>
           <option value="true">Randomised characters</option>
           <option value="false">Characters already chosen</option>
@@ -52,10 +52,10 @@
   // create-game button
   $("#form").submit(function() {
     var num = $("#num-of-players").val();
-    var random = $("#random").val();
-    if (num > 0 && random !== "none") {
+    var isRandom = $("#is-random").val();
+    if (num > 0 && isRandom !== "none") {
       var data = {
-        random: random,
+        isRandom: isRandom,
         numberOfPlayers: num,
         characters: []
       };
@@ -64,6 +64,7 @@
       }).toArray();
       socket.emit("newgame", data);
       determineVisibility();
+      $("#create-game").prop("disabled", true);
       return false;
     }
   });
@@ -76,14 +77,15 @@
     }
     determineVisibility();
   });
-  $("#random").change(function() {
+  $("#is-random").change(function() {
     determineVisibility();
   });
   $("#stop-game").click(function() {
+    $("#create-game").prop("disabled", false);
     socket.emit("stopgame", {});
   });
   function determineVisibility() {
-    if ($("#random").val() == "true" && !gameStarted) {
+    if ($("#is-random").val() == "true" && !gameStarted) {
       $(".character").removeClass("hide");
     } else {
       $(".character").addClass("hide");

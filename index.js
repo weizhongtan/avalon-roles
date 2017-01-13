@@ -6,8 +6,8 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var Mustache = require("mustache");
 var shuffle = require("knuth-shuffle").knuthShuffle;
-
 var port = process.env.PORT || 8000;
+
 // all named sockets that have no character assigned and are awaiting to be put into the game
 var names = [];
 // all named sockets that have character assigned and are in the game
@@ -15,17 +15,20 @@ var players = [];
 // all sockets that have connected to the server, even those that have not joined the game
 var clients = [];
 
-// game.random is true if the players are to be assigned random characters
+/* game.isRandom = true if the players are to be assigned random characters,
+   if the characters have already been assigned then it is false */
 var game = {
   started: false,
-  random: null,
+  isRandom: null,
   numJoined: null,
   numTotal: null,
   characters: null
 };
 
+// serve all files from public folder to the root domain
 app.use("/", express.static("public"));
 
+// takes a socket and the name, id and character data and returns a new combined socket
 function NewPlayer(socket, data) {
   /*  character name
   long version of character name
@@ -44,9 +47,8 @@ function NewPlayer(socket, data) {
     } else {
       characterLong = character;
     }
-    return function(name, id) {
+    return function(name) {
       this.name = name;
-      this.id = id;
       this.character = character;
       this.characterLong = characterLong;
       this.whatIsMyFaction = goodOrBad;
@@ -72,64 +74,74 @@ function NewPlayer(socket, data) {
   Avalon.Oberon = AvalonChar("Oberon", "bad", [], "");
 
   // add player client socket to the players list
-  socket.avalonData = new Avalon[data.character](data.name, data.id);
+  socket.avalonData = new Avalon[data.character](data.name);
   return socket;
 }
 
+// creates players from the names in the names array and pushes them to the players array
 function NamesToPlayers() {
-  if (names.length === game.characters.length);
-  var c = shuffle(game.characters.slice(0));
-  for (var i = 0; i < names.length; i++) {
-    var p = names[i];
-    p.extraData.character = c[i];
-    players.push(NewPlayer(p, p.extraData));
+  if (names.length === game.characters.length) {
+    var c = shuffle(game.characters.slice(0));
+    for (var i = 0; i < names.length; i++) {
+      var p = names[i];
+      p.avalonData.character = c[i];
+      players.push(NewPlayer(p, p.avalonData));
+    }
   }
 }
 
-function SendInfoTo(sockets) {
-  sockets.forEach(function(socket) {
+// emits "info" event with appropriate data to all sockets in socketsArr
+function SendInfoTo(socketsArr) {
+  socketsArr.forEach(function(socket) {
     var d = socket.avalonData;
     var view = {name: d.name, image: d.whatIsMyFaction, intro: "You are " + d.characterLong + "."};
     var i = 0;
-    sockets.forEach(function(otherSocket) {
+    socketsArr.forEach(function(otherSocket) {
       if (otherSocket != socket) {
         view[i] = d.whoIs(otherSocket.avalonData);
         i++;
       }
     });
     var template = "<img src='images/logo-{{image}}.png'><h1>{{name}}</h1><h2>{{intro}}</h2>";
-    for (let k = 0; k < sockets.length; k++) {
+    for (let k = 0; k < socketsArr.length; k++) {
       template += "<p>{{" + k + "}}</p>";
     }
     socket.emit("info", Mustache.render(template, view));
   });
 }
 
+// emits "game-status" event with appropriate data to all sockets in socketsArr
+function SendGameStatusTo(socketsArr) {
+  var data = {
+    game: game,
+  }
+  if (game.isRandom) {
+    game.numJoined = names.length;
+    data.names = names.map(function(s){ return s.avalonData.name}).join(", ");
+  } else {
+    game.numJoined = players.length;
+    data.names = players.map(function(s){ return s.avalonData.name}).join(", ");
+  }
+  socketsArr.forEach(function(socket) {
+    socket.emit("game-status", data);
+  });
+}
+
+// logs players array to the console
 function LogPlayerList() {
   console.log("Current Player List: \n " + players.map(function(p) {
     return p.avalonData.name
   }));
 }
 
-function SendGameStatusTo(arr) {
-  var data = {
-    game: game,
+// given a socket and an array of sockets, log to console if player was in the array
+function IdentifyLeaver(socket, socketsArr) {
+  var index = socketsArr.indexOf(socket);
+  if (index !== -1) {
+    var playerWhoLeft = socketsArr.splice(index, 1)[0].avalonData.name;
+    console.log("-- Player Left: " + playerWhoLeft + " --");
   }
-  if (game.random) {
-    game.numJoined = names.length;
-    data.names = names.map(function(s){ return s.extraData.name}).join(", ");
-  } else {
-    game.numJoined = players.length;
-    data.names = players.map(function(s){ return s.avalonData.name}).join(", ");
-  }
-  arr.forEach(function(socket) {
-    socket.emit("game-status", data);
-  });
 }
-
-app.get("/:name", function(req, res) {
-
-});
 
 io.on("connection", function(socket) {
   console.log("++ New Client On Server ++")
@@ -139,8 +151,8 @@ io.on("connection", function(socket) {
   // when the server receives a join request, it will add that player to the player list and send the updated information to all players
   socket.on("join", function(data) {
     if (players.length < game.numTotal) {
-      if (game.random) {
-        socket.extraData = data;
+      if (game.isRandom) {
+        socket.avalonData = data;
         names.push(socket);
         if (names.length === game.numTotal) {
           NamesToPlayers();
@@ -165,7 +177,7 @@ io.on("connection", function(socket) {
     console.log("new game created: " + data.numberOfPlayers + " players");
     players = [];
     names = [];
-    game.random = (data.random === "true") ? true : false;
+    game.isRandom = (data.isRandom === "true") ? true : false;
     game.numTotal = Number(data.numberOfPlayers);
     game.characters = data.characters || null;
     game.started = true;
@@ -182,19 +194,13 @@ io.on("connection", function(socket) {
   })
 
   socket.on("disconnect", function () {
-    if (players.indexOf(socket) !== -1) {
-      var playerWhoLeft = players.splice(players.indexOf(socket), 1)[0].avalonData.name;
-      console.log("Player Left Players: " + playerWhoLeft);
-      SendInfoTo(players);
-    }
-    if (names.indexOf(socket) !== -1) {
-      var playerWhoLeft = names.splice(names.indexOf(socket), 1)[0].extraData.name;
-      console.log("Player Left Players: " + playerWhoLeft);
-      SendInfoTo(players);
-    }
+    IdentifyLeaver(socket, players);
+    IdentifyLeaver(socket, names);
     LogPlayerList();
   });
 });
+
+
 
 http.listen(port, function() {
   console.log("listening on ", port);

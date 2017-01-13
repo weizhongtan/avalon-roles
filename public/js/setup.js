@@ -16,7 +16,7 @@ socket.on("game-status", function(data) {
     $("#setup").html("<span style='color: red'>Offline</span>");
     $("#submit-player").prop("disabled", true);
   }
-  if (data.game.random) {
+  if (data.game.isRandom) {
     $("#character").addClass("hide");
   } else {
     $("#character").removeClass("hide");
