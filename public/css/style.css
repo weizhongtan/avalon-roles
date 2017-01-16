@@ -50,3 +50,7 @@ img {
   border: solid 2px #000;
   border-radius: 50%;
 }
+
+a, a:visited {
+  color: rgb(22, 133, 235);
+}
