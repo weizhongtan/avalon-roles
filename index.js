@@ -7,6 +7,7 @@ var io = require("socket.io")(http);
 var Mustache = require("mustache");
 var shuffle = require("knuth-shuffle").knuthShuffle;
 var port = process.env.PORT || 8000;
+var ip = process.env.IP || "http://localhost";
 
 // all named sockets that have no character assigned and are awaiting to be put into the game
 var names = [];
@@ -57,7 +58,7 @@ function NewPlayer(socket, data) {
         whoCanISee.forEach(function(dude) {
           if (person.character == dude) known = true;
         });
-        return (known) ? person.name + " is " + howISeeThem + ".": person.name + " is Unknown.";
+        return [(known) ? person.name + " is " + howISeeThem + "." : person.name + " is Unknown.", known];
       }
     }
   }
@@ -98,13 +99,14 @@ function SendInfoTo(socketsArr) {
     var i = 0;
     socketsArr.forEach(function(otherSocket) {
       if (otherSocket != socket) {
-        view[i] = d.whoIs(otherSocket.avalonData);
+        view[i] = d.whoIs(otherSocket.avalonData)[0];
+        view["class" + i] = (d.whoIs(otherSocket.avalonData)[1]) ? "bad" : "";
         i++;
       }
     });
     var template = "<img src='images/logo-{{image}}.png'><h1>{{name}}</h1><h2>{{intro}}</h2>";
     for (let k = 0; k < socketsArr.length; k++) {
-      template += "<p>{{" + k + "}}</p>";
+      template += "<p class='{{class" + k + "}}'>{{" + k + "}}</p>";
     }
     socket.emit("info", Mustache.render(template, view));
   });
@@ -134,7 +136,7 @@ function LogPlayerList() {
   }));
 }
 
-// given a socket and an array of sockets, log to console if player was in the array
+// given a socket and an array of sockets, remove socket from array and log to console if player was in the array
 function IdentifyLeaver(socket, socketsArr) {
   var index = socketsArr.indexOf(socket);
   if (index !== -1) {
@@ -193,15 +195,16 @@ io.on("connection", function(socket) {
     SendGameStatusTo(clients);
   })
 
+  // when a socket disconnects, remove it from the player/names lists and log info to console
   socket.on("disconnect", function () {
     IdentifyLeaver(socket, players);
     IdentifyLeaver(socket, names);
+    SendGameStatusTo(clients);
+    SendInfoTo(players);
     LogPlayerList();
   });
 });
 
-
-
 http.listen(port, function() {
-  console.log("listening on ", port);
+  console.log("avalon running at " + ip + ":" + port);
 });
