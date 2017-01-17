@@ -7,7 +7,6 @@ var io = require("socket.io")(http);
 var Mustache = require("mustache");
 var shuffle = require("knuth-shuffle").knuthShuffle;
 var port = process.env.PORT || 8000;
-var ip = process.env.IP || "http://localhost";
 
 // all named sockets that have no character assigned and are awaiting to be put into the game
 var names = [];
@@ -206,5 +205,5 @@ io.on("connection", function(socket) {
 });
 
 http.listen(port, function() {
-  console.log("avalon running at " + ip + ":" + port);
+  console.log("server running on port: " + port);
 });
