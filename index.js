@@ -147,6 +147,7 @@ function IdentifyLeaver(socket, socketsArr) {
 io.on("connection", function(socket) {
   console.log("++ New Client On Server ++")
   clients.push(socket);
+  console.log(socket);
   SendGameStatusTo(clients);
 
   // when the server receives a join request, it will add that player to the player list and send the updated information to all players
@@ -192,7 +193,7 @@ io.on("connection", function(socket) {
     names = [];
     game.started = false;
     SendGameStatusTo(clients);
-  })
+  });
 
   // when a socket disconnects, remove it from the player/names lists and log info to console
   socket.on("disconnect", function () {
@@ -205,5 +206,5 @@ io.on("connection", function(socket) {
 });
 
 http.listen(port, function() {
-  console.log("server running on port: " + port);
+  console.log("-- server running on port: " + port + " --");
 });
