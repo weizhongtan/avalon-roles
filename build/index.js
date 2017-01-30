@@ -49,7 +49,7 @@ function UpdateGameStatus() {
 
 // serve all files from public folder to the root domain
 app.use("/", _express2.default.static(path.join(__dirname, "public")), function (req, res) {
-  res.end("404");
+  res.redirect("/index.html");
 });
 
 // takes a socket and the name and character data and returns a new AvalonPlayer object

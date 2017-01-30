@@ -27,7 +27,7 @@ socket.on("gamestatus", function (data) {
 /*
 * index.html functions
 */
-$("#submit-player").click(function () {
+$("#submit-player").on("click", function () {
   if ($("#name").val().length > 0) {
     socket.emit("join", {
       name: $("#name").val(),
@@ -44,7 +44,7 @@ socket.on("info", function (html) {
 /*
 * setup.html functions
 */
-$("#create-game").click(function () {
+$("#create-game").on("click", function () {
   var num = Number($("#num-of-players").val());
   var isRandom = $("#is-random").val();
   if (num > 0 && isRandom !== "none") {
@@ -79,13 +79,13 @@ $("#is-random").change(function () {
   determineVisibility();
 });
 
-$("#stop-game").click(function () {
+$("#stop-game").on("click", function () {
   $("#create-game").prop("disabled", false);
   socket.emit("stopgame", {});
 });
 
 function determineVisibility() {
-  if ($("#is-random").val() == "true" && !gameStarted) {
+  if ($("#is-random").val() === "true" && !gameStarted) {
     $(".character").removeClass("hide");
   } else {
     $(".character").addClass("hide");

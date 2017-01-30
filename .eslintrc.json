@@ -3,6 +3,11 @@
   "plugins": [
     "import"
   ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jquery": true
+  },
   "rules": {
     "linebreak-style": ["error", "windows"],
     "quotes": ["error", "double"],
