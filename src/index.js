@@ -4,8 +4,8 @@ import express from "express";
 
 const app = express();
 const http = require("http").Server(app);
+const path = require('path');
 const io = require("socket.io")(http);
-
 const Mustache = require("mustache");
 const shuffle = require("knuth-shuffle").knuthShuffle;
 
@@ -29,7 +29,7 @@ const game = {
 };
 
 // serve all files from public folder to the root domain
-app.use("/", express.static("public"));
+app.use("/", express.static(path.join(__dirname, "public")), (req, res) => { res.end("404"); });
 
 // takes a socket and the name, id and character data and returns a new combined socket
 function NewPlayer(socket, data) {
