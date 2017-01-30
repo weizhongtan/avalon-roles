@@ -8,7 +8,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var app = (0, _express2.default)();
 var http = require("http").Server(app);
-var path = require('path');
+var path = require("path");
 var io = require("socket.io")(http);
 var Mustache = require("mustache");
 var shuffle = require("knuth-shuffle").knuthShuffle;
@@ -47,14 +47,18 @@ function NewPlayer(socket, data) {
   */
   var AvalonChar = function AvalonChar(character, goodOrBad, whoCanISee, howISeeThem) {
     var characterLong = void 0;
-    if (character === "GoodGuy") {
-      characterLong = "a Loyal Servant of Arthur";
-    } else if (character === "BadGuy") {
-      characterLong = "a Minion of Mordred";
-    } else if (character === "Assassin") {
-      characterLong = "the Assassin";
-    } else {
-      characterLong = character;
+    switch (character) {
+      case "GoodGuy":
+        characterLong = "a Loyal Servant of Arthur";
+        break;
+      case "BadGuy":
+        characterLong = "a Minion of Mordred";
+        break;
+      case "Assassin":
+        characterLong = "the Assassin";
+        break;
+      default:
+        characterLong = character;
     }
     return function (name) {
       this.name = name;
@@ -62,11 +66,8 @@ function NewPlayer(socket, data) {
       this.characterLong = characterLong;
       this.whatIsMyFaction = goodOrBad;
       this.whoIs = function (person) {
-        var known = false;
-        whoCanISee.forEach(function (dude) {
-          if (person.character == dude) known = true;
-        });
-        return [known ? person.name + " is " + howISeeThem + "." : person.name + " is Unknown.", known];
+        var known = whoCanISee.indexOf(person.character) > -1;
+        return [person.name + " is " + (known ? howISeeThem : "Unknown"), known];
       };
     };
   };

@@ -11,7 +11,7 @@
       "named": "never",
       "asyncArrow": "ignore"
       }],
-    "max-len": ["warn", {"ignoreComments": true}],
+    "max-len": ["warn", {"ignoreComments": true, "ignoreStrings": true}],
     "no-plusplus": ["warn"],
     "no-console": ["off"]
     }

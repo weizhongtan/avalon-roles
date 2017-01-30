@@ -4,7 +4,7 @@ import express from "express";
 
 const app = express();
 const http = require("http").Server(app);
-const path = require('path');
+const path = require("path");
 const io = require("socket.io")(http);
 const Mustache = require("mustache");
 const shuffle = require("knuth-shuffle").knuthShuffle;
@@ -29,7 +29,10 @@ const game = {
 };
 
 // serve all files from public folder to the root domain
-app.use("/", express.static(path.join(__dirname, "public")), (req, res) => { res.end("404"); });
+app.use("/",
+  express.static(path.join(__dirname, "public")),
+  (req, res) => { res.end("404"); }
+);
 
 // takes a socket and the name, id and character data and returns a new combined socket
 function NewPlayer(socket, data) {
@@ -41,14 +44,18 @@ function NewPlayer(socket, data) {
   */
   const AvalonChar = function(character, goodOrBad, whoCanISee, howISeeThem) {
     let characterLong;
-    if (character === "GoodGuy") {
-      characterLong = "a Loyal Servant of Arthur";
-    } else if (character === "BadGuy") {
-      characterLong = "a Minion of Mordred";
-    } else if (character === "Assassin") {
-      characterLong = "the Assassin";
-    } else {
-      characterLong = character;
+    switch (character) {
+      case "GoodGuy":
+        characterLong = "a Loyal Servant of Arthur";
+        break;
+      case "BadGuy":
+        characterLong = "a Minion of Mordred";
+        break;
+      case "Assassin":
+        characterLong = "the Assassin";
+        break;
+      default:
+        characterLong = character;
     }
     return function(name) {
       this.name = name;
@@ -56,14 +63,11 @@ function NewPlayer(socket, data) {
       this.characterLong = characterLong;
       this.whatIsMyFaction = goodOrBad;
       this.whoIs = function(person) {
-        var known = false;
-        whoCanISee.forEach((dude) => {
-          if (person.character == dude) known = true;
-        });
-        return [(known) ? person.name + " is " + howISeeThem + "." : person.name + " is Unknown.", known];
-      }
-    }
-  }
+        const known = (whoCanISee.indexOf(person.character) > -1);
+        return [`${person.name} is ${(known) ? howISeeThem : "Unknown"}`, known];
+      };
+    };
+  };
 
   // Avalon characters
   const Avalon = {};
@@ -102,17 +106,16 @@ function SendInfoTo(socketsArr) {
       image: d.whatIsMyFaction,
       intro: `You are ${d.characterLong}.`,
     };
-    let i = 0;
-    socketsArr.forEach((otherSocket) => {
+    for (let i = 0; i < socketsArr.length; i++) {
+      const otherSocket = socketsArr[i];
       if (otherSocket !== socket) {
         view[i] = d.whoIs(otherSocket.avalonData)[0];
-        view[`class ${i}`] = (d.whoIs(otherSocket.avalonData)[1]) ? "bad" : "";
-        i++;
+        view[`class${i}`] = (d.whoIs(otherSocket.avalonData)[1]) ? "bad" : "";
       }
-    });
+    }
     let template = "<img src='images/logo-{{image}}.png'><h1>{{name}}</h1><h2>{{intro}}</h2>";
     for (let k = 0; k < socketsArr.length; k++) {
-      template += `<p class='{{class${k} }}'>{{${k}}}</p>`;
+      template += `<p class='{{class${k}}}'>{{${k}}}</p>`;
     }
     socket.emit("info", Mustache.render(template, view));
   });
