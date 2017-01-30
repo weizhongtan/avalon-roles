@@ -9,7 +9,11 @@
     "socket.io": "^1.7.2"
   },
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^3.14.1",
+    "eslint-config-airbnb-base": "^11.0.1",
+    "eslint-plugin-import": "^2.2.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"

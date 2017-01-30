@@ -26,7 +26,7 @@ var game = {
 };
 
 // serve all files from public folder to the root domain
-app.use("/", express.static("public"));
+app.use("/", express.static("public"), );
 
 // takes a socket and the name, id and character data and returns a new combined socket
 function NewPlayer(socket, data) {
