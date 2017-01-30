@@ -1,9 +1,18 @@
 {
-    "extends": "airbnb-base",
-    "plugins": [
-        "import"
-    ],
-    "rules": {
-      "linebreak-style": ["error", "windows"]
+  "extends": "airbnb-base",
+  "plugins": [
+    "import"
+  ],
+  "rules": {
+    "linebreak-style": ["error", "windows"],
+    "quotes": ["error", "double"],
+    "space-before-function-paren": ["error", {
+      "anonymous": "never",
+      "named": "never",
+      "asyncArrow": "ignore"
+      }],
+    "max-len": ["warn", {"ignoreComments": true}],
+    "no-plusplus": ["warn"],
+    "no-console": ["off"]
     }
-}
+  }
