@@ -3,6 +3,8 @@ Allows Avalon players to learn the information for their role without the whole 
 
 > [avalon.herokuapp.com](https://avalon.herokuapp.com/)
 
+Setup the game here:
+
 > [setup](https://avalon.herokuapp.com/setup.html)
 
 Build using on Express.js and Socket.io.
