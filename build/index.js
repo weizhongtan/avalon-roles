@@ -49,7 +49,7 @@ function UpdateGameStatus() {
 
 // serve all files from public folder to the root domain
 app.use("/", _express2.default.static(path.join(__dirname, "public")), function (req, res) {
-  res.redirect("/index.html");
+  res.end("404");
 });
 
 // takes a socket and the name and character data and returns a new AvalonPlayer object
@@ -209,7 +209,7 @@ io.on("connection", function (socket) {
         // non random game type
         default:
           // check that the person selected a character
-          if (data.character !== "SelectCharacter") {
+          if (data.name.length > 0 && (data.character !== "none" || game.isRandom)) {
             rooms.main.players.push(NewPlayer(socket, data));
             SendInfoTo(rooms.main.players);
             console.log("New Player Joined Assigned Game: " + data.name);

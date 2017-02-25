@@ -1,11 +1,14 @@
 "use strict";
 
 var socket = io();
-var gameStarted = null;
+var game = {
+  started: null,
+  isRandom: null
+};
 // data received from setup will indicate whether a game has been setup or not
 socket.on("gamestatus", function (data) {
   console.log(data);
-  gameStarted = data.started;
+  game = data;
   if (data.started) {
     $("#setup").html("<span style='color: green'>Online</span> - " + data.numJoined + " / " + data.numTotal + " players joined<p>Current Players: " + data.namesStr);
     if (data.numJoined === data.numTotal) {
@@ -27,11 +30,14 @@ socket.on("gamestatus", function (data) {
 /*
 * index.html functions
 */
-$("#submit-player").on("click", function () {
-  if ($("#name").val().length > 0) {
+$("#submit-player").click(function () {
+  // validate name
+  var name = $("#name").val();
+  var character = $("#character").val();
+  if (name.length > 0 && (character !== "none" || game.isRandom)) {
     socket.emit("join", {
-      name: $("#name").val(),
-      character: $("#character").val()
+      name: name,
+      character: character
     });
     $("#remove").addClass("hide");
   }
@@ -44,7 +50,7 @@ socket.on("info", function (html) {
 /*
 * setup.html functions
 */
-$("#create-game").on("click", function () {
+$("#create-game").click(function () {
   var num = Number($("#num-of-players").val());
   var isRandom = $("#is-random").val();
   if (num > 0 && isRandom !== "none") {
@@ -79,13 +85,13 @@ $("#is-random").change(function () {
   determineVisibility();
 });
 
-$("#stop-game").on("click", function () {
+$("#stop-game").click(function () {
   $("#create-game").prop("disabled", false);
   socket.emit("stopgame", {});
 });
 
 function determineVisibility() {
-  if ($("#is-random").val() === "true" && !gameStarted) {
+  if ($("#is-random").val() == "true" && !game.started) {
     $(".character").removeClass("hide");
   } else {
     $(".character").addClass("hide");

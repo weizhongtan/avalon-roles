@@ -1,23 +1,26 @@
 {
-  "extends": "airbnb-base",
-  "plugins": [
-    "import"
-  ],
-  "env": {
-    "browser": true,
-    "node": true,
-    "jquery": true
-  },
-  "rules": {
-    "linebreak-style": ["error", "windows"],
-    "quotes": ["error", "double"],
-    "space-before-function-paren": ["error", {
-      "anonymous": "never",
-      "named": "never",
-      "asyncArrow": "ignore"
-      }],
-    "max-len": ["warn", {"ignoreComments": true, "ignoreStrings": true}],
-    "no-plusplus": ["warn"],
-    "no-console": ["off"]
+    "extends": "airbnb-base",
+    "plugins": [
+        "import"
+    ],
+    "env": {
+        "browser": true,
+        "node": true,
+        "jquery": true
+    },
+    "rules": {
+        "indent": ["error", 4],
+        "linebreak-style": ["error", "windows"],
+        "quotes": ["error", "double"],
+        "space-before-function-paren": ["error",
+            {
+                "anonymous": "never",
+                "named": "never",
+                "asyncArrow": "ignore"
+            }
+        ],
+        "max-len": ["warn", {"ignoreComments": true, "ignoreStrings": true}],
+        "no-plusplus": ["warn"],
+        "no-console": ["off"]
     }
-  }
+}
