@@ -5,22 +5,12 @@
     ],
     "env": {
         "browser": true,
-        "node": true,
-        "jquery": true
+        "node": true
     },
     "rules": {
         "indent": ["error", 4],
-        "linebreak-style": ["error", "windows"],
-        "quotes": ["error", "double"],
-        "space-before-function-paren": ["error",
-            {
-                "anonymous": "never",
-                "named": "never",
-                "asyncArrow": "ignore"
-            }
-        ],
+        "linebreak-style": "error",
         "max-len": ["warn", {"ignoreComments": true, "ignoreStrings": true}],
-        "no-plusplus": ["warn"],
         "no-console": ["off"]
     }
 }
