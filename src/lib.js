@@ -1,11 +1,14 @@
-import { knuthShuffle as shuffle } from 'knuth-shuffle';
+const { knuthShuffle: shuffle } = require('knuth-shuffle');
 
-export function log(...args) {
-    console.log(...args);
+function message(type, payload) {
+    return JSON.stringify({
+        type,
+        payload,
+    });
 }
 
 // takes a socket and the name and character data and returns a new AvalonPlayer object
-export function NewPlayer(socket, data) {
+function NewPlayer(socket, data) {
     /*  character name
     long version of character name
     good / bad
@@ -58,4 +61,8 @@ export function NewPlayer(socket, data) {
         socket,
         gameData,
     };
+}
+
+module.exports = {
+    message,
 }

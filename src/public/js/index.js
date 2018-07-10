@@ -1,17 +1,13 @@
 import $ from 'jquery';
 import EVENTS from '../../config';
-
-let game = {
-    started: null,
-    isRandom: null,
-};
+import { message } from '../../lib';
 
 const socket = new WebSocket('ws://localhost:8000');
 
 // Connection opened
 socket.addEventListener('open', (event) => {
-    socket.send('Hello Server!');
-    console.log(event);
+    const m = message(EVENTS.JOIN_ROOM, 'room1');
+    socket.send(m);
 });
 
 // Listen for messages

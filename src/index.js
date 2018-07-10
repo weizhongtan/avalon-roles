@@ -1,29 +1,27 @@
-import WebSocket from 'ws';
-import Koa from 'koa';
-import http from 'http';
-import serve from 'koa-static';
-import { log } from './lib';
-import EVENTS from './config';
+const WebSocket = require('ws');
+const Koa = require('koa');
+const http = require('http');
+const debug = require('debug')('server');
+const serve = require('koa-static');
+const EVENTS = require('./config');
+const { message } = require('./lib');
+const Player = require('./Player');
 
 const PORT = process.env.PORT || 8000;
 
 const app = new Koa();
 const server = http.createServer(app.callback());
+const wss = new WebSocket.Server({ server });
 
 app.use(serve('./dist'));
 
-const wss = new WebSocket.Server({ server });
-
-wss.on('connection', function connection(ws) {
-    console.log('connected');
-    ws.on('message', function incoming(message) {
-      console.log('received: %s', message);
+wss.on('connection', (ws) => {
+    debug('client connected');
+    ws.on('message', (json) => {
+        debug('received: %s', json);
     });
-
-    ws.send('something');
-    setTimeout(() => ws.send('beans!'), 1000);
 });
 
 server.listen(PORT, () => {
-    log(`listening on *:${PORT}`);
+    debug(`listening on *:${PORT}`);
 });
