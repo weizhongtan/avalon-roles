@@ -1,4 +1,4 @@
-import socketio from 'socket.io';
+import WebSocket from 'ws';
 import Koa from 'koa';
 import http from 'http';
 import serve from 'koa-static';
@@ -9,22 +9,20 @@ const PORT = process.env.PORT || 8000;
 
 const app = new Koa();
 const server = http.createServer(app.callback());
-const io = socketio(server);
 
 app.use(serve('./dist'));
 
-function onConnection(socket) {
-    log('client connected');
-    socket.on(EVENTS.JOIN_ROOM, ({ roomId }) => {
-        socket.join(roomId, () => {
-            io.in(roomId).clients((err, clients) => {
-                io.to(roomId).emit(EVENTS.UPDATE_ROOMS, { rooms: clients });
-            });
-        });
-    });
-}
+const wss = new WebSocket.Server({ server });
 
-io.on('connection', onConnection);
+wss.on('connection', function connection(ws) {
+    console.log('connected');
+    ws.on('message', function incoming(message) {
+      console.log('received: %s', message);
+    });
+
+    ws.send('something');
+    setTimeout(() => ws.send('beans!'), 1000);
+});
 
 server.listen(PORT, () => {
     log(`listening on *:${PORT}`);
