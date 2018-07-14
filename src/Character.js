@@ -1,10 +1,10 @@
 const uuid = require('uuid/v4');
 
-class Player {
+class Character {
     constructor(socket) {
         this.id = uuid();
         this.socket = socket;
     }
 }
 
-module.exports = Player;
+module.exports = Character;

@@ -10,5 +10,8 @@
     "linebreak-style": "error",
     "max-len": ["warn", { "ignoreComments": true, "ignoreStrings": true }],
     "no-console": ["off"]
+  },
+  "globals": {
+    "log": false
   }
 }

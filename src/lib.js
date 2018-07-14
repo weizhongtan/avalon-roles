@@ -1,9 +1,18 @@
 const { knuthShuffle: shuffle } = require('knuth-shuffle');
+const TYPES = require('./config');
 
-function message(type, payload) {
+function serialise({
+    type,
+    payload,
+    ackId = null,
+}) {
+    if (!Object.prototype.hasOwnProperty.call(TYPES, type)) {
+        throw new Error(`type ${type} is not supported`);
+    }
     return JSON.stringify({
         type,
         payload,
+        ackId,
     });
 }
 
@@ -64,5 +73,5 @@ function NewPlayer(socket, data) {
 }
 
 module.exports = {
-    message,
-}
+    serialise,
+};

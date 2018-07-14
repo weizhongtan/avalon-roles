@@ -1,23 +1,33 @@
 import $ from 'jquery';
-import EVENTS from '../../config';
-import { message } from '../../lib';
+import { createAckChannel } from './lib';
+
+const log = console.log;
 
 const socket = new WebSocket('ws://localhost:8000');
+const channel = createAckChannel(socket);
 
 // Connection opened
-socket.addEventListener('open', (event) => {
-    const m = message(EVENTS.JOIN_ROOM, 'room1');
-    socket.send(m);
+socket.addEventListener('open', async () => {
+    const ack = await channel.createRoom('room 1');
+    log(ack);
 });
 
 // Listen for messages
 socket.addEventListener('message', (event) => {
-    console.log('Message from server ', event.data);
+    log('Message from server ', event.data);
 });
+
+$('#join-room')
+    .find('button')
+    .click(async function () {
+
+        const ack = await channel.createRoom('bean room');
+        log(ack);
+    });
 
 // data received from setup will indicate whether a game has been setup or not
 // socket.on('gamestatus', (data) => {
-//     console.log(data);
+//     log(data);
 //     game = data;
 //     if (data.started) {
 //         $('#setup').html(`<span style='color: green'>Online</span> - ${data.numJoined} / ${data.numTotal} players joined<p>Current Players: ${data.namesStr}`);
