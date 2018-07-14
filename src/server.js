@@ -19,32 +19,36 @@ app.use(serve('./dist'));
 
 const roomList = new Map();
 
-
-
 wss.on('connection', (ws) => {
     log('client connected');
 
     const player = new Player(ws);
-    const {
-        handleCreateRoom,
-        handleJoinRoom,
-    } = createHandlers({ roomList, player });
+    const handlers = createHandlers({ roomList, player });
 
     ws.on('message', (json) => {
-        log('received: %s', json);
         const { type, payload, ackId } = JSON.parse(json);
-        switch (type) {
-        case TYPES.CREATE_ROOM:
-            handleCreateRoom(ackId, payload);
-            break;
-        case TYPES.JOIN_ROOM: {
-            handleJoinRoom(ackId, player, payload);
-            break;
-        }
-        default:
-            log('unsupported type', type);
+        const handler = handlers[type];
+        if (typeof handler === 'function') {
+            const ack = (message) => {
+                player.send({
+                    ackId,
+                    type: TYPES.ACK,
+                    payload: message,
+                });
+            };
+            handler(ack, payload);
         }
         log('roomList:', roomList);
+    });
+
+    ws.on('close', () => {
+        roomList.forEach((room, roomName) => {
+            const wasRemoved = room.remove(player);
+            if (wasRemoved) {
+                log('player was removed from', roomName);
+            }
+        });
+        log('roomList after close:', roomList);
     });
 });
 

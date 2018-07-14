@@ -1,29 +1,31 @@
-import $ from 'jquery';
-import { createAckChannel } from './lib';
-
-const log = console.log;
+import TYPES from '../../config';
+import { DOM, createChannel } from './lib';
 
 const socket = new WebSocket('ws://localhost:8000');
-const channel = createAckChannel(socket);
+const channel = createChannel(socket);
 
-// Connection opened
-socket.addEventListener('open', async () => {
-    const ack = await channel.createRoom('room 1');
-    log(ack);
+channel.onOpen(async () => {
+    await channel.createRoom('room 1');
+    await channel.joinRoom('room 1');
+});
+channel.onMessage((data) => {
+    if (data.type === TYPES.UPDATE_ROOMS) {
+        DOM.info.currentRoom.innerHTML = data.payload.roomName;
+        DOM.info.currentMembers.innerHTML = '';
+        data.payload.members.forEach((member) => {
+            DOM.info.currentMembers.innerHTML += `<li>${member}</li>`;
+        });
+    }
 });
 
-// Listen for messages
-socket.addEventListener('message', (event) => {
-    log('Message from server ', event.data);
+DOM.joinRoom.button.addEventListener('click', () => {
+    const room = DOM.joinRoom.input.value;
+    channel.joinRoom(room);
 });
-
-$('#join-room')
-    .find('button')
-    .click(async function () {
-
-        const ack = await channel.createRoom('bean room');
-        log(ack);
-    });
+DOM.createRoom.button.addEventListener('click', () => {
+    const room = DOM.createRoom.input.value;
+    channel.createRoom(room);
+});
 
 // data received from setup will indicate whether a game has been setup or not
 // socket.on('gamestatus', (data) => {
