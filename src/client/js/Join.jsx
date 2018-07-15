@@ -1,18 +1,14 @@
 import React from 'react';
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, Segment } from 'semantic-ui-react';
 
-const FormExampleForm = () => (
-  <Form>
-    <Form.Field>
-      <label>First Name</label>
-      <input placeholder='Room ID' />
-    </Form.Field>
-    <Form.Field>
-      <label>Last Name</label>
-      <input placeholder='Your Name' />
-    </Form.Field>
-    <Button type='submit'>Join</Button>
-  </Form>
+const Join = () => (
+  <Segment>
+    <Form>
+      <Form.Input name='room-id' placeholder='Room ID' />
+      <Form.Input name='player-name' placeholder='Your Name' />
+      <Button positive fluid type='submit'>Join Game</Button>
+    </Form>
+  </Segment>
 );
 
-export default FormExampleForm;
+export default Join;

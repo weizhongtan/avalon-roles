@@ -8,8 +8,6 @@ const Home = () => (
       <Button primary fluid as= {Link} to="/join">
       Join a game
       </Button>
-    </Segment>
-    <Segment>
       <Button secondary fluid as= {Link} to="/create">
       Create a game
       </Button>

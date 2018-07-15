@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Header, Icon, Image, Menu, Segment, Sidebar } from 'semantic-ui-react';
+import { Button, Header, Icon, Image, Menu, Segment, Sidebar, Grid } from 'semantic-ui-react';
 import {BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
 
 export default class SlidingSidebar extends Component {
@@ -13,38 +13,37 @@ export default class SlidingSidebar extends Component {
     const { visible } = this.state;
 
     return (
-      <div>
-        <Sidebar.Pushable>
+      <div style={{ height: '100vh' }}>
+        <Sidebar.Pushable as={Segment}>
           <Sidebar
             as={Menu}
-            animation="push"
-            icon="labeled"
+            animation='push'
             inverted
             onHide={this.handleSidebarHide}
-            vertical
             visible={visible}
-            width="thin"
+            direction='top'
+            widths={2}
           >
-            <Menu.Item as={NavLink} to="/join" onClick={this.handleSidebarHide}>
-              <Icon name="plus" />
+            <Menu.Item as={NavLink} to='/join' onClick={this.handleSidebarHide}>
+              <Icon name='plus' />
               Join a game
             </Menu.Item>
-            <Menu.Item as={NavLink} to="/create" onClick={this.handleSidebarHide}>
-              <Icon name="cog" />
+            <Menu.Item as={NavLink} to='/create' onClick={this.handleSidebarHide}>
+              <Icon name='cog' />
               Create a game
             </Menu.Item>
           </Sidebar>
 
           <Sidebar.Pusher>
-            <Button onClick={this.handleButtonClick}>
-              <Icon name="bars" />
+            <Button fluid onClick={this.handleButtonClick}>
+              <Icon name='bars' />
             </Button>
-            <Segment padded>
+            <Segment vertical>
               {this.props.children}
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </div>
-    )
+    );
   }
 }

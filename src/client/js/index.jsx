@@ -11,8 +11,8 @@ const socket = new WebSocket('ws://localhost:8000');
 const channel = createChannel(socket);
 
 channel.onOpen(async () => {
-    await channel.createRoom('room 1');
-    await channel.joinRoom('room 1');
+  await channel.createRoom('room 1');
+  await channel.joinRoom('room 1');
 });
 channel.onMessage((data) => {
     console.log('got message', data);
