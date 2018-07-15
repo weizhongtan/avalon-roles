@@ -60,20 +60,32 @@ const WrappedCreate = withChannel(
   (channel, props) => channel.onMessage(props.onData),
 );
 
+const WrappedJoin = withChannel(
+  Join,
+  (channel, props) => channel.onMessage(props.onData),
+);
+
 export default class Root extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  onCreateGame = async ({ numberOfPlayers }) => {
-    const roomId = uuid().slice(0, 4).toUpperCase();
+  handleCreateGame = async ({ numberOfPlayers }) => {
+    const roomName = uuid().slice(0, 4).toUpperCase();
     await socketChannel.createRoom({
-      roomId,
+      roomName,
       numberOfPlayers,
     });
   };
 
-  onData = (data) => {
+  handleJoinGame = async ({ roomName, playerName }) => {
+    await socketChannel.joinRoom({
+      roomName,
+      playerName,
+    });
+  };
+
+  handleData = (data) => {
     console.log(data);
   };
 
@@ -82,11 +94,15 @@ export default class Root extends React.Component {
       <HashRouter basename='/'>
         <Sidebar>
           <Route exact path="/" component={Home}/>
-          <Route exact path="/join" component={Join}/>
+          <Route exact path="/join" render={() => (
+            <WrappedJoin
+              onJoinGame={this.handleJoinGame}
+            />
+          )} />
           <Route exact path="/create" render={() => (
             <WrappedCreate
-              onCreateGame={this.onCreateGame}
-              onData={this.onData}
+              onCreateGame={this.handleCreateGame}
+              onData={this.handleData}
             />
           )}/>
         </Sidebar>

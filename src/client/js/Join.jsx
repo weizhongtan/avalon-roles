@@ -4,7 +4,7 @@ import { Button, Form, Segment, Header } from 'semantic-ui-react';
 class Join extends React.Component {
   state = {
     playerName: null,
-    roomId: null,
+    roomName: null,
     hasJoinedRoom: false,
     gameStarted: false,
     character: null,
@@ -15,6 +15,7 @@ class Join extends React.Component {
 
   handleJoinRoom = () => {
     this.setState({ hasJoinedRoom: true });
+    this.props.onJoinRoom(this.state);
   };
 
   render() {
@@ -24,7 +25,7 @@ class Join extends React.Component {
           {this.state.hasJoinedRoom ? (
             <div>
               <Header>{this.state.gameStarted ? `You are ${this.state.character}` : 'Waiting for players'}</Header>
-              {typeof this.state.playerView === 'object' && (
+              {this.state.playerView && (
                 <ul>
                   {Object.entries(this.state.player).map(([player, view], index) => (
                     <li key={index}>{player} is {view}</li>
@@ -34,9 +35,9 @@ class Join extends React.Component {
             </div>
           ) : (
             <Form>
-              <Form.Input name='roomId' placeholder='Room ID' onChange={this.handleInputChange} />
+              <Form.Input name='roomName' placeholder='Room ID' onChange={this.handleInputChange} />
               <Form.Input name='playerName' placeholder='Your Name' onChange={this.handleInputChange} />
-              <Button positive fluid type='submit' onClick={this.handleJoinRoom}>
+              <Button positive fluid onClick={this.handleJoinRoom}>
               Join Game
               </Button>
             </Form>

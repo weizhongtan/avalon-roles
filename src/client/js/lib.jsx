@@ -32,10 +32,10 @@ export function createChannel(socket) {
         payload: data,
       });
     },
-    async joinRoom(roomName) {
+    async joinRoom(data) {
       return send(socket, {
         type: TYPES.JOIN_ROOM,
-        payload: roomName,
+        payload: data,
       });
     },
     async onOpen(cb) {
