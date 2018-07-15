@@ -1,15 +1,16 @@
 const Room = require('./Room');
-const TYPES = require('./config');
+const TYPES = require('../config');
 
 module.exports = ({ roomList, player }) => {
     const handlers = {
         [TYPES.CREATE_ROOM]: (ack, roomName) => {
             if (roomList.get(roomName)) {
-                return ack(`room ${roomName} already exists`);
+                ack(`room ${roomName} already exists`);
+            } else {
+                const room = new Room(roomName);
+                roomList.set(roomName, room);
+                ack(`created room: ${roomName}`);
             }
-            const room = new Room(roomName);
-            roomList.set(roomName, room);
-            ack(`created room: ${roomName}`);
         },
         [TYPES.JOIN_ROOM]: (ack, roomName) => {
             if (roomList.has(roomName)) {

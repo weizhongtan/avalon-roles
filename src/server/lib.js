@@ -1,20 +1,4 @@
-const TYPES = require('./config');
 const CharacterType = require('./CharacterType');
-
-function serialise({
-    type,
-    payload,
-    ackId = null,
-}) {
-    if (!Object.prototype.hasOwnProperty.call(TYPES, type)) {
-        throw new Error(`type ${type} is not supported`);
-    }
-    return JSON.stringify({
-        type,
-        payload,
-        ackId,
-    });
-}
 
 const STANDARD_GOOD = 'a Loyal Servant of Arthur';
 const STANDARD_EVIL = 'a Minion of Mordred';
@@ -39,6 +23,5 @@ function createCharacterTypes() {
 }
 
 module.exports = {
-    serialise,
     characterTypes: createCharacterTypes(),
 };

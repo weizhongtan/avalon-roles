@@ -4,7 +4,7 @@ const debug = require('debug');
 const http = require('http');
 const serve = require('koa-static');
 
-const TYPES = require('./config');
+const TYPES = require('../config');
 const Player = require('./Player');
 const createHandlers = require('./create-handlers');
 

@@ -1,5 +1,5 @@
 import uuid from 'uuid/v4';
-import { serialise } from '../../lib';
+import { serialise } from '../../common';
 import TYPES from '../../config';
 
 export const DOM = {
@@ -37,6 +37,7 @@ async function send(socket, data) {
         const dataToSend = Object.assign({}, data, {
             ackId,
         });
+        console.log(dataToSend);
         socket.send(serialise(dataToSend));
     });
 }

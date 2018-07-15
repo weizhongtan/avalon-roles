@@ -26,8 +26,8 @@
     "parcel": "^1.9.4"
   },
   "scripts": {
-    "start": "DEBUG=avalon nodemon src/server.js",
-    "build": "parcel watch src/public/index.html",
+    "start": "DEBUG=avalon nodemon src/server/index.js",
+    "build": "parcel watch src/client/index.html",
     "lint": "eslint --fix src"
   },
   "repository": {

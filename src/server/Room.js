@@ -1,6 +1,6 @@
 const uuid = require('uuid/v4');
 const { knuthShuffle } = require('knuth-shuffle');
-const TYPES = require('./config');
+const TYPES = require('../config');
 const { characterTypes } = require('./lib');
 
 class Room {
