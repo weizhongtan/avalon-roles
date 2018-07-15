@@ -8,46 +8,8 @@
 </head>
 
 <body>
-    <div class="container">
-        <!-- <p>Game <span id="setup"></span> (Go to <a href="/setup.html">setup</a>)</p> -->
-        <div id="join-room">
-            <label for="room-name">Room Name:</label>
-            <input type="text" name="room-name">
-            <button>Join Room</button>
-        </div>
-        <div id="create-room">
-            <label for="room-name">Room Name:</label>
-            <input type="text" name="room-name">
-            <button>Create Room</button>
-        </div>
-        <div id="info">
-            <label for="player-name">Set Name:</label>
-            <input type="text" name="player-name">
-            <button>Set Name</button>
-            <p>Your Name: <span class="player-name"></span></p>
-            <p>Current Room: <span class="current-room"></span></p>
-            <p>Members: <span class="current-members"></span></p>
-        </div>
-        <div id="remove">
-            <form id="form">
-                <input type="text" id="name" autocomplete="off" placeholder="Enter your real name">
-                <select id="character">
-                    <option id="default" value="none" selected="selected">Select Character</option>
-                    <option value="GoodGuy">Loyal Servant of Arthur</option>
-                    <option value="Merlin">Merlin</option>
-                    <option value="Percival">Percival</option>
-                    <option value="BadGuy">Minion of Mordred</option>
-                    <option value="Assassin">Assassin</option>
-                    <option value="Morgana">Morgana</option>
-                    <option value="Mordred">Mordred</option>
-                    <option value="Oberon">Oberon</option>
-                </select>
-            </form>
-            <button id="submit-player">Join Game</button>
-        </div>
-        <div id="info" class="hide"></div>
-    </div>
-    <script src="./js/index.js" type="text/javascript"></script>
+    <div id="root"></div>
+    <script src="./js/index.jsx" type="text/javascript"></script>
 </body>
 
 </html>

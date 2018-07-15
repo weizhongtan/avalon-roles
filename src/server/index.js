@@ -20,41 +20,41 @@ app.use(serve('./dist'));
 const roomList = new Map();
 
 wss.on('connection', (ws) => {
-    log('client connected');
+  log('client connected');
 
-    const player = new Player(ws);
-    const handlers = createHandlers({ roomList, player });
+  const player = new Player(ws);
+  const handlers = createHandlers({ roomList, player });
 
-    ws.on('message', (json) => {
-        const { type, payload, ackId } = JSON.parse(json);
-        const handler = handlers[type];
-        if (typeof handler === 'function') {
-            const ack = (message) => {
-                player.send({
-                    ackId,
-                    type: TYPES.ACK,
-                    payload: message,
-                });
-            };
-            handler(ack, payload);
-        }
-        log('roomList:', roomList);
-    });
-
-    ws.on('close', () => {
-        roomList.forEach((room, roomName) => {
-            const wasRemoved = room.remove(player);
-            if (wasRemoved) {
-                log('player was removed from', roomName);
-            }
+  ws.on('message', (json) => {
+    const { type, payload, ackId } = JSON.parse(json);
+    const handler = handlers[type];
+    if (typeof handler === 'function') {
+      const ack = (message) => {
+        player.send({
+          ackId,
+          type: TYPES.ACK,
+          payload: message,
         });
-        log('roomList after close:', roomList);
+      };
+      handler(ack, payload);
+    }
+    log('roomList:', roomList);
+  });
+
+  ws.on('close', () => {
+    roomList.forEach((room, roomName) => {
+      const wasRemoved = room.remove(player);
+      if (wasRemoved) {
+        log('player was removed from', roomName);
+      }
     });
+    log('roomList after close:', roomList);
+  });
 });
 
 server.listen(PORT, (err) => {
-    if (err) {
-        throw err;
-    }
-    log(`listening on *:${PORT}`);
+  if (err) {
+    throw err;
+  }
+  log(`listening on *:${PORT}`);
 });

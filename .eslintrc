@@ -1,15 +1,23 @@
 {
-  "extends": "airbnb-base",
-  "plugins": ["import"],
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb-base",
+    "plugin:react/recommended"
+  ],
+  "plugins": [
+    "import",
+    "babel"
+  ],
   "env": {
     "browser": true,
     "node": true
   },
   "rules": {
-    "indent": ["error", 4],
+    "indent": ["error", 2],
     "linebreak-style": "error",
     "max-len": ["warn", { "ignoreComments": true, "ignoreStrings": true }],
-    "no-console": ["off"]
+    "no-console": ["off"],
+    "babel/semi": 1
   },
   "globals": {
     "log": false
