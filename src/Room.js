@@ -1,17 +1,34 @@
 const uuid = require('uuid/v4');
+const { knuthShuffle } = require('knuth-shuffle');
 const TYPES = require('./config');
+const { characterTypes } = require('./lib');
 
 class Room {
     constructor(name) {
         this.roomName = name;
         this.id = uuid();
         this.players = new Set();
+        this.characters = knuthShuffle([
+            characterTypes.MERLIN,
+            characterTypes.PERCIVAL,
+            characterTypes.STANDARD_GOOD,
+            characterTypes.ASSASIN,
+            characterTypes.MORGANA,
+        ]);
     }
     startGame() {
 
     }
+    addCharacter(character) {
+        this.characters.push(character);
+    }
     randomlyAssignCharacters() {
-
+        for (let i = 0; i < this.players.length; i += 1) {
+            this.players[i].assignCharacter(this.characters[i]);
+        }
+    }
+    has(player) {
+        return this.players.has(player);
     }
     add(player) {
         const wasAdded = this.players.add(player);
@@ -39,7 +56,7 @@ class Room {
         });
     }
     serialise() {
-        const players = Array.from(this.players).map(p => p.id);
+        const players = Array.from(this.players).map(p => p.serialise());
         return {
             roomName: this.roomName,
             members: players,

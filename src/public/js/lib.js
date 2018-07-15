@@ -12,6 +12,9 @@ export const DOM = {
         button: document.querySelector('#create-room button'),
     },
     info: {
+        input: document.querySelector('#info input'),
+        button: document.querySelector('#info button'),
+        playerName: document.querySelector('#info .player-name'),
         currentRoom: document.querySelector('#info .current-room'),
         currentMembers: document.querySelector('#info .current-members'),
     },
@@ -65,6 +68,12 @@ export function createChannel(socket) {
                     }
                     cb(data);
                 }
+            });
+        },
+        async setPlayerName(playerName) {
+            return send(socket, {
+                type: TYPES.SET_PLAYER_DATA,
+                payload: playerName,
             });
         },
     };

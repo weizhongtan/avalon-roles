@@ -24,6 +24,18 @@ module.exports = ({ roomList, player }) => {
                 ack(`room: ${roomName} does not exist`);
             }
         },
+        [TYPES.SET_PLAYER_DATA]: (ack, playerName) => {
+            player.setName(playerName);
+            roomList.forEach((room) => {
+                if (room.has(player)) {
+                    room.send({
+                        type: TYPES.UPDATE_ROOMS,
+                        payload: room.serialise(),
+                    });
+                }
+            });
+            ack(`set player name to ${playerName}`);
+        },
     };
 
     return handlers;

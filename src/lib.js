@@ -1,5 +1,5 @@
-const { knuthShuffle: shuffle } = require('knuth-shuffle');
 const TYPES = require('./config');
+const CharacterType = require('./CharacterType');
 
 function serialise({
     type,
@@ -16,62 +16,29 @@ function serialise({
     });
 }
 
-// takes a socket and the name and character data and returns a new AvalonPlayer object
-function NewPlayer(socket, data) {
-    /*  character name
-    long version of character name
-    good / bad
-    array containing names of characters i can see
-    string containing what i see them as
-    */
-    function AvalonChar(character, goodOrBad, whoCanISee, howISeeThem) {
-        let characterLong;
-        switch (character) {
-        case 'GoodGuy':
-            characterLong = 'a Loyal Servant of Arthur';
-            break;
-        case 'BadGuy':
-            characterLong = 'a Minion of Mordred';
-            break;
-        case 'Assassin':
-            characterLong = 'the Assassin';
-            break;
-        default:
-            characterLong = character;
-        }
-        return (name) => {
-            this.name = name;
-            this.character = character;
-            this.characterLong = characterLong;
-            this.whatIsMyFaction = goodOrBad;
-            this.whoIs = (person) => {
-                const known = (whoCanISee.indexOf(person.character) > -1);
-                return [`${person.name} is ${(known) ? howISeeThem : 'Unknown'}`, known];
-            };
-        };
-    }
+const STANDARD_GOOD = 'a Loyal Servant of Arthur';
+const STANDARD_EVIL = 'a Minion of Mordred';
+const ASSASIN = 'the Assassin';
+const MERLIN = 'Merlin';
+const PERCIVAL = 'Percival';
+const MORGANA = 'Morgana';
+const MORDRED = 'Mordred';
+const OBERON = 'Oberon';
 
-    // Create avalon characters constructors from the base constructor
-    const Avalon = {};
-    Avalon.Merlin = AvalonChar('Merlin', 'good', ['BadGuy', 'Assassin', 'Morgana', 'Oberon'], 'Bad');
-    Avalon.Percival = AvalonChar('Percival', 'good', ['Merlin', 'Morgana'], 'Merlin or Morgana');
-    Avalon.GoodGuy = AvalonChar('GoodGuy', 'good', [], '');
-    Avalon.BadGuy = AvalonChar('BadGuy', 'bad', ['BadGuy', 'Assassin', 'Morgana', 'Mordred'], 'Bad too');
-    Avalon.Assassin = AvalonChar('Assassin', 'bad', ['BadGuy', 'Morgana', 'Mordred'], 'Bad too');
-    Avalon.Morgana = AvalonChar('Morgana', 'bad', ['BadGuy', 'Assassin', 'Mordred'], 'Bad too');
-    Avalon.Mordred = AvalonChar('Mordred', 'bad', ['BadGuy', 'Assassin', 'Morgana'], 'Bad too');
-    Avalon.Oberon = AvalonChar('Oberon', 'bad', [], '');
-
-    // create avalon character based on input data
-    const gameData = new Avalon[data.character](data.name);
-
-    // return object which contains the socket and avalon character
+function createCharacterTypes() {
     return {
-        socket,
-        gameData,
+        MERLIN: new CharacterType(MERLIN, true, [STANDARD_EVIL, ASSASIN, MORGANA, OBERON], 'evil'),
+        PERCIVAL: new CharacterType(PERCIVAL, true, [MERLIN, MORGANA], 'Merlin or Morgana'),
+        STANDARD_GOOD: new CharacterType(STANDARD_GOOD, true, [], ''),
+        STANDARD_EVIL: new CharacterType(STANDARD_EVIL, false, [STANDARD_EVIL, ASSASIN, MORGANA, MORDRED], 'evil'),
+        ASSASIN: new CharacterType(ASSASIN, false, [STANDARD_EVIL, MORGANA, MORDRED], 'evil'),
+        MORGANA: new CharacterType(MORGANA, false, [STANDARD_EVIL, ASSASIN, MORDRED], 'evil'),
+        MORDRED: new CharacterType(MORDRED, false, [STANDARD_EVIL, ASSASIN, MORGANA], 'evil'),
+        OBERON: new CharacterType(OBERON, false, [], ''),
     };
 }
 
 module.exports = {
     serialise,
+    characterTypes: createCharacterTypes(),
 };

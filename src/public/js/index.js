@@ -9,12 +9,15 @@ channel.onOpen(async () => {
     await channel.joinRoom('room 1');
 });
 channel.onMessage((data) => {
+    console.log('got message', data);
     if (data.type === TYPES.UPDATE_ROOMS) {
         DOM.info.currentRoom.innerHTML = data.payload.roomName;
         DOM.info.currentMembers.innerHTML = '';
         data.payload.members.forEach((member) => {
             DOM.info.currentMembers.innerHTML += `<li>${member}</li>`;
         });
+    } else if (data.type === TYPES.UPDATE_PLAYER) {
+        DOM.info.playerName.innerHTML = data.payload;
     }
 });
 
@@ -25,6 +28,10 @@ DOM.joinRoom.button.addEventListener('click', () => {
 DOM.createRoom.button.addEventListener('click', () => {
     const room = DOM.createRoom.input.value;
     channel.createRoom(room);
+});
+DOM.info.button.addEventListener('click', () => {
+    const name = DOM.info.input.value;
+    channel.setPlayerName(name);
 });
 
 // data received from setup will indicate whether a game has been setup or not
