@@ -3,11 +3,12 @@ const TYPES = require('../config');
 
 module.exports = ({ roomList, player }) => {
   const handlers = {
-    [TYPES.CREATE_ROOM]: (ack, roomName) => {
+    [TYPES.CREATE_ROOM]: (ack, { roomName, numberOfPlayers }) => {
       if (roomList.get(roomName)) {
         ack(`room ${roomName} already exists`);
       } else {
         const room = new Room(roomName);
+        room.setNumberOfPlayers(numberOfPlayers);
         roomList.set(roomName, room);
         ack(`created room: ${roomName}`);
       }

@@ -1,15 +1,17 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
-import {Button, Form, Segment} from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Button, Form, Icon, Segment } from 'semantic-ui-react';
 
 const Home = () => (
   <Form>
     <Segment>
       <Button primary fluid as= {Link} to="/join">
-      Join a game
+        <Icon name='plus' />
+        Join a game
       </Button>
       <Button secondary fluid as= {Link} to="/create">
-      Create a game
+        <Icon name='cog' />
+        Create a game
       </Button>
     </Segment>
   </Form>

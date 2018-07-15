@@ -24,12 +24,12 @@ async function send(socket, data) {
   });
 }
 
-export default function createChannel(socket) {
+export function createChannel(socket) {
   return {
-    async createRoom(roomName) {
+    async createRoom(data) {
       return send(socket, {
         type: TYPES.CREATE_ROOM,
-        payload: roomName,
+        payload: data,
       });
     },
     async joinRoom(roomName) {

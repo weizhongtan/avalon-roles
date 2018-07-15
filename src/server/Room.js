@@ -7,6 +7,7 @@ class Room {
   constructor(name) {
     this.roomName = name;
     this.id = uuid();
+    this.numberOfPlayers = null;
     this.players = new Set();
     this.characters = knuthShuffle([
       characterTypes.MERLIN,
@@ -15,6 +16,10 @@ class Room {
       characterTypes.ASSASIN,
       // characterTypes.MORGANA,
     ]);
+  }
+
+  setNumberOfPlayers(number) {
+    this.numberOfPlayers = number;
   }
 
   startGame() {
@@ -61,7 +66,7 @@ class Room {
         payload: this.serialise(),
       });
     }
-    if (this.players.size >= 2) {
+    if (this.players.size >= this.numberOfPlayers) {
       this.randomlyAssignCharacters();
       this.startGame();
     }
