@@ -24,6 +24,7 @@ async function send(socket, data) {
   });
 }
 
+// eslint-disable-next-line
 export function createChannel(socket) {
   return {
     async createRoom(data) {

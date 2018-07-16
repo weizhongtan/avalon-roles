@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 const options = [
   { text: 'Merlin', value: 0 },
@@ -8,13 +9,18 @@ const options = [
   { text: 'Assassin', value: 3 },
 ];
 
-const AvalonCharacterSelect = ({ ...props }) => (
+const AvalonCharacterDropdown = ({ defaultCharacterID, ...props }) => (
   <Form.Dropdown
     selection
     options={options}
     fluid
+    defaultValue={defaultCharacterID}
     {...props}
   />
 );
 
-export default AvalonCharacterSelect;
+AvalonCharacterDropdown.propTypes = {
+  defaultCharacterID: PropTypes.number,
+};
+
+export default AvalonCharacterDropdown;
