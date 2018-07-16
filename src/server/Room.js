@@ -32,7 +32,7 @@ class Room {
     let i = 0;
     this.players.forEach((player) => {
       log(this.selectedCharacterIDs);
-      const characterID = this.selectedCharacterIDs[i++];
+      const characterID = this.selectedCharacterIDs[i++]; // eslint-disable-line
       const CharacterType = characterTypes[characterID];
       const character = new CharacterType();
       player.assignCharacter(character);

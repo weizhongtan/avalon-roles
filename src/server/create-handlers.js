@@ -28,7 +28,6 @@ module.exports = ({ roomList, player }) => {
         } else {
           ack(`room: ${roomID} is full!`);
         }
-
       } else {
         ack(`room: ${roomID} does not exist`);
       }

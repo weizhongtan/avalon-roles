@@ -1,6 +1,5 @@
 const uuid = require('uuid/v4');
 const { serialise } = require('../common');
-const TYPES = require('../config');
 
 class Player {
   constructor(socket) {

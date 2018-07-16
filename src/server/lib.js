@@ -1,6 +1,7 @@
 const { CHARACTERS: CH } = require('../config');
 
-function makeCharacterType(name, isGood, otherCharactersSeen, seesOtherCharactersAs) {
+function makeCharacterType(name, isGood, otherCharactersSeen,
+                           seesOtherCharactersAs) {
   return class CharacterType {
     constructor() {
       this.name = name;
