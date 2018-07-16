@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Segment, Header } from 'semantic-ui-react';
+import { Form, Segment, Header } from 'semantic-ui-react';
+import LinkButton from '../LinkButton';
+
 import AvalonCharacterDropdown from './AvalonCharacterDropdown';
 import { CHARACTERS } from '../../../config';
 
@@ -33,7 +35,6 @@ class CreateRoom extends React.Component {
 
   handleInputChange = (e, args) => {
     const { name, value, position } = args;
-    console.log('got', args);
     if (name === 'numberOfPlayers') {
       this.setState({ [name]: value });
     } else if (name === 'characterDropdown') {
@@ -78,9 +79,7 @@ class CreateRoom extends React.Component {
             <Header content='Characters' size='tiny' />
             {dropdownList}
           </Segment>
-          <Button positive fluid type='submit' onClick={this.handleCreateGame}>
-          Create Game
-          </Button>
+          <LinkButton text='Create room' positive onClick={this.handleCreateGame} linkTo='/join' />
         </Form>
       </Segment>
     );

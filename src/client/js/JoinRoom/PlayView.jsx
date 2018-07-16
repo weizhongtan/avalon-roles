@@ -36,13 +36,13 @@ class PlayView extends Component {
 
   render() {
     const { assignedCharacter, viewOfOtherPlayers, currentRoom } = this.props;
-    const membersList = currentRoom.members.join(',');
+    const membersList = currentRoom.members.join(', ');
     return (
       <div>
         <Segment>
           {currentRoom.roomID && (
             <div>
-              <Header>{currentRoom.roomID}</Header>
+              <Header>You are in room {currentRoom.roomID}</Header>
               <p>Players in this room: {membersList}</p>
             </div>
           )}
