@@ -43,6 +43,7 @@
     "start-dev": "DEBUG=avalon nodemon src/server/index.js",
     "build-production": "parcel build src/client/index.html",
     "build-dev": "parcel watch src/client/index.html",
+    "postinstall": "npm run build-production",
     "lint": "eslint --fix src"
   },
   "repository": {
