@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Segment, Header } from 'semantic-ui-react';
 import AvalonCharacterDropdown from './AvalonCharacterDropdown';
+import { CHARACTERS } from '../../../config';
 
 const options = [
   { text: 5, value: 5 },
@@ -12,7 +13,7 @@ const options = [
   { text: 10, value: 10 },
 ];
 
-const defaultCharacterIDs = [0, 1];
+const defaultCharacterIDs = [CHARACTERS.MERLIN, CHARACTERS.ASSASIN];
 
 class CreateRoom extends React.Component {
   static propTypes = {
@@ -20,7 +21,7 @@ class CreateRoom extends React.Component {
   };
 
   state = {
-    numberOfPlayers: 5,
+    numberOfPlayers: 2,
     selectedCharacterIDs: defaultCharacterIDs,
   };
 
@@ -40,12 +41,12 @@ class CreateRoom extends React.Component {
     const dropdownList = new Array(this.state.numberOfPlayers)
       .fill(null)
       .map((_, index) => {
-        if (defaultCharacterIDs.includes(index)) {
+        if (index <= 1) {
           return (
             <AvalonCharacterDropdown
               name='characterDropdown'
-              key={index}
-              defaultCharacterID={index}
+              key={defaultCharacterIDs[index]}
+              defaultCharacterID={defaultCharacterIDs[index]}
               onChange={this.handleInputChange}
             />
           );

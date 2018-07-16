@@ -1,6 +1,5 @@
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
-import { Segment } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import uuid from 'uuid/v4';
 
@@ -9,13 +8,16 @@ import Home from './Home';
 import JoinRoom from './JoinRoom';
 import CreateRoom from './CreateRoom';
 
-import TYPES from '../../config';
 import { createChannel } from './lib';
 
 class App extends React.Component {
   state = {
     socket: null,
     roomID: null,
+    currentRoom: {
+      roomID: null,
+      members: [],
+    },
     playerName: null,
     assignedCharacter: null,
     viewOfOtherPlayers: null,
@@ -23,6 +25,19 @@ class App extends React.Component {
 
   componentDidMount = () => {
     this.socket = createChannel(new WebSocket('ws://localhost:8000'));
+    this.socket.onMessage(({ payload }) => {
+      console.log('got data', payload);
+      const { currentRoom, assignedCharacter, playerView } = payload;
+      if (currentRoom) {
+        this.setState({ currentRoom });
+      }
+      if (assignedCharacter) {
+        this.setState({ assignedCharacter });
+      }
+      if (playerView) {
+        this.setState({ viewOfOtherPlayers: playerView });
+      }
+    });
   };
 
   handleCreateGame = async ({ selectedCharacterIDs }) => {
@@ -50,6 +65,7 @@ class App extends React.Component {
           <Route exact path="/join" render={() => (
             <JoinRoom
               onJoinRoom={this.handleJoinRoom}
+              currentRoom={this.state.currentRoom}
               assignedCharacter={this.state.assignedCharacter}
               viewOfOtherPlayers={this.state.viewOfOtherPlayers}
             />

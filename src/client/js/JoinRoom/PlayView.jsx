@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Header, Segment } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { Header, Segment } from 'semantic-ui-react';
 
 const PlayerViewItem = ({ otherPlayer, viewedAs }) => (
-  <li>{otherPlayer} is {viewedAs}</li>
+  <li>{otherPlayer} is {viewedAs || 'unknown.'}</li>
 );
 
 PlayerViewItem.propTypes = {
-  otherPlayer: PropTypes.string,
+  otherPlayer: PropTypes.string.isRequired,
   viewedAs: PropTypes.string,
 };
 
@@ -24,26 +24,32 @@ const PlayerViewList = ({ viewOfOtherPlayers }) => {
 };
 
 PlayerViewList.propTypes = {
-  viewOfOtherPlayers: PropTypes.array,
+  viewOfOtherPlayers: PropTypes.object.isRequired,
 };
 
 class PlayView extends Component {
-  propTypes = {
-    assignedCharacter: PropTypes.string,
+  static propTypes = {
+    assignedCharacter: PropTypes.object,
     viewOfOtherPlayers: PropTypes.object,
+    currentRoom: PropTypes.object,
   };
 
   render() {
-    const { assignedCharacter, viewOfOtherPlayers } = this.props;
+    const { assignedCharacter, viewOfOtherPlayers, currentRoom } = this.props;
+    const membersList = currentRoom.members.join(',');
     return (
       <div>
         <Segment>
-          <Header>
-            {assignedCharacter ? `You are ${assignedCharacter}` : 'Waiting for players'}
-          </Header>
+          {currentRoom.roomID && (
+            <div>
+              <Header>{currentRoom.roomID}</Header>
+              <p>Players in this room: {membersList}</p>
+            </div>
+          )}
         </Segment>
         <Segment>
-          {viewOfOtherPlayers && <PlayerViewList />}
+          {assignedCharacter && <Header>You are {assignedCharacter.name}</Header>}
+          {viewOfOtherPlayers && <PlayerViewList viewOfOtherPlayers={viewOfOtherPlayers} />}
         </Segment>
       </div>
     );

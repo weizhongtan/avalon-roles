@@ -1,12 +1,13 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { CHARACTERS } from '../../../config';
 
 const options = [
-  { text: 'Merlin', value: 0 },
-  { text: 'Loyal servant of Arthur', value: 1 },
-  { text: 'Minion of Mordred', value: 2 },
-  { text: 'Assassin', value: 3 },
+  { text: CHARACTERS.MERLIN, value: CHARACTERS.MERLIN },
+  { text: CHARACTERS.STANDARD_GOOD, value: CHARACTERS.STANDARD_GOOD },
+  { text: CHARACTERS.STANDARD_EVIL, value: CHARACTERS.STANDARD_EVIL },
+  { text: CHARACTERS.ASSASIN, value: CHARACTERS.ASSASIN },
 ];
 
 const AvalonCharacterDropdown = ({ defaultCharacterID, ...props }) => (
@@ -20,7 +21,7 @@ const AvalonCharacterDropdown = ({ defaultCharacterID, ...props }) => (
 );
 
 AvalonCharacterDropdown.propTypes = {
-  defaultCharacterID: PropTypes.number,
+  defaultCharacterID: PropTypes.oneOf(Object.values(CHARACTERS)),
 };
 
 export default AvalonCharacterDropdown;

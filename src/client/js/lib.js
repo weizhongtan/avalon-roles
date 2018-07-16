@@ -54,11 +54,5 @@ export function createChannel(socket) {
         }
       });
     },
-    async setPlayerName(playerName) {
-      return send(socket, {
-        type: TYPES.SET_PLAYER_DATA,
-        payload: playerName,
-      });
-    },
   };
 }

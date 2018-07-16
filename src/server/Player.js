@@ -12,12 +12,6 @@ class Player {
 
   setName(name) {
     this.name = name;
-    this.send({
-      type: TYPES.UPDATE_PLAYER,
-      payload: {
-        name,
-      },
-    });
   }
 
   send(data) {

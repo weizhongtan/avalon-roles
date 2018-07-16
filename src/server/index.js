@@ -42,10 +42,10 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
-    roomList.forEach((room, roomName) => {
+    roomList.forEach((room, roomID) => {
       const wasRemoved = room.remove(player);
       if (wasRemoved) {
-        log('player was removed from', roomName);
+        log('player was removed from', roomID);
       }
     });
     log('roomList after close:', roomList);

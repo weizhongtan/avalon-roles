@@ -1,57 +1,43 @@
-const uuid = require('uuid/v4');
 const { knuthShuffle } = require('knuth-shuffle');
 const TYPES = require('../config');
 const { characterTypes } = require('./lib');
+const { CHARACTERS } = require('../config');
 
 class Room {
-  constructor(name) {
-    this.roomName = name;
-    this.id = uuid();
-    this.numberOfPlayers = null;
+  constructor(id, selectedCharacterIDs) {
+    this.roomID = id;
+    this.selectedCharacterIDs = selectedCharacterIDs;
     this.players = new Set();
-    this.characters = knuthShuffle([
-      characterTypes.MERLIN,
-      // characterTypes.PERCIVAL,
-      // characterTypes.STANDARD_GOOD,
-      characterTypes.ASSASIN,
-      // characterTypes.MORGANA,
-    ]);
-  }
-
-  setNumberOfPlayers(number) {
-    this.numberOfPlayers = number;
   }
 
   startGame() {
     log('starting new game');
     this.players.forEach((player) => {
       const playerView = {};
-      Array.from(this.players)
-        .filter(p => p !== player)
-        .forEach((otherPlayer) => {
-          playerView[otherPlayer] = player.viewOtherPlayer(otherPlayer);
-        });
+      const otherPlayers = Array.from(this.players).filter(p => p !== player);
+      otherPlayers.forEach((otherPlayer) => {
+        playerView[otherPlayer.name] = player.viewOtherPlayer(otherPlayer);
+      });
       player.send({
-        type: TYPES.UPDATE_PLAYER,
+        type: TYPES.UPDATE_CLIENT,
         payload: {
           playerView,
+          assignedCharacter: player.character,
         },
       });
     });
   }
 
-  addCharacter(character) {
-    this.characters.push(character);
-  }
-
   randomlyAssignCharacters() {
-    const characters = (new Set(this.characters)).values();
-    const players = this.players.values();
-    for (const player of players) {
-      const character = characters.next().value;
+    this.selectedCharacterIDs = knuthShuffle(this.selectedCharacterIDs);
+    let i = 0;
+    this.players.forEach((player) => {
+      log(this.selectedCharacterIDs);
+      const characterID = this.selectedCharacterIDs[i++];
+      const CharacterType = characterTypes[characterID];
+      const character = new CharacterType();
       player.assignCharacter(character);
-    }
-    log(Array.from(this.players).map(p => p.character));
+    });
   }
 
   has(player) {
@@ -62,11 +48,13 @@ class Room {
     const wasAdded = this.players.add(player);
     if (wasAdded) {
       this.send({
-        type: TYPES.UPDATE_ROOMS,
-        payload: this.serialise(),
+        type: TYPES.UPDATE_CLIENT,
+        payload: {
+          currentRoom: this.serialise(),
+        },
       });
     }
-    if (this.players.size >= this.numberOfPlayers) {
+    if (this.players.size >= this.selectedCharacterIDs.length) {
       this.randomlyAssignCharacters();
       this.startGame();
     }
@@ -77,8 +65,10 @@ class Room {
     const wasRemoved = this.players.delete(player);
     if (wasRemoved) {
       this.send({
-        type: TYPES.UPDATE_ROOMS,
-        payload: this.serialise(),
+        type: TYPES.UPDATE_CLIENT,
+        payload: {
+          currentRoom: this.serialise(),
+        },
       });
     }
     return wasRemoved;
@@ -93,7 +83,7 @@ class Room {
   serialise() {
     const players = Array.from(this.players).map(p => p.serialise());
     return {
-      roomName: this.roomName,
+      roomID: this.roomID,
       members: players,
     };
   }

@@ -1,8 +1,18 @@
 module.exports = {
   JOIN_ROOM: 'JOIN_ROOM',
   CREATE_ROOM: 'CREATE_ROOM',
-  UPDATE_ROOMS: 'UPDATE_ROOMS',
   ACK: 'ACK',
-  SET_PLAYER_DATA: 'SET_PLAYER_DATA',
-  UPDATE_PLAYER: 'UPDATE_PLAYER',
+  UPDATE_CLIENT: 'UPDATE_CLIENT',
+};
+
+
+module.exports.CHARACTERS = {
+  STANDARD_GOOD: 'a Loyal Servant of Arthur',
+  STANDARD_EVIL: 'a Minion of Mordred',
+  ASSASIN: 'the Assassin',
+  MERLIN: 'Merlin',
+  PERCIVAL: 'Percival',
+  MORGANA: 'Morgana',
+  MORDRED: 'Mordred',
+  OBERON: 'Oberon',
 };

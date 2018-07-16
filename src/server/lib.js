@@ -1,24 +1,33 @@
-const CharacterType = require('./CharacterType');
+const { CHARACTERS: CH } = require('../config');
 
-const STANDARD_GOOD = 'a Loyal Servant of Arthur';
-const STANDARD_EVIL = 'a Minion of Mordred';
-const ASSASIN = 'the Assassin';
-const MERLIN = 'Merlin';
-const PERCIVAL = 'Percival';
-const MORGANA = 'Morgana';
-const MORDRED = 'Mordred';
-const OBERON = 'Oberon';
+function makeCharacterType(name, isGood, otherCharactersSeen, seesOtherCharactersAs) {
+  return class CharacterType {
+    constructor() {
+      this.name = name;
+      this.isGood = isGood;
+      this.otherCharactersSeen = otherCharactersSeen;
+      this.seesOtherCharactersAs = seesOtherCharactersAs;
+    }
+
+    sees(character) {
+      if (this.otherCharactersSeen.includes(character.name)) {
+        return this.seesOtherCharactersAs;
+      }
+      return null;
+    }
+  };
+}
 
 function createCharacterTypes() {
   return {
-    MERLIN: new CharacterType(MERLIN, true, [STANDARD_EVIL, ASSASIN, MORGANA, OBERON], 'evil'),
-    PERCIVAL: new CharacterType(PERCIVAL, true, [MERLIN, MORGANA], 'Merlin or Morgana'),
-    STANDARD_GOOD: new CharacterType(STANDARD_GOOD, true, [], ''),
-    STANDARD_EVIL: new CharacterType(STANDARD_EVIL, false, [STANDARD_EVIL, ASSASIN, MORGANA, MORDRED], 'evil'),
-    ASSASIN: new CharacterType(ASSASIN, false, [STANDARD_EVIL, MORGANA, MORDRED], 'evil'),
-    MORGANA: new CharacterType(MORGANA, false, [STANDARD_EVIL, ASSASIN, MORDRED], 'evil'),
-    MORDRED: new CharacterType(MORDRED, false, [STANDARD_EVIL, ASSASIN, MORGANA], 'evil'),
-    OBERON: new CharacterType(OBERON, false, [], ''),
+    [CH.MERLIN]: makeCharacterType(CH.MERLIN, true, [CH.STANDARD_EVIL, CH.ASSASIN, CH.MORGANA, CH.OBERON], 'evil'),
+    [CH.PERCIVAL]: makeCharacterType(CH.PERCIVAL, true, [CH.MERLIN, CH.MORGANA], 'Merlin or Morgana'),
+    [CH.STANDARD_GOOD]: makeCharacterType(CH.STANDARD_GOOD, true, [], ''),
+    [CH.STANDARD_EVIL]: makeCharacterType(CH.STANDARD_EVIL, false, [CH.STANDARD_EVIL, CH.ASSASIN, CH.MORGANA, CH.MORDRED], 'evil'),
+    [CH.ASSASIN]: makeCharacterType(CH.ASSASIN, false, [CH.STANDARD_EVIL, CH.MORGANA, CH.MORDRED], 'evil'),
+    [CH.MORGANA]: makeCharacterType(CH.MORGANA, false, [CH.STANDARD_EVIL, CH.ASSASIN, CH.MORDRED], 'evil'),
+    [CH.MORDRED]: makeCharacterType(CH.MORDRED, false, [CH.STANDARD_EVIL, CH.ASSASIN, CH.MORGANA], 'evil'),
+    [CH.OBERON]: makeCharacterType(CH.OBERON, false, [], ''),
   };
 }
 
