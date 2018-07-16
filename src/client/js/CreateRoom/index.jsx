@@ -13,7 +13,13 @@ const options = [
   { text: 10, value: 10 },
 ];
 
-const defaultCharacterIDs = [CHARACTERS.MERLIN, CHARACTERS.ASSASIN];
+const defaultCharacterIDs = [
+  CHARACTERS.MERLIN,
+  CHARACTERS.STANDARD_GOOD,
+  CHARACTERS.STANDARD_GOOD,
+  CHARACTERS.ASSASIN,
+  CHARACTERS.STANDARD_EVIL,
+];
 
 class CreateRoom extends React.Component {
   static propTypes = {
@@ -21,16 +27,20 @@ class CreateRoom extends React.Component {
   };
 
   state = {
-    numberOfPlayers: 2,
+    numberOfPlayers: 5,
     selectedCharacterIDs: defaultCharacterIDs,
   };
 
-  handleInputChange = (e, { name, value }) => {
+  handleInputChange = (e, args) => {
+    const { name, value, position } = args;
+    console.log('got', args);
     if (name === 'numberOfPlayers') {
       this.setState({ [name]: value });
     } else if (name === 'characterDropdown') {
       this.setState((({ selectedCharacterIDs }) => {
-        return { selectedCharacterIDs: [...selectedCharacterIDs, value] };
+        const updatedIDs = [...selectedCharacterIDs];
+        updatedIDs[position] = value;
+        return { selectedCharacterIDs: updatedIDs };
       }));
     }
   };
@@ -41,17 +51,15 @@ class CreateRoom extends React.Component {
     const dropdownList = new Array(this.state.numberOfPlayers)
       .fill(null)
       .map((_, index) => {
-        if (index <= 1) {
-          return (
-            <AvalonCharacterDropdown
-              name='characterDropdown'
-              key={defaultCharacterIDs[index]}
-              defaultCharacterID={defaultCharacterIDs[index]}
-              onChange={this.handleInputChange}
-            />
-          );
-        }
-        return <AvalonCharacterDropdown key={index} />;
+        return (
+          <AvalonCharacterDropdown
+            name='characterDropdown'
+            key={index}
+            position={index}
+            defaultCharacterID={defaultCharacterIDs[index]}
+            onChange={this.handleInputChange}
+          />
+        );
       });
 
     return (

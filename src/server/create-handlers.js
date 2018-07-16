@@ -22,9 +22,13 @@ module.exports = ({ roomList, player }) => {
           room.remove(player);
         });
         const room = roomList.get(roomID);
-        room.add(player);
+        const wasAdded = room.add(player);
+        if (wasAdded) {
+          ack(`joined room: ${roomID}`);
+        } else {
+          ack(`room: ${roomID} is full!`);
+        }
 
-        ack(`joined room: ${roomID}`);
       } else {
         ack(`room: ${roomID} does not exist`);
       }

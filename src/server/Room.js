@@ -1,7 +1,6 @@
 const { knuthShuffle } = require('knuth-shuffle');
 const TYPES = require('../config');
 const { characterTypes } = require('./lib');
-const { CHARACTERS } = require('../config');
 
 class Room {
   constructor(id, selectedCharacterIDs) {
@@ -45,6 +44,9 @@ class Room {
   }
 
   add(player) {
+    if (this.players.length >= this.selectedCharacterIDs.length) {
+      return false;
+    }
     const wasAdded = this.players.add(player);
     if (wasAdded) {
       this.send({
