@@ -24,7 +24,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    this.socket = createChannel(new WebSocket(`ws://${window.location.hostname}`));
+    this.socket = createChannel(new WebSocket(`wss://${window.location.hostname}`));
     this.socket.onMessage(({ payload }) => {
       console.log('got data', payload);
       const { currentRoom, assignedCharacter, playerView } = payload;
