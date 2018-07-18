@@ -23,6 +23,11 @@ class Room {
           playerView,
           assignedCharacter: player.character,
         },
+      }, (err) => {
+        if (err) {
+          log('Failed to send data to player');
+          this.remove(player);
+        }
       });
     });
   }
@@ -76,9 +81,9 @@ class Room {
     return wasRemoved;
   }
 
-  send(message) {
+  send(message, cb) {
     this.players.forEach((player) => {
-      player.send(message);
+      player.send(message, cb);
     });
   }
 
@@ -86,6 +91,7 @@ class Room {
     const players = Array.from(this.players).map(p => p.serialise());
     return {
       roomID: this.roomID,
+      selectedCharacterIDs: this.selectedCharacterIDs,
       members: players,
     };
   }

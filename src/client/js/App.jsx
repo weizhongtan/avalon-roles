@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { HashRouter, Route } from 'react-router-dom';
-import 'semantic-ui-css/semantic.min.css';
 import uuid from 'uuid/v4';
+import 'semantic-ui-css/semantic.min.css';
 
 import Sidebar from './Sidebar';
 import Home from './Home';
@@ -10,12 +10,13 @@ import CreateRoom from './CreateRoom';
 
 import { createChannel } from './lib';
 
-class App extends React.Component {
+class App extends Component {
   state = {
     socket: null,
     roomID: null,
     currentRoom: {
       roomID: null,
+      selectedCharacterIDs: [],
       members: [],
     },
     playerName: null,
@@ -24,7 +25,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    this.socket = createChannel(new WebSocket(`wss://${window.location.hostname}`));
+    this.socket = createChannel();
     this.socket.onMessage(({ payload }) => {
       console.log('got data', payload);
       const { currentRoom, assignedCharacter, playerView } = payload;
@@ -40,12 +41,16 @@ class App extends React.Component {
     });
   };
 
-  handleCreateGame = async ({ selectedCharacterIDs }) => {
+  handleCreateGame = async ({ selectedCharacterIDs, playerName }) => {
     const roomID = uuid().slice(0, 4).toUpperCase();
     this.setState({ roomID });
     await this.socket.createRoom({
       roomID,
       selectedCharacterIDs,
+    });
+    await this.handleJoinRoom({
+      roomID,
+      playerName,
     });
   };
 

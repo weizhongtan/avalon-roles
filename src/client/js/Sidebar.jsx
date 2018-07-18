@@ -13,7 +13,7 @@ export default class SlidingSidebar extends Component {
     const { visible } = this.state;
 
     return (
-      <div style={{ height: '100vh' }}>
+      <div>
         <Sidebar.Pushable as={Segment}>
           <Sidebar
             as={Menu}

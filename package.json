@@ -1,6 +1,6 @@
 {
   "name": "avalon-roles",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "auto assigns avalon roles",
   "dependencies": {
     "debug": "^3.1.0",
@@ -19,7 +19,7 @@
     "uuid": "^3.3.2",
     "ws": "^5.2.2"
   },
-  "main": "index.js",
+  "main": "./server/index.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.6",
@@ -35,12 +35,12 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-react": "^7.10.0",
     "node-sass": "^4.9.2",
-    "nodemon": "^1.18.2",
-    "parcel": "^1.9.6"
+    "nodemon": "^1.18.3",
+    "parcel": "^1.9.7"
   },
   "scripts": {
     "start": "DEBUG=avalon node src/server/index.js",
-    "start-dev": "DEBUG=avalon nodemon src/server/index.js",
+    "start-dev": "DEBUG=avalon nodemon src/server/index.js --ignore src/client/ --ignore dist --ignore .cache",
     "build-production": "parcel build src/client/index.html",
     "build-dev": "parcel watch src/client/index.html",
     "postinstall": "npm run build-production",

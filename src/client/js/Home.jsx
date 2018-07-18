@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Form, Segment } from 'semantic-ui-react';
 import LinkButton from './LinkButton';
 
