@@ -44,11 +44,21 @@ class Join extends React.Component {
             />
           ) : (
             <Form>
-              <Form.Input name='chosenRoomID' placeholder='Room ID' onChange={this.handleInputChange} error={this.state.chosenRoomIDInvalid} />
-              <Form.Input name='playerName' placeholder='Your Name' onChange={this.handleInputChange} error={this.state.playerNameInvalid} />
-              <Button positive fluid onClick={this.handleJoinRoom}>
-              Join Room
-              </Button>
+              <Form.Input
+                name='chosenRoomID'
+                placeholder='Room
+                ID'
+                onChange={this.handleInputChange}
+                error={this.state.chosenRoomIDInvalid}
+              />
+              <Form.Input
+                name='playerName'
+                placeholder='Your
+                Name'
+                onChange={this.handleInputChange}
+                error={this.state.playerNameInvalid}
+              />
+              <Button positive fluid onClick={this.handleJoinRoom} content='Join Room' />
             </Form>
           )}
         </Segment>

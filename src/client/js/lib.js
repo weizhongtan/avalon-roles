@@ -57,3 +57,8 @@ export function createChannel() {
     },
   };
 }
+
+export function getRandomIcon() {
+  const icons = ['heart', 'bolt', 'eye', 'tint', 'bomb'];
+  return icons[Math.floor(Math.random() * icons.length)];
+}

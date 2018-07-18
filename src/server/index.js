@@ -63,6 +63,7 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
+    log('player left, removing from all rooms');
     removePlayerFromAllRooms(player, roomList);
   });
 });

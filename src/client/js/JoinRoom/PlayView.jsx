@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Header, Segment, List, Icon } from 'semantic-ui-react';
 
+import { CHARACTERS } from '../../../config';
+import { getRandomIcon } from '../lib';
+
 const PlayerViewItem = ({ otherPlayer, viewedAs }) => (
   <li>{otherPlayer} is {viewedAs || 'unknown.'}</li>
 );
@@ -28,10 +31,10 @@ PlayerViewList.propTypes = {
 };
 
 const HorizontalList = ({ elements }) => (
-  <List horizontal>
+  <List horizontal relaxed>
     {elements.map((el, index) => (
       <List.Item key={index}>
-        <Icon name='heart' />
+        <Icon name={getRandomIcon()} />
         <List.Content>
           <List.Header>{el}</List.Header>
         </List.Content>
@@ -58,21 +61,34 @@ class PlayView extends Component {
       currentRoom,
     } = this.props;
 
+    const characterCounts = {};
+    currentRoom.selectedCharacterIDs.forEach((id) => {
+      const { name } = Object.values(CHARACTERS)[id];
+      if (characterCounts[name]) {
+        characterCounts[name] += 1;
+      } else {
+        characterCounts[name] = 1;
+      }
+    });
+
+    const characterStrings = Object.entries(characterCounts)
+      .map(([key, val]) => (val > 1 ? `${key} x${val}` : key));
+
     return (
       <div>
         <Segment>
           {currentRoom.roomID && (
             <div>
-              <Header >You are in room {currentRoom.roomID}</Header>
+              <Header block>Current room: {currentRoom.roomID}</Header>
               <Header size='tiny'>Players in this room:</Header>
               <HorizontalList elements={currentRoom.members} />
               <Header size='tiny'>Available characters:</Header>
-              <HorizontalList elements={currentRoom.selectedCharacterIDs} />
+              <HorizontalList elements={characterStrings} />
             </div>
           )}
         </Segment>
         <Segment>
-          {assignedCharacter && <Header>You are {assignedCharacter.name}</Header>}
+          {assignedCharacter && <Header>You are {CHARACTERS[assignedCharacter].name}</Header>}
           {viewOfOtherPlayers && <PlayerViewList viewOfOtherPlayers={viewOfOtherPlayers} />}
         </Segment>
       </div>

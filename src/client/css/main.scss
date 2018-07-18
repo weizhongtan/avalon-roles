@@ -1,3 +1,7 @@
 #root {
   height: 100%;
 }
+
+.ui.visible.top.sidebar~.fixed, .ui.visible.top.sidebar~.pusher {
+  transform: translate3d(0,40px,0) !important;
+}

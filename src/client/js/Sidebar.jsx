@@ -39,10 +39,8 @@ class SlidingSidebar extends Component {
             </Menu.Item>
           </Sidebar>
 
-          <Sidebar.Pusher>
-            <Button fluid onClick={this.handleButtonClick}>
-              <Icon name='bars' />
-            </Button>
+          <Sidebar.Pusher >
+            <Button icon='bars' fluid attached='bottom' onClick={this.handleButtonClick} />
             <Segment vertical>
               {this.props.children}
             </Segment>

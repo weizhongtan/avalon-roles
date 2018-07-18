@@ -1,7 +1,11 @@
-const { CHARACTERS: CH } = require('../config');
+const { CHARACTERS } = require('../config');
 
-function makeCharacterType(name, isGood, otherCharactersSeen,
-                           seesOtherCharactersAs) {
+const CH = {};
+Object.entries(CHARACTERS).forEach(([key, val]) => {
+  CH[key] = val.id;
+});
+
+function makeCharacterType(name, isGood, otherCharactersSeen, seesOtherCharactersAs) {
   return class CharacterType {
     constructor() {
       this.name = name;

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Segment, Header, Button } from 'semantic-ui-react';
-import LinkButton from '../LinkButton';
 
 import AvalonCharacterDropdown from './AvalonCharacterDropdown';
 import { CHARACTERS } from '../../../config';
@@ -16,11 +15,11 @@ const options = [
 ];
 
 const defaultCharacterIDs = [
-  CHARACTERS.MERLIN,
-  CHARACTERS.STANDARD_GOOD,
-  CHARACTERS.STANDARD_GOOD,
-  CHARACTERS.ASSASIN,
-  CHARACTERS.STANDARD_EVIL,
+  CHARACTERS.MERLIN.id,
+  CHARACTERS.STANDARD_GOOD.id,
+  CHARACTERS.STANDARD_GOOD.id,
+  CHARACTERS.ASSASIN.id,
+  CHARACTERS.STANDARD_EVIL.id,
 ];
 
 class CreateRoom extends React.Component {
@@ -31,24 +30,34 @@ class CreateRoom extends React.Component {
   state = {
     numberOfPlayers: 5,
     selectedCharacterIDs: defaultCharacterIDs,
-    playerName: null,
+    playerName: '',
+    attemptedSubmit: false,
   };
 
   handleInputChange = (e, args) => {
     const { name, value, position } = args;
-    if (name === 'numberOfPlayers' || name === 'playerName') {
+    switch (name) {
+    case 'numberOfPlayers':
+    case 'playerName':
       this.setState({ [name]: value });
-    } else if (name === 'characterDropdown') {
+      break;
+    case 'characterDropdown':
       this.setState((({ selectedCharacterIDs }) => {
         const updatedIDs = [...selectedCharacterIDs];
         updatedIDs[position] = value;
         return { selectedCharacterIDs: updatedIDs };
       }));
+      break;
+    default:
+      throw new Error(`invalid field name: ${name}`);
     }
   };
 
   handleCreateGame = async () => {
-    await this.props.onCreateGame(this.state);
+    this.setState({ attemptedSubmit: true });
+    if (this.state.playerName.length) {
+      await this.props.onCreateGame(this.state);
+    }
   };
 
   render() {
@@ -76,11 +85,14 @@ class CreateRoom extends React.Component {
             defaultValue={this.state.numberOfPlayers}
             fluid
           />
-          <Segment>
-            <Header content='Characters' size='tiny' />
-            {dropdownList}
-            <Form.Input name='playerName' placeholder='Your Name' onChange={this.handleInputChange} error={this.state.playerName === ''} />
-          </Segment>
+          <Header content='Characters' size='tiny' />
+          {dropdownList}
+          <Form.Input
+            name='playerName'
+            placeholder='Your Name'
+            onChange={this.handleInputChange}
+            error={this.state.playerName === '' && this.state.attemptedSubmit}
+          />
           <Button
             fluid
             positive

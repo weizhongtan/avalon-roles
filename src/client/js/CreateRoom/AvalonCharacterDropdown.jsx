@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { CHARACTERS } from '../../../config';
 
 const options = Object.entries(CHARACTERS)
-  .map(([, val]) => ({ text: val, value: val }));
+  .map(([, { id, name }]) => ({ text: name, value: id }));
 
 const AvalonCharacterDropdown = ({ defaultCharacterID, ...props }) => (
   <Form.Dropdown
@@ -17,7 +17,7 @@ const AvalonCharacterDropdown = ({ defaultCharacterID, ...props }) => (
 );
 
 AvalonCharacterDropdown.propTypes = {
-  defaultCharacterID: PropTypes.oneOf(Object.values(CHARACTERS)),
+  defaultCharacterID: PropTypes.number,
 };
 
 export default AvalonCharacterDropdown;
