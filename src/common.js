@@ -3,7 +3,7 @@ const TYPES = require('./config');
 function serialise({
   type,
   payload,
-  ackId = null,
+  ackID = null,
 }) {
   if (!TYPES[type]) {
     throw new Error(`type ${type} is not supported`);
@@ -11,7 +11,7 @@ function serialise({
   return JSON.stringify({
     type,
     payload,
-    ackId,
+    ackID,
   });
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Segment, Header } from 'semantic-ui-react';
+import { Form, Segment, Header, Button } from 'semantic-ui-react';
 import LinkButton from '../LinkButton';
 
 import AvalonCharacterDropdown from './AvalonCharacterDropdown';
@@ -47,22 +47,22 @@ class CreateRoom extends React.Component {
     }
   };
 
-  handleCreateGame = () => this.props.onCreateGame(this.state);
+  handleCreateGame = async () => {
+    await this.props.onCreateGame(this.state);
+  };
 
   render() {
     const dropdownList = new Array(this.state.numberOfPlayers)
       .fill(null)
-      .map((_, index) => {
-        return (
-          <AvalonCharacterDropdown
-            name='characterDropdown'
-            key={index}
-            position={index}
-            defaultCharacterID={defaultCharacterIDs[index]}
-            onChange={this.handleInputChange}
-          />
-        );
-      });
+      .map((_, index) => (
+        <AvalonCharacterDropdown
+          name='characterDropdown'
+          key={index}
+          position={index}
+          defaultCharacterID={defaultCharacterIDs[index]}
+          onChange={this.handleInputChange}
+        />
+      ));
 
     return (
       <Segment>
@@ -81,7 +81,12 @@ class CreateRoom extends React.Component {
             {dropdownList}
             <Form.Input name='playerName' placeholder='Your Name' onChange={this.handleInputChange} error={this.state.playerName === ''} />
           </Segment>
-          <LinkButton text='Create room' positive onClick={this.handleCreateGame} linkTo='/join' />
+          <Button
+            fluid
+            positive
+            content='Create and join room'
+            onClick={this.handleCreateGame}
+          />
         </Form>
       </Segment>
     );

@@ -1,8 +1,13 @@
-import React, { Component } from 'react'
-import { Button, Header, Icon, Image, Menu, Segment, Sidebar, Grid } from 'semantic-ui-react';
+import React, { Component } from 'react';
+import { Button, Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-export default class SlidingSidebar extends Component {
+class SlidingSidebar extends Component {
+  static propTypes = {
+    children: PropTypes.arrayOf(PropTypes.element),
+  };
+
   state = { visible: false };
 
   handleButtonClick = () => this.setState({ visible: !this.state.visible });
@@ -13,8 +18,8 @@ export default class SlidingSidebar extends Component {
     const { visible } = this.state;
 
     return (
-      <div>
-        <Sidebar.Pushable as={Segment}>
+      <div style={{ height: '100%' }}>
+        <Sidebar.Pushable as={Segment} style={{ overflow: 'hidden' }}>
           <Sidebar
             as={Menu}
             animation='push'
@@ -47,3 +52,5 @@ export default class SlidingSidebar extends Component {
     );
   }
 }
+
+export default SlidingSidebar;

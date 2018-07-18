@@ -3,23 +3,23 @@ import { serialise } from '../../common';
 import TYPES from '../../config';
 
 async function send(socket, data) {
-  const ackId = uuid();
+  const ackID = uuid();
   return new Promise((resolve) => {
     const ackListener = (event) => {
       if (event.data) {
-        const ackData = JSON.parse(event.data);
-        if (ackData.ackId === ackId) {
+        const { ackID: _ackID, payload } = JSON.parse(event.data);
+        if (_ackID === ackID) {
           socket.removeEventListener('message', ackListener);
-          console.log('ack:', ackData.payload);
-          resolve(ackData);
+          console.log('ack:', payload);
+          resolve(payload);
         }
       }
     };
     socket.addEventListener('message', ackListener);
     const dataToSend = Object.assign({}, data, {
-      ackId,
+      ackID,
     });
-    console.log(dataToSend);
+    console.log('sending', dataToSend)
     socket.send(serialise(dataToSend));
   });
 }
@@ -48,7 +48,7 @@ export function createChannel() {
         // ignore acks
         if (event.data) {
           const data = JSON.parse(event.data);
-          if (data.ackId) {
+          if (data.ackID) {
             return;
           }
           cb(data);

@@ -35,12 +35,20 @@ wss.on('connection', (ws) => {
   const handlers = createHandlers({ roomList, player });
 
   ws.on('message', (json) => {
-    const { type, payload, ackId } = JSON.parse(json);
+    const { type, payload, ackID } = JSON.parse(json);
+    if (!ackID) {
+      log('got message with no ackID, doing nothing');
+      return;
+    }
     const handler = handlers[type];
     if (typeof handler === 'function') {
       const ack = (message) => {
+        log('acking:', {
+          ackID,
+          message,
+        });
         player.send({
-          ackId,
+          ackID,
           type: TYPES.ACK,
           payload: message,
         }, (err) => {
@@ -52,12 +60,10 @@ wss.on('connection', (ws) => {
       };
       handler(ack, payload);
     }
-    log('roomList:', roomList);
   });
 
   ws.on('close', () => {
     removePlayerFromAllRooms(player, roomList);
-    log('roomList after close:', roomList);
   });
 });
 

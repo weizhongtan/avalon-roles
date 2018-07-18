@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { HashRouter, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Route } from 'react-router-dom';
 import uuid from 'uuid/v4';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -11,6 +12,10 @@ import CreateRoom from './CreateRoom';
 import { createChannel } from './lib';
 
 class App extends Component {
+  static propTypes = {
+    history: PropTypes.object,
+  };
+
   state = {
     socket: null,
     roomID: null,
@@ -27,7 +32,7 @@ class App extends Component {
   componentDidMount = () => {
     this.socket = createChannel();
     this.socket.onMessage(({ payload }) => {
-      console.log('got data', payload);
+      console.log('got message', payload);
       const { currentRoom, assignedCharacter, playerView } = payload;
       if (currentRoom) {
         this.setState({ currentRoom });
@@ -43,45 +48,45 @@ class App extends Component {
 
   handleCreateGame = async ({ selectedCharacterIDs, playerName }) => {
     const roomID = uuid().slice(0, 4).toUpperCase();
-    this.setState({ roomID });
-    await this.socket.createRoom({
+    const res1 = await this.socket.createRoom({
       roomID,
       selectedCharacterIDs,
     });
-    await this.handleJoinRoom({
-      roomID,
-      playerName,
-    });
+    if (res1.roomID && res1.selectedCharacterIDs) {
+      await this.handleJoinRoom({ roomID, playerName });
+    }
   };
 
   handleJoinRoom = async ({ roomID, playerName }) => {
-    this.setState({ roomID, playerName });
-    await this.socket.joinRoom({
+    const res = await this.socket.joinRoom({
       roomID,
       playerName,
     });
+    this.setState({
+      roomID: res.roomID,
+      playerName: res.playerName,
+    });
+    this.props.history.push('/join');
   };
 
   render() {
     return (
-      <HashRouter basename='/'>
-        <Sidebar>
-          <Route exact path="/" component={Home}/>
-          <Route exact path="/join" render={() => (
-            <JoinRoom
-              onJoinRoom={this.handleJoinRoom}
-              currentRoom={this.state.currentRoom}
-              assignedCharacter={this.state.assignedCharacter}
-              viewOfOtherPlayers={this.state.viewOfOtherPlayers}
-            />
-          )} />
-          <Route exact path="/create" render={() => (
-            <CreateRoom
-              onCreateGame={this.handleCreateGame}
-            />
-          )}/>
-        </Sidebar>
-      </HashRouter>
+      <Sidebar>
+        <Route exact path="/" component={Home}/>
+        <Route exact path="/join" render={() => (
+          <JoinRoom
+            onJoinRoom={this.handleJoinRoom}
+            currentRoom={this.state.currentRoom}
+            assignedCharacter={this.state.assignedCharacter}
+            viewOfOtherPlayers={this.state.viewOfOtherPlayers}
+          />
+        )} />
+        <Route exact path="/create" render={() => (
+          <CreateRoom
+            onCreateGame={this.handleCreateGame}
+          />
+        )}/>
+      </Sidebar>
     );
   }
 }
