@@ -31,11 +31,12 @@ class CreateRoom extends React.Component {
   state = {
     numberOfPlayers: 5,
     selectedCharacterIDs: defaultCharacterIDs,
+    playerName: null,
   };
 
   handleInputChange = (e, args) => {
     const { name, value, position } = args;
-    if (name === 'numberOfPlayers') {
+    if (name === 'numberOfPlayers' || name === 'playerName') {
       this.setState({ [name]: value });
     } else if (name === 'characterDropdown') {
       this.setState((({ selectedCharacterIDs }) => {
@@ -78,6 +79,7 @@ class CreateRoom extends React.Component {
           <Segment>
             <Header content='Characters' size='tiny' />
             {dropdownList}
+            <Form.Input name='playerName' placeholder='Your Name' onChange={this.handleInputChange} error={this.state.playerName === ''} />
           </Segment>
           <LinkButton text='Create room' positive onClick={this.handleCreateGame} linkTo='/join' />
         </Form>

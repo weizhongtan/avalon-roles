@@ -14,11 +14,18 @@ class Join extends React.Component {
   state = {
     chosenRoomID: '',
     playerName: '',
+    chosenRoomIDInvalid: false,
+    playerNameInvalid: false,
   };
 
   handleInputChange = (e, { name, value }) => this.setState({ [name]: value });
 
   handleJoinRoom = () => {
+    this.setState({ chosenRoomIDInvalid: !this.state.chosenRoomID.length });
+    this.setState({ playerNameInvalid: !this.state.playerName.length });
+    if (!this.state.chosenRoomID.length || !this.state.playerName.length) {
+      return;
+    }
     this.props.onJoinRoom({
       playerName: this.state.playerName,
       roomID: this.state.chosenRoomID,
@@ -37,8 +44,8 @@ class Join extends React.Component {
             />
           ) : (
             <Form>
-              <Form.Input name='chosenRoomID' placeholder='Room ID' onChange={this.handleInputChange} />
-              <Form.Input name='playerName' placeholder='Your Name' onChange={this.handleInputChange} />
+              <Form.Input name='chosenRoomID' placeholder='Room ID' onChange={this.handleInputChange} error={this.state.chosenRoomIDInvalid} />
+              <Form.Input name='playerName' placeholder='Your Name' onChange={this.handleInputChange} error={this.state.playerNameInvalid} />
               <Button positive fluid onClick={this.handleJoinRoom}>
               Join Room
               </Button>

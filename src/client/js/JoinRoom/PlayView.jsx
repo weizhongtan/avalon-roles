@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Header, Segment } from 'semantic-ui-react';
+import { Header, Segment, List, Icon } from 'semantic-ui-react';
 
 const PlayerViewItem = ({ otherPlayer, viewedAs }) => (
   <li>{otherPlayer} is {viewedAs || 'unknown.'}</li>
@@ -27,6 +27,23 @@ PlayerViewList.propTypes = {
   viewOfOtherPlayers: PropTypes.object.isRequired,
 };
 
+const HorizontalList = ({ elements }) => (
+  <List horizontal>
+    {elements.map((el, index) => (
+      <List.Item key={index}>
+        <Icon name='heart' />
+        <List.Content>
+          <List.Header>{el}</List.Header>
+        </List.Content>
+      </List.Item>
+    ))}
+  </List>
+);
+
+HorizontalList.propTypes = {
+  elements: PropTypes.array.isRequired,
+};
+
 class PlayView extends Component {
   static propTypes = {
     assignedCharacter: PropTypes.object,
@@ -35,15 +52,22 @@ class PlayView extends Component {
   };
 
   render() {
-    const { assignedCharacter, viewOfOtherPlayers, currentRoom } = this.props;
-    const membersList = currentRoom.members.join(', ');
+    const {
+      assignedCharacter,
+      viewOfOtherPlayers,
+      currentRoom,
+    } = this.props;
+
     return (
       <div>
         <Segment>
           {currentRoom.roomID && (
             <div>
-              <Header>You are in room {currentRoom.roomID}</Header>
-              <p>Players in this room: {membersList}</p>
+              <Header >You are in room {currentRoom.roomID}</Header>
+              <Header size='tiny'>Players in this room:</Header>
+              <HorizontalList elements={currentRoom.members} />
+              <Header size='tiny'>Available characters:</Header>
+              <HorizontalList elements={currentRoom.selectedCharacterIDs} />
             </div>
           )}
         </Segment>

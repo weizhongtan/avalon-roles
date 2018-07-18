@@ -25,7 +25,8 @@ async function send(socket, data) {
 }
 
 // eslint-disable-next-line
-export function createChannel(socket) {
+export function createChannel() {
+  const socket = new WebSocket(window.location.origin.replace('http', 'ws'));
   return {
     async createRoom(data) {
       return send(socket, {

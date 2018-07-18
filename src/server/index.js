@@ -17,6 +17,15 @@ const wss = new WebSocket.Server({ server });
 
 app.use(serve('./dist'));
 
+const removePlayerFromAllRooms = (player, roomList) => {
+  roomList.forEach((room, roomID) => {
+    const wasRemoved = room.remove(player);
+    if (wasRemoved) {
+      log('player was removed from', roomID);
+    }
+  });
+};
+
 const roomList = new Map();
 
 wss.on('connection', (ws) => {
@@ -34,6 +43,11 @@ wss.on('connection', (ws) => {
           ackId,
           type: TYPES.ACK,
           payload: message,
+        }, (err) => {
+          if (err) {
+            log('Socket connection failed, removing player from all rooms');
+            removePlayerFromAllRooms(player, roomList);
+          }
         });
       };
       handler(ack, payload);
@@ -42,12 +56,7 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
-    roomList.forEach((room, roomID) => {
-      const wasRemoved = room.remove(player);
-      if (wasRemoved) {
-        log('player was removed from', roomID);
-      }
-    });
+    removePlayerFromAllRooms(player, roomList);
     log('roomList after close:', roomList);
   });
 });

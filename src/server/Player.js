@@ -13,8 +13,8 @@ class Player {
     this.name = name;
   }
 
-  send(data) {
-    this.socket.send(serialise(data));
+  send(data, cb) {
+    this.socket.send(serialise(data), cb);
   }
 
   assignCharacter(character) {
