@@ -2,11 +2,13 @@
   "parser": "babel-eslint",
   "extends": [
     "airbnb-base",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:jest/recommended"
   ],
   "plugins": [
     "import",
-    "babel"
+    "babel",
+    "jest"
   ],
   "env": {
     "browser": true,
@@ -18,10 +20,12 @@
     "max-len": ["warn", { "ignoreComments": true, "ignoreStrings": true }],
     "no-console": ["off"],
     "babel/semi": 1,
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "comma-dangle": "off"
   },
   "globals": {
-    "log": false
+    "log": false,
+    "jest/globals": true
   },
   "settings": {
     "import/resolver": {

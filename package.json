@@ -33,10 +33,13 @@
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jest": "^21.18.0",
     "eslint-plugin-react": "^7.10.0",
+    "jest": "^23.4.2",
     "node-sass": "^4.9.2",
     "nodemon": "^1.18.3",
-    "parcel": "^1.9.7"
+    "parcel": "^1.9.7",
+    "react-test-renderer": "^16.4.1"
   },
   "scripts": {
     "start": "DEBUG=avalon node src/server/index.js",
@@ -44,7 +47,8 @@
     "build-production": "parcel build src/client/index.html",
     "build-dev": "parcel watch src/client/index.html",
     "postinstall": "npm run build-production",
-    "lint": "eslint --fix src"
+    "lint": "eslint --fix src",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -58,5 +62,9 @@
   "homepage": "https://github.com/weizhongtan/avalon-roles#readme",
   "engines": {
     "node": "^10.5.0"
+  },
+  "jest": {
+    "verbose": true,
+    "testURL": "http://localhost/"
   }
 }
