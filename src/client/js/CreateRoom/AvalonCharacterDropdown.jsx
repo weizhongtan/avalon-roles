@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+
 import { CHARACTERS } from '../../../config';
 
 const options = Object.entries(CHARACTERS)

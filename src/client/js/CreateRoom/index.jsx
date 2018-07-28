@@ -82,8 +82,7 @@ class CreateRoom extends React.Component {
             name='numberOfPlayers'
             onChange={this.handleInputChange}
             options={options}
-            defaultValue={this.state.numberOfPlayers}
-            fluid
+            value={this.state.numberOfPlayers}
           />
           <Header content='Characters' size='tiny' />
           {dropdownList}
@@ -92,6 +91,7 @@ class CreateRoom extends React.Component {
             placeholder='Your Name'
             onChange={this.handleInputChange}
             error={this.state.playerName === '' && this.state.attemptedSubmit}
+            value={this.state.playerName}
           />
           <Button
             fluid
