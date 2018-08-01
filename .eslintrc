@@ -21,6 +21,8 @@
     "no-console": ["off"],
     "babel/semi": 1,
     "object-curly-newline": "off",
+    "arrow-parens": "off",
+    "arrow-body-style": "off",
     "comma-dangle": "off"
   },
   "globals": {

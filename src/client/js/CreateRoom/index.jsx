@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Segment, Header, Button } from 'semantic-ui-react';
+import { Form, Segment, Header, Button, Divider } from 'semantic-ui-react';
 
-import AvalonCharacterDropdown from './AvalonCharacterDropdown';
+import CharacterToggle from './CharacterToggle';
 import { CHARACTERS } from '../../../config';
 
 const options = [
@@ -14,13 +14,10 @@ const options = [
   { text: 10, value: 10 },
 ];
 
-const defaultCharacterIDs = [
-  CHARACTERS.MERLIN.id,
-  CHARACTERS.STANDARD_GOOD.id,
-  CHARACTERS.STANDARD_GOOD.id,
-  CHARACTERS.ASSASIN.id,
-  CHARACTERS.STANDARD_EVIL.id,
-];
+const allCharacters = Object.assign({}, CHARACTERS);
+Object.keys(allCharacters).forEach((char) => {
+  allCharacters[char].active = false;
+});
 
 class CreateRoom extends React.Component {
   static propTypes = {
@@ -29,49 +26,59 @@ class CreateRoom extends React.Component {
 
   state = {
     numberOfPlayers: 5,
-    selectedCharacterIDs: defaultCharacterIDs,
+    includedCharacters: allCharacters,
     playerName: '',
     attemptedSubmit: false,
   };
 
   handleInputChange = (e, args) => {
-    const { name, value, position } = args;
+    const { name, value } = args;
     switch (name) {
     case 'numberOfPlayers':
     case 'playerName':
       this.setState({ [name]: value });
       break;
-    case 'characterDropdown':
-      this.setState((({ selectedCharacterIDs }) => {
-        const updatedIDs = [...selectedCharacterIDs];
-        updatedIDs[position] = value;
-        return { selectedCharacterIDs: updatedIDs };
+    default: {
+      this.setState((({ includedCharacters }) => {
+        const updatedincludedCharacters = Object.assign({}, includedCharacters);
+        updatedincludedCharacters[name].active = !updatedincludedCharacters[name].active;
+        return { includedCharacters: updatedincludedCharacters };
       }));
-      break;
-    default:
-      throw new Error(`invalid field name: ${name}`);
+    }
     }
   };
 
   handleCreateGame = async () => {
     this.setState({ attemptedSubmit: true });
     if (this.state.playerName.length) {
-      await this.props.onCreateGame(this.state);
+      const selectedCharacterIDs = Object.entries(this.state.includedCharacters)
+        .map(([, val]) => val)
+        .filter(({ active }) => active)
+        .map(({ id }) => id);
+      console.log(selectedCharacterIDs);
+      const config = {
+        selectedCharacterIDs,
+        playerName: this.state.playerName,
+      };
+      await this.props.onCreateGame(config);
     }
   };
 
   render() {
-    const dropdownList = new Array(this.state.numberOfPlayers)
-      .fill(null)
-      .map((_, index) => (
-        <AvalonCharacterDropdown
-          name='characterDropdown'
-          key={index}
-          position={index}
-          defaultCharacterID={defaultCharacterIDs[index]}
-          onChange={this.handleInputChange}
-        />
-      ));
+    const dropdownList = (
+      <Button.Group vertical fluid labeled icon>
+        {Object.entries(this.state.includedCharacters)
+          .map(([char, { active, name }]) => (
+            <CharacterToggle
+              name={char}
+              key={char}
+              content={name}
+              onToggle={this.handleInputChange}
+              active={active}
+            />
+          ))}
+      </Button.Group>
+    );
 
     return (
       <Segment>
@@ -84,8 +91,9 @@ class CreateRoom extends React.Component {
             options={options}
             value={this.state.numberOfPlayers}
           />
-          <Header content='Characters' size='tiny' />
+          <Header content='Select characters' size='tiny' />
           {dropdownList}
+          <Divider />
           <Form.Input
             name='playerName'
             placeholder='Your Name'
@@ -93,6 +101,7 @@ class CreateRoom extends React.Component {
             error={this.state.playerName === '' && this.state.attemptedSubmit}
             value={this.state.playerName}
           />
+          <Divider />
           <Button
             fluid
             positive
