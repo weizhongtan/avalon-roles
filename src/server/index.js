@@ -4,7 +4,7 @@ const session = require('koa-session');
 const _ = require('koa-route');
 const websockify = require('koa-websocket');
 const debug = require('debug');
-const uuid = require('uuid');
+const uuid = require('uuid/v4');
 
 const TYPES = require('../config');
 const Player = require('./Player');
