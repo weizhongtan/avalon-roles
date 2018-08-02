@@ -1,5 +1,5 @@
 import uuid from 'uuid/v4';
-import { serialise } from '../../common';
+import { serialise, deserialise } from '../../common';
 import TYPES from '../../config';
 
 async function send(socket, data) {
@@ -7,7 +7,7 @@ async function send(socket, data) {
   return new Promise((resolve) => {
     const ackListener = (event) => {
       if (event.data) {
-        const { ackID: _ackID, payload } = JSON.parse(event.data);
+        const { ackID: _ackID, payload } = deserialise(event.data);
         if (_ackID === ackID) {
           socket.removeEventListener('message', ackListener);
           console.log('ack:', payload);
@@ -47,7 +47,7 @@ export function createChannel() {
       socket.addEventListener('message', (event) => {
         // ignore acks
         if (event.data) {
-          const data = JSON.parse(event.data);
+          const data = deserialise(event.data);
           if (data.ackID) {
             return;
           }

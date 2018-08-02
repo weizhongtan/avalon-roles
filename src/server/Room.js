@@ -7,15 +7,18 @@ class Room {
     this.roomID = id;
     this.selectedCharacterIDs = selectedCharacterIDs;
     this.players = new Set();
+
+    this.gameStarted = false;
   }
 
   startGame() {
     log('starting new game');
+    this.gameStarted = true;
     this.players.forEach((player) => {
       const playerView = {};
       const otherPlayers = Array.from(this.players).filter(p => p !== player);
       otherPlayers.forEach((otherPlayer) => {
-        playerView[otherPlayer.name] = player.viewOtherPlayer(otherPlayer);
+        playerView[otherPlayer.getName()] = player.viewOtherPlayer(otherPlayer);
       });
       player.send({
         type: TYPES.UPDATE_CLIENT,
@@ -54,12 +57,7 @@ class Room {
     }
     const wasAdded = this.players.add(player);
     if (wasAdded) {
-      this.send({
-        type: TYPES.UPDATE_CLIENT,
-        payload: {
-          currentRoom: this.serialise(),
-        },
-      });
+      this.updateClients();
     }
     if (this.players.size >= this.selectedCharacterIDs.length) {
       this.randomlyAssignCharacters();
@@ -71,14 +69,18 @@ class Room {
   remove(player) {
     const wasRemoved = this.players.delete(player);
     if (wasRemoved) {
-      this.send({
-        type: TYPES.UPDATE_CLIENT,
-        payload: {
-          currentRoom: this.serialise(),
-        },
-      });
+      this.updateClients();
     }
     return wasRemoved;
+  }
+
+  updateClients() {
+    this.send({
+      type: TYPES.UPDATE_CLIENT,
+      payload: {
+        currentRoom: this.serialise(),
+      },
+    });
   }
 
   send(message, cb) {

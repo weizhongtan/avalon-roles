@@ -1,39 +1,29 @@
-const WebSocket = require('ws');
 const Koa = require('koa');
-const debug = require('debug');
-const http = require('http');
 const serve = require('koa-static');
 const session = require('koa-session');
+const _ = require('koa-route');
+const websockify = require('koa-websocket');
+const debug = require('debug');
 const uuid = require('uuid');
 
 const TYPES = require('../config');
 const Player = require('./Player');
 const createHandlers = require('./create-handlers');
+const { deserialise } = require('../common');
 
 global.log = debug('avalon');
 const PORT = process.env.PORT || 8000;
 
-const app = new Koa();
-const server = http.createServer(app.callback());
-const wss = new WebSocket.Server({ server });
+const app = websockify(new Koa());
 
 app.use(serve('./dist', {
   defer: true,
 }));
 
-app.keys = ['some secret hurr'];
+app.keys = [`avalon-secret-${uuid()}`];
 
 const CONFIG = {
-  key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
-  /** (number || 'session') maxAge in ms (default is 1 days) */
-  /** 'session' will result in a cookie that expires when session/browser is closed */
-  /** Warning: If a session cookie is stolen, this cookie will never expire */
-  maxAge: 86400000,
-  overwrite: true, /** (boolean) can overwrite or not (default true) */
-  httpOnly: true, /** (boolean) httpOnly or not (default true) */
-  signed: true, /** (boolean) signed or not (default true) */
-  rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
-  renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false) */
+  rolling: true,
 };
 
 app.use(session(CONFIG, app));
@@ -44,7 +34,6 @@ app.use(ctx => {
   if (!ctx.session.id) {
     ctx.session.id = uuid();
   }
-  console.log(ctx.session);
 });
 
 const removePlayerFromAllRooms = (player, roomList) => {
@@ -57,15 +46,30 @@ const removePlayerFromAllRooms = (player, roomList) => {
 };
 
 const roomList = new Map();
+const playerList = new Map();
 
-wss.on('connection', (ws) => {
-  log('client connected');
+app.ws.use(_.get('/', (ctx) => {
+  log('new client entered', ctx.session);
 
-  const player = new Player(ws);
+  let player;
+  if (playerList.has(ctx.session.id)) {
+    player = playerList.get(ctx.session.id);
+    player.setSocket(ctx.websocket);
+    roomList.forEach((room) => {
+      if (room.has(player)) {
+        player.setActive(true);
+        room.updateClients();
+      }
+    });
+  } else {
+    player = new Player(ctx.websocket);
+    playerList.set(ctx.session.id, player);
+  }
+
   const handlers = createHandlers({ roomList, player });
 
-  ws.on('message', (json) => {
-    const { type, payload, ackID } = JSON.parse(json);
+  ctx.websocket.on('message', (data) => {
+    const { type, payload, ackID } = deserialise(data);
     if (!ackID) {
       log('got message with no ackID, doing nothing');
       return;
@@ -92,13 +96,13 @@ wss.on('connection', (ws) => {
     }
   });
 
-  ws.on('close', () => {
-    log('player left, removing from all rooms');
-    removePlayerFromAllRooms(player, roomList);
+  ctx.websocket.on('close', () => {
+    log('player disconnected, setting to inactive');
+    player.setActive(false);
   });
-});
+}));
 
-server.listen(PORT, (err) => {
+app.listen(PORT, (err) => {
   if (err) {
     throw err;
   }

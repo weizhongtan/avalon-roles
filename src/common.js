@@ -15,6 +15,11 @@ function serialise({
   });
 }
 
+function deserialise(data) {
+  return JSON.parse(data);
+}
+
 module.exports = {
   serialise,
+  deserialise,
 };

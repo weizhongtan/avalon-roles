@@ -5,12 +5,30 @@ class Player {
   constructor(socket) {
     this.id = uuid();
     this.name = null;
-    this.socket = socket;
     this.character = null;
+    this.active = true;
+    this.socket = socket;
+  }
+
+  setActive(value) {
+    log('player active flag set:', value);
+    this.active = value;
+  }
+
+  isActive() {
+    return this.active;
+  }
+
+  setSocket(websocket) {
+    this.socket = websocket;
   }
 
   setName(name) {
     this.name = name;
+  }
+
+  getName() {
+    return this.name;
   }
 
   send(data, cb) {
