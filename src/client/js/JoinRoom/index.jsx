@@ -34,34 +34,35 @@ class Join extends React.Component {
   };
 
   render() {
+    const PlayViewSection = <PlayView
+      assignedCharacter={this.props.assignedCharacter}
+      viewOfOtherPlayers={this.props.viewOfOtherPlayers}
+      currentRoom={this.props.currentRoom}
+    />;
+    const JoinRoomSection = (
+      <Form>
+        <Form.Input
+          name='chosenRoomID'
+          value={this.state.chosenRoomID}
+          placeholder='Room ID'
+          onChange={this.handleInputChange}
+          error={this.state.chosenRoomIDInvalid}
+        />
+        <Form.Input
+          name='playerName'
+          value={this.state.playerName}
+          placeholder='Your Name'
+          onChange={this.handleInputChange}
+          error={this.state.playerNameInvalid}
+        />
+        <Button positive fluid onClick={this.handleJoinRoom} content='Join Room' />
+      </Form>
+    );
+
     return (
       <div>
         <Segment>
-          {this.props.currentRoom.roomID ? (
-            <PlayView
-              assignedCharacter={this.props.assignedCharacter}
-              viewOfOtherPlayers={this.props.viewOfOtherPlayers}
-              currentRoom={this.props.currentRoom}
-            />
-          ) : (
-            <Form>
-              <Form.Input
-                name='chosenRoomID'
-                placeholder='Room
-                ID'
-                onChange={this.handleInputChange}
-                error={this.state.chosenRoomIDInvalid}
-              />
-              <Form.Input
-                name='playerName'
-                placeholder='Your
-                Name'
-                onChange={this.handleInputChange}
-                error={this.state.playerNameInvalid}
-              />
-              <Button positive fluid onClick={this.handleJoinRoom} content='Join Room' />
-            </Form>
-          )}
+          {this.props.currentRoom.roomID ? PlayViewSection : JoinRoomSection}
         </Segment>
       </div>
     );
