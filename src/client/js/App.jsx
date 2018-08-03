@@ -71,7 +71,7 @@ class App extends Component {
     const res = await this.socket.startGame({
       roomID: this.state.currentRoom.roomID,
     });
-  }
+  };
 
   render() {
     return (

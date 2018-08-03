@@ -19,7 +19,7 @@ async function send(socket, data) {
     const dataToSend = Object.assign({}, data, {
       ackID,
     });
-    console.log('sending', dataToSend)
+    console.log('sending', dataToSend);
     socket.send(serialise(dataToSend));
   });
 }
