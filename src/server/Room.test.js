@@ -51,5 +51,12 @@ describe('Room', () => {
         },
       }, undefined); // no callback provided
     });
+    it('does not add the player if the room is full', () => {
+      room.add(player);
+      const secondPlayer = new PlayerMock(testSocket);
+      const res = room.add(secondPlayer);
+      expect(res).toBe(false);
+      expect(room.players).not.toContain(secondPlayer);
+    });
   });
 });
