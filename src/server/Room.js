@@ -1,6 +1,9 @@
 const { knuthShuffle } = require('knuth-shuffle');
+const debug = require('debug')('avalone:Room');
+
 const TYPES = require('../config');
 const { characterTypes } = require('./lib');
+
 
 class Room {
   constructor(id, selectedCharacterIDs) {
@@ -12,7 +15,7 @@ class Room {
   }
 
   startGame() {
-    log('starting new game');
+    debug('starting new game');
     this.gameStarted = true;
     this.players.forEach((player) => {
       const playerView = {};
@@ -28,7 +31,7 @@ class Room {
         },
       }, (err) => {
         if (err) {
-          log('Failed to send data to player');
+          debug('Failed to send data to player');
           this.remove(player);
         }
       });
@@ -39,7 +42,7 @@ class Room {
     this.selectedCharacterIDs = knuthShuffle(this.selectedCharacterIDs);
     let i = 0;
     this.players.forEach((player) => {
-      log(this.selectedCharacterIDs);
+      debug(this.selectedCharacterIDs);
       const characterID = this.selectedCharacterIDs[i++]; // eslint-disable-line
       const CharacterType = characterTypes[characterID];
       const character = new CharacterType();

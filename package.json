@@ -44,8 +44,8 @@
     "react-test-renderer": "^16.4.1"
   },
   "scripts": {
-    "start": "DEBUG=avalon node src/server/index.js",
-    "start-dev": "DEBUG=avalon nodemon src/server/index.js --ignore src/client/ --ignore dist --ignore .cache",
+    "start": "DEBUG=avalon:* node src/server/index.js",
+    "start-dev": "DEBUG=avalon:* nodemon src/server/index.js --ignore src/client/ --ignore dist --ignore .cache",
     "build-production": "parcel build src/client/index.html",
     "build-dev": "parcel watch src/client/index.html",
     "postinstall": "npm run build-production",

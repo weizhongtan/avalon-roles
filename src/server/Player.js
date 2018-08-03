@@ -1,4 +1,6 @@
 const uuid = require('uuid/v4');
+const debug = require('debug')('avalon:Player');
+
 const { serialise } = require('../common');
 
 class Player {
@@ -11,7 +13,7 @@ class Player {
   }
 
   setActive(value) {
-    log('player active flag set:', value);
+    debug('player active flag set:', value);
     this.active = value;
   }
 
