@@ -4,7 +4,7 @@ import { Button, Form, Segment } from 'semantic-ui-react';
 
 import PlayView from './PlayView';
 
-class Join extends React.Component {
+class JoinRoom extends React.Component {
   static propTypes = {
     onJoinRoom: PropTypes.func,
     assignedCharacter: PropTypes.object,
@@ -34,11 +34,14 @@ class Join extends React.Component {
   };
 
   render() {
-    const PlayViewSection = <PlayView
-      assignedCharacter={this.props.assignedCharacter}
-      viewOfOtherPlayers={this.props.viewOfOtherPlayers}
-      currentRoom={this.props.currentRoom}
-    />;
+    const PlayViewSection = (
+      <PlayView
+        assignedCharacter={this.props.assignedCharacter}
+        viewOfOtherPlayers={this.props.viewOfOtherPlayers}
+        currentRoom={this.props.currentRoom}
+        onStartGame={this.props.onStartGame}
+      />
+    );
     const JoinRoomSection = (
       <Form>
         <Form.Input
@@ -69,4 +72,4 @@ class Join extends React.Component {
   }
 }
 
-export default Join;
+export default JoinRoom;

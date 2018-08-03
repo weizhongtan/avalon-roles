@@ -48,11 +48,11 @@ class App extends Component {
 
   handleCreateGame = async ({ selectedCharacterIDs, playerName }) => {
     const roomID = uuid().slice(0, 4).toUpperCase();
-    const res1 = await this.socket.createRoom({
+    const res = await this.socket.createRoom({
       roomID,
       selectedCharacterIDs,
     });
-    if (res1.roomID && res1.selectedCharacterIDs) {
+    if (res.roomID && res.selectedCharacterIDs) {
       await this.handleJoinRoom({ roomID, playerName });
     }
   };
@@ -62,12 +62,16 @@ class App extends Component {
       roomID,
       playerName,
     });
-    this.setState({
-      roomID: res.roomID,
-      playerName: res.playerName,
-    });
-    this.props.history.push('/join');
+    if (res.roomID && res.playerName) {
+      this.props.history.push('/join');
+    }
   };
+
+  handleStartGame = async () => {
+    const res = await this.socket.startGame({
+      roomID: this.state.currentRoom.roomID,
+    });
+  }
 
   render() {
     return (
@@ -79,6 +83,7 @@ class App extends Component {
             currentRoom={this.state.currentRoom}
             assignedCharacter={this.state.assignedCharacter}
             viewOfOtherPlayers={this.state.viewOfOtherPlayers}
+            onStartGame={this.handleStartGame}
           />
         )} />
         <Route exact path="/create" render={() => (

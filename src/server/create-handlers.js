@@ -28,6 +28,21 @@ module.exports = ({ roomList, player }) => {
         roomID: wasAdded ? roomID : null,
       });
     },
+    [TYPES.START_GAME]: (ack, { roomID }) => {
+      if (!roomID) {
+        ack({ err: 'roomID not provided' });
+        return;
+      }
+      if (!roomList.get(roomID)) {
+        ack({ err: `roomID ${roomID} does not exist` });
+        return;
+      }
+      const room = roomList.get(roomID);
+      const res = room.tryStartGame();
+      if (!res) {
+        ack({ err: 'game could not start' });
+      }
+    },
   };
 
   return handlers;

@@ -76,10 +76,6 @@ app.ws.use(_.get('/', (ctx) => {
     const handler = handlers[type];
     if (typeof handler === 'function') {
       const ack = (message) => {
-        debug('acking:', {
-          ackID,
-          message,
-        });
         player.send({
           ackID,
           type: TYPES.ACK,

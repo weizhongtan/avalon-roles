@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Header, Segment } from 'semantic-ui-react';
+import { Header, Segment, Button } from 'semantic-ui-react';
 
 import { CHARACTERS } from '../../../config';
 import HorizontalList from './HorizontalList';
@@ -43,13 +43,19 @@ class PlayView extends Component {
               <HorizontalList elements={currentRoom.members} />
               <Header size='tiny'>Available characters:</Header>
               <HorizontalList elements={characterStrings} />
+              <Button
+                content='Start game'
+                onClick={this.props.onStartGame}
+              />
             </div>
           )}
         </Segment>
-        <Segment>
-          {assignedCharacter && <Header>You are {CHARACTERS[assignedCharacter].name}</Header>}
-          {viewOfOtherPlayers && <PlayerViewList viewOfOtherPlayers={viewOfOtherPlayers} />}
-        </Segment>
+        {assignedCharacter && viewOfOtherPlayers && (
+          <Segment>
+            <Header>You are {CHARACTERS[assignedCharacter].name}</Header>
+            <PlayerViewList viewOfOtherPlayers={viewOfOtherPlayers} />
+          </Segment>
+        )}
       </div>
     );
   }

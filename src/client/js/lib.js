@@ -40,6 +40,12 @@ export function createChannel() {
         payload: data,
       });
     },
+    async startGame(data) {
+      return send(socket, {
+        type: TYPES.START_GAME,
+        payload: data,
+      });
+    },
     async onOpen(cb) {
       socket.addEventListener('open', cb);
     },

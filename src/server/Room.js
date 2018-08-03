@@ -1,5 +1,5 @@
 const { knuthShuffle } = require('knuth-shuffle');
-const debug = require('debug')('avalone:Room');
+const debug = require('debug')('avalon:Room');
 
 const TYPES = require('../config');
 const { characterTypes } = require('./lib');
@@ -14,9 +14,18 @@ class Room {
     this.gameStarted = false;
   }
 
-  startGame() {
-    debug('starting new game');
+  tryStartGame() {
+    if (this.gameStarted) {
+      debug('game cannot be started: game is already in progress');
+      return false;
+    }
+    if (Array.from(this.players).filter(p => p.isActive()).length < this.selectedCharacterIDs.length) {
+      debug('game cannot be started: not enough active players');
+      return false;
+    }
     this.gameStarted = true;
+    debug('starting new game');
+    this.randomlyAssignCharacters();
     this.players.forEach((player) => {
       const playerView = {};
       const otherPlayers = Array.from(this.players).filter(p => p !== player);
@@ -36,6 +45,7 @@ class Room {
         }
       });
     });
+    return true;
   }
 
   randomlyAssignCharacters() {
@@ -55,16 +65,12 @@ class Room {
   }
 
   add(player) {
-    if (this.players.length >= this.selectedCharacterIDs.length) {
+    if (this.players.size >= this.selectedCharacterIDs.length) {
       return false;
     }
     const wasAdded = this.players.add(player);
     if (wasAdded) {
       this.updateClients();
-    }
-    if (this.players.size >= this.selectedCharacterIDs.length) {
-      this.randomlyAssignCharacters();
-      this.startGame();
     }
     return wasAdded;
   }

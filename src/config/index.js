@@ -1,6 +1,7 @@
 module.exports = {
   JOIN_ROOM: 'JOIN_ROOM',
   CREATE_ROOM: 'CREATE_ROOM',
+  START_GAME: 'START_GAME',
   ACK: 'ACK',
   UPDATE_CLIENT: 'UPDATE_CLIENT',
 };
