@@ -68,7 +68,7 @@ class Room {
     if (this.players.size >= this.selectedCharacterIDs.length) {
       return false;
     }
-    const wasAdded = this.players.add(player);
+    const wasAdded = !!this.players.add(player);
     if (wasAdded) {
       this.updateClients();
     }

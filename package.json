@@ -67,6 +67,7 @@
   },
   "jest": {
     "verbose": true,
+    "clearMocks": true,
     "testURL": "http://localhost/"
   }
 }
