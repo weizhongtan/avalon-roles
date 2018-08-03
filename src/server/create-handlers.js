@@ -5,7 +5,7 @@ module.exports = ({ roomList, player }) => {
   const handlers = {
     [TYPES.CREATE_ROOM]: (ack, { roomID, selectedCharacterIDs }) => {
       if (roomList.get(roomID)) {
-        ack({ roomID: null });
+        ack({ err: `room ${roomID} already exists` });
         return;
       }
       const room = new Room(roomID, selectedCharacterIDs);

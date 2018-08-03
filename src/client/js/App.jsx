@@ -52,7 +52,7 @@ class App extends Component {
       roomID,
       selectedCharacterIDs,
     });
-    if (res.roomID && res.selectedCharacterIDs) {
+    if (!res.err) {
       await this.handleJoinRoom({ roomID, playerName });
     }
   };
@@ -62,13 +62,13 @@ class App extends Component {
       roomID,
       playerName,
     });
-    if (res.roomID && res.playerName) {
+    if (!res.err) {
       this.props.history.push('/join');
     }
   };
 
   handleStartGame = async () => {
-    const res = await this.socket.startGame({
+    await this.socket.startGame({
       roomID: this.state.currentRoom.roomID,
     });
   };
