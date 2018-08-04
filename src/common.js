@@ -1,3 +1,5 @@
+// @flow
+
 const TYPES = require('./config');
 
 function serialise({
@@ -15,9 +17,15 @@ function serialise({
   });
 }
 
-function deserialise(data) {
+function deserialise(data: object) {
   return JSON.parse(data);
 }
+
+function test(a, b) {
+  return a + b;
+}
+
+test(1, 2);
 
 module.exports = {
   serialise,
