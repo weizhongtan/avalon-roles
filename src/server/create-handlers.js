@@ -1,4 +1,5 @@
 const Room = require('./Room');
+
 const TYPES = require('../config');
 
 module.exports = ({ roomList, player }) => {
