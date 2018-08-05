@@ -4,7 +4,6 @@ const debug = require('debug')('avalon:Room');
 const TYPES = require('../config');
 const { characterTypes } = require('./lib');
 
-
 class Room {
   constructor(id, selectedCharacterIDs) {
     this.roomID = id;
@@ -36,7 +35,7 @@ class Room {
         type: TYPES.UPDATE_CLIENT,
         payload: {
           playerView,
-          assignedCharacter: player.character,
+          assignedCharacter: player.getCharacter(),
         },
       }, (err) => {
         if (err) {

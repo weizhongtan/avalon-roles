@@ -41,8 +41,8 @@ class Player {
     this.character = character;
   }
 
-  unassignCharacter() {
-    this.character = null;
+  getCharacter() {
+    return this.character;
   }
 
   viewOtherPlayer(otherPlayer) {

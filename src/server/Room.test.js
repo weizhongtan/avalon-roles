@@ -4,12 +4,13 @@ const TYPES = require('../config');
 
 jest.mock('./Player');
 
-const testID = 'id123';
-const testCharacters = ['merlin', 'morgana'];
+const testID = 'ab12';
+const testCharacters = [0, 1];
 const testSocket = {
   send: jest.fn(),
 };
-const testPlayerName = 'the beanernator';
+const testPlayerName = 'player 1';
+const testSecondPlayerName = 'player 2';
 
 describe('Room', () => {
   let room;
@@ -25,10 +26,15 @@ describe('Room', () => {
 
   describe('methods', () => {
     let player;
+    let secondPlayer;
 
     beforeEach(() => {
       player = new PlayerMock(testSocket);
       player.serialise.mockReturnValue(testPlayerName);
+      player.isActive.mockReturnValue(true);
+      secondPlayer = new PlayerMock(testSocket);
+      secondPlayer.serialise.mockReturnValue(testSecondPlayerName);
+      secondPlayer.isActive.mockReturnValue(true);
     });
 
     describe('#add', () => {
@@ -52,7 +58,6 @@ describe('Room', () => {
       });
       it('does not add the player if the room is full', () => {
         room.add(player);
-        const secondPlayer = new PlayerMock(testSocket);
         room.add(secondPlayer);
         const thirdPlayer = new PlayerMock(testSocket);
         const res = room.add(thirdPlayer);
@@ -73,7 +78,6 @@ describe('Room', () => {
         expect(room.players).not.toContain(player);
       });
       it('notifies all clients when a new player is removed', () => {
-        const secondPlayer = new PlayerMock(testSocket);
         room.add(secondPlayer);
         room.remove(secondPlayer);
         expect(player.send).toHaveBeenCalledWith({
@@ -86,6 +90,50 @@ describe('Room', () => {
             },
           },
         }, undefined); // no callback provided
+      });
+    });
+
+    describe('#randomlyAssignCharacters', () => {
+      beforeEach(() => {
+        room.add(player);
+        room.add(secondPlayer);
+      });
+
+      it('assigns a character to each player', () => {
+        room.randomlyAssignCharacters();
+        expect(player.assignCharacter).toHaveBeenCalledTimes(1);
+        expect(secondPlayer.assignCharacter).toHaveBeenCalledTimes(1);
+        const playerCharacter = player.assignCharacter.mock.calls[0];
+        const secondPlayerCharacter = secondPlayer.assignCharacter.mock.calls[0];
+        expect(playerCharacter).not.toBe(secondPlayerCharacter);
+      });
+    });
+
+    describe('#tryStartGame', () => {
+      beforeEach(() => {
+        room.add(player);
+        room.add(secondPlayer);
+        player.send.mockClear();
+        secondPlayer.send.mockClear();
+      });
+
+      it('does not start the game if there are not enough active players', () => {
+        room.remove(secondPlayer);
+        const res = room.tryStartGame();
+        expect(res).toBe(false);
+      });
+
+      it('starts the game', () => {
+        const res = room.tryStartGame();
+        expect(res).toBe(true);
+        expect(player.send).toHaveBeenCalledTimes(1);
+        expect(secondPlayer.send).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not start a game if the game is already in progress', () => {
+        room.tryStartGame();
+        const res = room.tryStartGame();
+        expect(res).toBe(false);
       });
     });
   });
