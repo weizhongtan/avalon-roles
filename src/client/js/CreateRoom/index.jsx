@@ -16,7 +16,8 @@ const options = [
 
 const allCharacters = Object.assign({}, CHARACTERS);
 Object.keys(allCharacters).forEach((char) => {
-  allCharacters[char].active = false;
+  const defaultActive = ['MERLIN'].includes(char);
+  allCharacters[char].active = defaultActive;
 });
 
 class CreateRoom extends React.Component {
@@ -68,13 +69,14 @@ class CreateRoom extends React.Component {
     const dropdownList = (
       <Button.Group vertical fluid labeled icon>
         {Object.entries(this.state.includedCharacters)
-          .map(([char, { active, name }]) => (
+          .map(([char, { active, name, isGood }]) => (
             <CharacterToggle
               name={char}
               key={char}
               content={name}
               onToggle={this.handleInputChange}
               active={active}
+              isGood={isGood}
             />
           ))}
       </Button.Group>
