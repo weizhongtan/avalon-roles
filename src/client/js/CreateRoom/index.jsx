@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Segment, Header, Button, Divider } from 'semantic-ui-react';
 
@@ -20,7 +20,62 @@ Object.keys(allCharacters).forEach((char) => {
   allCharacters[char].active = defaultActive;
 });
 
-class CreateRoom extends React.Component {
+function inflateCharacterList(list, numberOfPlayers) {
+  const selectedCharacters = list.slice(0);
+  let maxGoodCount;
+  let maxBadCount;
+  switch (numberOfPlayers) {
+  case 5: {
+    maxGoodCount = 3;
+    maxBadCount = 2;
+    break;
+  }
+  case 6: {
+    maxGoodCount = 4;
+    maxBadCount = 2;
+    break;
+  }
+  case 7: {
+    maxGoodCount = 4;
+    maxBadCount = 3;
+    break;
+  }
+  case 8: {
+    maxGoodCount = 5;
+    maxBadCount = 3;
+    break;
+  }
+  case 9: {
+    maxGoodCount = 6;
+    maxBadCount = 3;
+    break;
+  }
+  case 10: {
+    maxGoodCount = 6;
+    maxBadCount = 4;
+    break;
+  }
+  default:
+    throw new Error('invalid number of players:', numberOfPlayers);
+  }
+
+  const goodCount = selectedCharacters.filter(c => c.isGood).length;
+  const goodToAddCount = maxGoodCount - goodCount;
+
+  const badCount = selectedCharacters.filter(c => !c.isGood).length;
+  const badToAddCount = maxBadCount - badCount;
+  for (let i = 0; i < goodToAddCount; i += 1) {
+    selectedCharacters.push(CHARACTERS.STANDARD_GOOD);
+  }
+  for (let i = 0; i < badToAddCount; i += 1) {
+    const char = (i === 0) ? CHARACTERS.ASSASIN : CHARACTERS.STANDARD_EVIL;
+    selectedCharacters.push(char);
+  }
+
+  return selectedCharacters;
+}
+
+class CreateRoom extends Component {
   static propTypes = {
     onCreateGame: PropTypes.func.isRequired,
   };
@@ -50,17 +105,19 @@ class CreateRoom extends React.Component {
   };
 
   handleCreateGame = async () => {
+    const { playerName, numberOfPlayers, includedCharacters } = this.state;
     this.setState({ attemptedSubmit: true });
-    if (this.state.playerName.length) {
-      const selectedCharacterIDs = Object.entries(this.state.includedCharacters)
+    if (playerName.length) {
+      const selectedCharacterList = Object.entries(includedCharacters)
         .map(([, val]) => val)
-        .filter(({ active }) => active)
-        .map(({ id }) => id);
-      console.log(selectedCharacterIDs);
+        .filter(({ active }) => active);
+
+      const inflatedCharacterList = inflateCharacterList(selectedCharacterList, numberOfPlayers);
       const config = {
-        selectedCharacterIDs,
-        playerName: this.state.playerName,
+        selectedCharacterIDs: inflatedCharacterList.map(({ id }) => id),
+        playerName,
       };
+      console.log(config);
       await this.props.onCreateGame(config);
     }
   };

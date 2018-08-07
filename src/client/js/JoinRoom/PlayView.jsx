@@ -52,7 +52,7 @@ class PlayView extends Component {
         </Segment>
         {assignedCharacter && viewOfOtherPlayers && (
           <Segment>
-            <Header>You are {CHARACTERS[assignedCharacter].name}</Header>
+            <Header>You are {assignedCharacter.name}</Header>
             <PlayerViewList viewOfOtherPlayers={viewOfOtherPlayers} />
           </Segment>
         )}

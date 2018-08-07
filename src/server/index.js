@@ -12,6 +12,10 @@ const createHandlers = require('./create-handlers');
 const { deserialise } = require('../common');
 
 const PORT = process.env.PORT || 8000;
+const DISABLE_SESSION = !!process.env.DISABLE_SESSION;
+if (DISABLE_SESSION) {
+  debug('sessions disabled');
+}
 
 const app = websockify(new Koa());
 
@@ -25,15 +29,16 @@ const CONFIG = {
   rolling: true,
 };
 
-app.use(session(CONFIG, app));
-
-app.use(ctx => {
-  // ignore favicon
-  if (ctx.path === '/favicon.ico') return;
-  if (!ctx.session.id) {
-    ctx.session.id = uuid();
-  }
-});
+if (!DISABLE_SESSION) {
+  app.use(session(CONFIG, app));
+  app.use(ctx => {
+    // ignore favicon
+    if (ctx.path === '/favicon.ico') return;
+    if (!ctx.session.id) {
+      ctx.session.id = uuid();
+    }
+  });
+}
 
 const removePlayerFromAllRooms = (player, roomList) => {
   roomList.forEach((room, roomID) => {
@@ -51,18 +56,22 @@ app.ws.use(_.get('/', (ctx) => {
   debug('new client entered', ctx.session);
 
   let player;
-  if (playerList.has(ctx.session.id)) {
-    player = playerList.get(ctx.session.id);
-    player.setSocket(ctx.websocket);
-    roomList.forEach((room) => {
-      if (room.has(player)) {
-        player.setActive(true);
-        room.updateClients();
-      }
-    });
+  if (!DISABLE_SESSION) {
+    if (playerList.has(ctx.session.id)) {
+      player = playerList.get(ctx.session.id);
+      player.setSocket(ctx.websocket);
+      roomList.forEach((room) => {
+        if (room.has(player)) {
+          player.setActive(true);
+          room.updateClients();
+        }
+      });
+    } else {
+      player = new Player(ctx.websocket);
+      playerList.set(ctx.session.id, player);
+    }
   } else {
     player = new Player(ctx.websocket);
-    playerList.set(ctx.session.id, player);
   }
 
   const handlers = createHandlers({ roomList, player });

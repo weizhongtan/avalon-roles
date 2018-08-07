@@ -1,10 +1,5 @@
 const { CHARACTERS } = require('../config');
 
-const CH = {};
-Object.entries(CHARACTERS).forEach(([key, val]) => {
-  CH[key] = val.id;
-});
-
 function makeCharacterType(name, isGood, otherCharactersSeen, seesOtherCharactersAs) {
   return class CharacterType {
     constructor() {
@@ -14,8 +9,12 @@ function makeCharacterType(name, isGood, otherCharactersSeen, seesOtherCharacter
       this.seesOtherCharactersAs = seesOtherCharactersAs;
     }
 
+    getName() {
+      return this.name;
+    }
+
     sees(character) {
-      if (this.otherCharactersSeen.includes(character.name)) {
+      if (this.otherCharactersSeen.includes(character.getName())) {
         return this.seesOtherCharactersAs;
       }
       return null;
@@ -23,19 +22,21 @@ function makeCharacterType(name, isGood, otherCharactersSeen, seesOtherCharacter
   };
 }
 
-function createCharacterTypes() {
-  return {
-    [CH.MERLIN]: makeCharacterType(CH.MERLIN, true, [CH.STANDARD_EVIL, CH.ASSASIN, CH.MORGANA, CH.OBERON], 'evil'),
-    [CH.PERCIVAL]: makeCharacterType(CH.PERCIVAL, true, [CH.MERLIN, CH.MORGANA], 'Merlin or Morgana'),
-    [CH.STANDARD_GOOD]: makeCharacterType(CH.STANDARD_GOOD, true, [], ''),
-    [CH.STANDARD_EVIL]: makeCharacterType(CH.STANDARD_EVIL, false, [CH.STANDARD_EVIL, CH.ASSASIN, CH.MORGANA, CH.MORDRED], 'evil'),
-    [CH.ASSASIN]: makeCharacterType(CH.ASSASIN, false, [CH.STANDARD_EVIL, CH.MORGANA, CH.MORDRED], 'evil'),
-    [CH.MORGANA]: makeCharacterType(CH.MORGANA, false, [CH.STANDARD_EVIL, CH.ASSASIN, CH.MORDRED], 'evil'),
-    [CH.MORDRED]: makeCharacterType(CH.MORDRED, false, [CH.STANDARD_EVIL, CH.ASSASIN, CH.MORGANA], 'evil'),
-    [CH.OBERON]: makeCharacterType(CH.OBERON, false, [], ''),
-  };
+const characterTypes = {
+  [CHARACTERS.MERLIN.id]: makeCharacterType(CHARACTERS.MERLIN.name, true, [CHARACTERS.STANDARD_EVIL.name, CHARACTERS.ASSASIN.name, CHARACTERS.MORGANA.name, CHARACTERS.OBERON.name], 'evil'),
+  [CHARACTERS.PERCIVAL.id]: makeCharacterType(CHARACTERS.PERCIVAL.name, true, [CHARACTERS.MERLIN.name, CHARACTERS.MORGANA.name], 'Merlin or Morgana'),
+  [CHARACTERS.STANDARD_GOOD.id]: makeCharacterType(CHARACTERS.STANDARD_GOOD.name, true, [], ''),
+  [CHARACTERS.STANDARD_EVIL.id]: makeCharacterType(CHARACTERS.STANDARD_EVIL.name, false, [CHARACTERS.STANDARD_EVIL.name, CHARACTERS.ASSASIN.name, CHARACTERS.MORGANA.name, CHARACTERS.MORDRED.name], 'evil'),
+  [CHARACTERS.ASSASIN.id]: makeCharacterType(CHARACTERS.ASSASIN.name, false, [CHARACTERS.STANDARD_EVIL.name, CHARACTERS.MORGANA.name, CHARACTERS.MORDRED.name], 'evil'),
+  [CHARACTERS.MORGANA.id]: makeCharacterType(CHARACTERS.MORGANA.name, false, [CHARACTERS.STANDARD_EVIL.name, CHARACTERS.ASSASIN.name, CHARACTERS.MORDRED.name], 'evil'),
+  [CHARACTERS.MORDRED.id]: makeCharacterType(CHARACTERS.MORDRED.name, false, [CHARACTERS.STANDARD_EVIL.name, CHARACTERS.ASSASIN.name, CHARACTERS.MORGANA.name], 'evil'),
+  [CHARACTERS.OBERON.id]: makeCharacterType(CHARACTERS.OBERON.name, false, [], ''),
+};
+
+function getCharacterTypeByID(id) {
+  return characterTypes[id];
 }
 
 module.exports = {
-  characterTypes: createCharacterTypes(),
+  getCharacterTypeByID,
 };

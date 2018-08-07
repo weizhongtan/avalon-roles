@@ -2,7 +2,7 @@ const { knuthShuffle } = require('knuth-shuffle');
 const debug = require('debug')('avalon:Room');
 
 const TYPES = require('../config');
-const { characterTypes } = require('./lib');
+const { getCharacterTypeByID } = require('./lib');
 
 class Room {
   constructor(id, selectedCharacterIDs) {
@@ -53,7 +53,7 @@ class Room {
     this.players.forEach((player) => {
       debug(this.selectedCharacterIDs);
       const characterID = this.selectedCharacterIDs[i++]; // eslint-disable-line
-      const CharacterType = characterTypes[characterID];
+      const CharacterType = getCharacterTypeByID(characterID);
       const character = new CharacterType();
       player.assignCharacter(character);
     });
