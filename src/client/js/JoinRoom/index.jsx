@@ -6,7 +6,8 @@ import PlayView from './PlayView';
 
 class JoinRoom extends React.Component {
   static propTypes = {
-    onJoinRoom: PropTypes.func,
+    onJoinRoom: PropTypes.func.isRequired,
+    onStartGame: PropTypes.func.isRequired,
     assignedCharacter: PropTypes.object,
     viewOfOtherPlayers: PropTypes.object,
     currentRoom: PropTypes.object,

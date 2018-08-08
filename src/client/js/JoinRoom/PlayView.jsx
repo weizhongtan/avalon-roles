@@ -11,6 +11,7 @@ class PlayView extends Component {
     assignedCharacter: PropTypes.object,
     viewOfOtherPlayers: PropTypes.object,
     currentRoom: PropTypes.object,
+    onStartGame: PropTypes.func.isRequired,
   };
 
   render() {

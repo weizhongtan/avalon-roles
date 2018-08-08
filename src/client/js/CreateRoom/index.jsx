@@ -1,18 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Segment, Header, Button, Divider } from 'semantic-ui-react';
 
-import CharacterToggle from './CharacterToggle';
+import CreateRoomForm from './CreateRoomForm';
 import { CHARACTERS } from '../../../config';
-
-const options = [
-  { text: 5, value: 5 },
-  { text: 6, value: 6 },
-  { text: 7, value: 7 },
-  { text: 8, value: 8 },
-  { text: 9, value: 9 },
-  { text: 10, value: 10 },
-];
 
 const allCharacters = Object.assign({}, CHARACTERS);
 Object.keys(allCharacters).forEach((char) => {
@@ -75,7 +65,7 @@ function inflateCharacterList(list, numberOfPlayers) {
   return selectedCharacters;
 }
 
-class CreateRoom extends Component {
+class CreateRoomContainer extends Component {
   static propTypes = {
     onCreateGame: PropTypes.func.isRequired,
   };
@@ -123,54 +113,19 @@ class CreateRoom extends Component {
   };
 
   render() {
-    const dropdownList = (
-      <Button.Group vertical fluid labeled icon>
-        {Object.entries(this.state.includedCharacters)
-          .map(([char, { active, name, isGood }]) => (
-            <CharacterToggle
-              name={char}
-              key={char}
-              content={name}
-              onToggle={this.handleInputChange}
-              active={active}
-              isGood={isGood}
-            />
-          ))}
-      </Button.Group>
-    );
-
     return (
-      <Segment>
-        <Form>
-          <Form.Dropdown
-            label='Number of players'
-            selection
-            name='numberOfPlayers'
-            onChange={this.handleInputChange}
-            options={options}
-            value={this.state.numberOfPlayers}
-          />
-          <Header content='Select characters' size='tiny' />
-          {dropdownList}
-          <Divider />
-          <Form.Input
-            name='playerName'
-            placeholder='Your Name'
-            onChange={this.handleInputChange}
-            error={this.state.playerName === '' && this.state.attemptedSubmit}
-            value={this.state.playerName}
-          />
-          <Divider />
-          <Button
-            fluid
-            positive
-            content='Create and join room'
-            onClick={this.handleCreateGame}
-          />
-        </Form>
-      </Segment>
+      <CreateRoomForm
+        characters={this.state.includedCharacters}
+        onToggleCharacter={this.handleInputChange}
+        numberOfPlayers={this.state.numberOfPlayers}
+        onNumberOfPlayersChange={this.handleInputChange}
+        playerName={this.state.playerName}
+        onPlayerNameChange={this.handleInputChange}
+        hasAttemptedSubmit={this.state.attemptedSubmit}
+        onCreateGame={this.handleCreateGame}
+      />
     );
   }
 }
 
-export default CreateRoom;
+export default CreateRoomContainer;
