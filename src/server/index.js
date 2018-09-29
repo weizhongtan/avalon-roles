@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const serve = require('koa-static');
 const session = require('koa-session');
-const _ = require('koa-route');
+const route = require('koa-route');
 const websockify = require('koa-websocket');
 const debug = require('debug')('avalon:index');
 const uuid = require('uuid/v4');
@@ -52,7 +52,7 @@ const removePlayerFromAllRooms = (player, roomList) => {
 const roomList = new Map();
 const playerList = new Map();
 
-app.ws.use(_.get('/', (ctx) => {
+app.ws.use(route.get('/', (ctx) => {
   debug('new client entered', ctx.session);
 
   let player;
