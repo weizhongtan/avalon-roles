@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Header, Segment, Button } from 'semantic-ui-react';
 
-import { CHARACTERS } from '../../../config';
+import { CHARACTERS } from '../../../../config';
 import HorizontalList from './HorizontalList';
 import PlayerViewList from './PlayerViewList';
 

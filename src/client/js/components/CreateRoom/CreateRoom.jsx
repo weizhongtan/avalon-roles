@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import CreateRoomForm from './CreateRoomForm';
-import { CHARACTERS } from '../../../../common';
+import { CHARACTERS } from '../../../../config';
 
 const allCharacters = ((characters) => {
   const chars = Object.assign({}, characters);
@@ -43,7 +43,7 @@ function hydrateCharacterList(list, numberOfPlayers) {
   return selectedCharacters;
 }
 
-class CreateRoomContainer extends Component {
+class CreateRoom extends Component {
   static propTypes = {
     onCreateGame: PropTypes.func.isRequired,
   };
@@ -106,4 +106,4 @@ class CreateRoomContainer extends Component {
   }
 }
 
-export default CreateRoomContainer;
+export default CreateRoom;
