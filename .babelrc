@@ -1,14 +1,15 @@
 {
-  "presets": ["env", "react", "flow"],
-  "plugins": [
+  "presets": [
     [
-      "transform-runtime",
+      "@babel/preset-env",
       {
-        "polyfill": false,
-        "regenerator": true
+        "targets": "> 0.25%, not dead"
       }
     ],
-    "transform-class-properties",
-    "transform-object-rest-spread"
+    "@babel/preset-react",
+    "@babel/preset-flow"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties"
   ]
 }
