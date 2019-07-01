@@ -72,7 +72,7 @@
   },
   "homepage": "https://github.com/weizhongtan/avalon-roles#readme",
   "engines": {
-    "node": "^12.0.0"
+    "node": "^10.15.1"
   },
   "jest": {
     "verbose": true,
