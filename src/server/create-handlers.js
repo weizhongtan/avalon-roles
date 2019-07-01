@@ -1,10 +1,12 @@
-const Room = require('./Room');
+const debug = require('debug')('avalon:create-handlers');
 
+const Room = require('./Room');
 const TYPES = require('../config');
 
 module.exports = ({ roomList, player }) => {
   const handlers = {
     [TYPES.CREATE_ROOM]: (ack, { roomID, selectedCharacterIDs }) => {
+      debug('creating room');
       if (roomList.get(roomID)) {
         ack({ err: `room ${roomID} already exists` });
         return;
