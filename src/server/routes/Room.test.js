@@ -1,6 +1,6 @@
 const Room = require('./Room');
 const PlayerMock = require('./Player');
-const { types } = require('../common');
+const { types } = require('../../common');
 
 jest.mock('./Player');
 

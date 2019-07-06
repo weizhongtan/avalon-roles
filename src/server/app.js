@@ -5,7 +5,8 @@ const route = require('koa-route');
 const debug = require('debug')('avalon:app');
 
 const { session, setSessionId } = require('./middleware/session');
-const root = require('./routes/root');
+const channel = require('./routes/channel');
+const features = require('./features');
 
 const app = websockify(new Koa());
 
@@ -13,14 +14,13 @@ app.use(serve('./dist', { defer: true }));
 
 app.keys = ['avalon-secret'];
 
-const DISABLE_SESSION = !!process.env.DISABLE_SESSION;
-if (DISABLE_SESSION) {
-  debug('sessions disabled');
-} else {
+if (features.session) {
   app.use(session(app));
   app.use(setSessionId());
+} else {
+  debug('sessions disabled');
 }
 
-app.ws.use(route.get('/', root));
+app.ws.use(route.get('/', channel));
 
 module.exports = app;

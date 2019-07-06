@@ -1,7 +1,7 @@
 const debug = require('debug')('avalon:create-handlers');
 
 const Room = require('./Room');
-const { errors, types } = require('../common');
+const { errors, types } = require('../../common');
 
 module.exports = ({ roomList, player }) => {
   const handlers = {

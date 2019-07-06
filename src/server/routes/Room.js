@@ -1,6 +1,6 @@
 const uuidv4 = require('uuid/v4');
 
-const { errors } = require('../common');
+const { errors } = require('../../common');
 const Game = require('./Game');
 
 class Room {

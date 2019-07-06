@@ -1,8 +1,8 @@
 const debug = require('debug')(`avalon:${__filename}`);
 const { knuthShuffle } = require('knuth-shuffle');
 
-const { getCharacterTypeByID } = require('./lib');
-const { errors } = require('../common');
+const { getCharacterTypeByID } = require('../lib');
+const { errors } = require('../../common');
 
 class Game {
   constructor(charactersIds) {

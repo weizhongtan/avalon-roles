@@ -5,9 +5,8 @@ const Player = require('../Player');
 const RoomList = require('../RoomList');
 const PlayerList = require('../PlayerList');
 const createHandlers = require('../create-handlers');
-const { deserialise } = require('../../common');
-
-const DISABLE_SESSION = !!process.env.DISABLE_SESSION;
+const features = require('../../features');
+const { deserialise } = require('../../../common');
 
 const roomList = new RoomList();
 const playerList = new PlayerList();
@@ -23,8 +22,8 @@ const createAck = (player, ackId) => data => {
   });
 };
 
-const root = ctx => {
-  const sessionId = DISABLE_SESSION ? uuidv4() : ctx.session.id;
+const channel = ctx => {
+  const sessionId = features.session ? ctx.session.id : uuidv4();
   // each player is identified by their session id
   let player = playerList.getPlayerById(sessionId);
   if (player) {
@@ -69,4 +68,4 @@ const root = ctx => {
   });
 };
 
-module.exports = root;
+module.exports = channel;

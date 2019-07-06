@@ -1,4 +1,4 @@
-const { serialise, types } = require('../common');
+const { serialise, types } = require('../../common');
 
 class Player {
   constructor(socket) {
