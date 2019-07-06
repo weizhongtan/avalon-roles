@@ -1,12 +1,10 @@
-const debug = require('debug')('avalon:create-handlers');
-
 const Room = require('./Room');
-const { errors, types } = require('../../common');
+const { errors, types, log } = require('../../common');
 
 module.exports = ({ roomList, player }) => {
   const handlers = {
     [types.CREATE_ROOM]: ({ selectedCharacterIds }) => {
-      debug('creating room');
+      log('creating room');
       const room = new Room(selectedCharacterIds);
       roomList.addRoom(room);
       return { roomId: room.getId(), selectedCharacterIds };

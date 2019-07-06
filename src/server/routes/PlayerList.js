@@ -1,4 +1,4 @@
-const debug = require('debug')('avalon:PlayerList');
+const { log } = require('../../common');
 
 class PlayerList {
   constructor() {
@@ -7,12 +7,12 @@ class PlayerList {
 
   addPlayer(id, player) {
     this._players.set(id, player);
-    debug('added player with id: ', id);
+    log('added player with id: ', id);
   }
 
   getPlayerById(id) {
     if (this._players.has(id)) {
-      debug('matched existing player with id: ', id);
+      log('matched existing player with id: ', id);
       return this._players.get(id);
     }
     return null;

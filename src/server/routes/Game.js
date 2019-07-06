@@ -1,8 +1,7 @@
-const debug = require('debug')(`avalon:${__filename}`);
 const { knuthShuffle } = require('knuth-shuffle');
 
 const { getCharacterTypeByID } = require('../lib');
-const { errors } = require('../../common');
+const { errors, log } = require('../../common');
 
 class Game {
   constructor(charactersIds) {
@@ -14,7 +13,7 @@ class Game {
     if (this._isStarted) {
       throw new Error(errors.GAME_IN_PROGRESS);
     }
-    debug('starting new game');
+    log('starting new game');
     this.randomlyAssignCharacters();
     this._isStarted = true;
     this.players.forEach((player) => {
@@ -42,7 +41,7 @@ class Game {
   randomlyAssignCharacters() {
     const shuffledCharacterIds = knuthShuffle(this._charactersIds);
     this.players.forEach((player) => {
-      debug(shuffledCharacterIds);
+      log(shuffledCharacterIds);
       const characterID = shuffledCharacterIds.pop();
       const CharacterType = getCharacterTypeByID(characterID);
       const character = new CharacterType();

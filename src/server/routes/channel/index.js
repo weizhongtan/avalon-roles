@@ -1,4 +1,3 @@
-const debug = require('debug')('avalon:app');
 const uuidv4 = require('uuid/v4');
 
 const Player = require('../Player');
@@ -6,7 +5,7 @@ const RoomList = require('../RoomList');
 const PlayerList = require('../PlayerList');
 const createHandlers = require('../create-handlers');
 const features = require('../../features');
-const { deserialise } = require('../../../common');
+const { deserialise, log } = require('../../../common');
 
 const roomList = new RoomList();
 const playerList = new PlayerList();
@@ -16,7 +15,7 @@ const createAck = (player, ackId) => data => {
   const payload = data instanceof Error ? { err: data.message } : data;
   player.ack(payload, ackId, (err) => {
     if (err) {
-      debug('Socket connection failed, removing player from all rooms');
+      log('Socket connection failed, removing player from all rooms');
       roomList.removePlayerFromRooms(player);
     }
   });
@@ -27,11 +26,11 @@ const channel = ctx => {
   // each player is identified by their session id
   let player = playerList.getPlayerById(sessionId);
   if (player) {
-    debug('client re-entered', ctx.session);
+    log('client re-entered', ctx.session);
     player.setSocket(ctx.websocket);
     roomList.notifyRoomWithPlayer(player);
   } else {
-    debug('new client entered', ctx.session);
+    log('new client entered', ctx.session);
     player = new Player(ctx.websocket);
     playerList.addPlayer(sessionId, player);
   }
@@ -41,7 +40,7 @@ const channel = ctx => {
   ctx.websocket.on('message', (data) => {
     const { type, payload, ackId } = deserialise(data);
     if (!ackId) {
-      debug('got message with no ackId, ignoring');
+      log('got message with no ackId, ignoring');
       return;
     }
     const handler = handlers[type];
@@ -50,16 +49,16 @@ const channel = ctx => {
       try {
         ack(handler(payload));
       } catch (err) {
-        debug(err);
+        log(err);
         ack(err);
       }
     } else {
-      debug(`couldn't match handler type ${type}`);
+      log(`couldn't match handler type ${type}`);
     }
   });
 
   ctx.websocket.on('close', () => {
-    debug('client', sessionId, 'removing socket channel');
+    log('client', sessionId, 'removing socket channel');
     player.setSocket(null);
     const room = roomList.getRoomByPlayer(player);
     if (room) {

@@ -1,4 +1,4 @@
-const debug = require('debug')('avalon:RoomList');
+const { log } = require('../../common');
 
 class RoomList {
   constructor() {
@@ -21,7 +21,7 @@ class RoomList {
     this._rooms.forEach(room => {
       const wasRemoved = room.remove(player);
       if (wasRemoved) {
-        debug('player was removed from', room.getId());
+        log('player was removed from', room.getId());
       }
     });
   }
@@ -30,7 +30,7 @@ class RoomList {
     this._rooms.forEach(room => {
       if (room.has(player)) {
         room.notify();
-        debug('player rejoined room with id: ', room.getId());
+        log('player rejoined room with id: ', room.getId());
       }
     });
   }

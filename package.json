@@ -20,6 +20,7 @@
     "koa-session": "^5.8.2",
     "koa-static": "^5.0.0",
     "koa-websocket": "^5.0.1",
+    "pat": "0.0.1",
     "prop-types": "^15.7.2",
     "react": "16.8.x",
     "react-dom": "16.8.x",
