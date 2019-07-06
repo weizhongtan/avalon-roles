@@ -1,18 +1,17 @@
 const debug = require('debug')('avalon:create-handlers');
 
 const Room = require('./Room');
-const TYPES = require('../config');
-const { errors } = require('../common');
+const { errors, types } = require('../common');
 
 module.exports = ({ roomList, player }) => {
   const handlers = {
-    [TYPES.CREATE_ROOM]: (ack, { selectedCharacterIDs }) => {
+    [types.CREATE_ROOM]: (ack, { selectedCharacterIDs }) => {
       debug('creating room');
       const room = new Room(selectedCharacterIDs);
       roomList.addRoom(room);
       ack({ roomId: room.getId(), selectedCharacterIDs });
     },
-    [TYPES.JOIN_ROOM]: (ack, { roomId, playerName }) => {
+    [types.JOIN_ROOM]: (ack, { roomId, playerName }) => {
       const room = roomList.getRoomById(roomId);
       if (room) {
         if (room.getPlayerByName(playerName)) {
@@ -31,7 +30,7 @@ module.exports = ({ roomList, player }) => {
       }
       return null;
     },
-    [TYPES.START_GAME]: (ack) => {
+    [types.START_GAME]: (ack) => {
       const room = roomList.getRoomByPlayer(player);
       try {
         room.startGame();

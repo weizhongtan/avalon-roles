@@ -2,9 +2,8 @@ const { knuthShuffle } = require('knuth-shuffle');
 const debug = require('debug')('avalon:Room');
 const uuidv4 = require('uuid/v4');
 
-const TYPES = require('../config');
 const { getCharacterTypeByID } = require('./lib');
-const { errors } = require('../common');
+const { errors, types } = require('../common');
 
 class Room {
   constructor(selectedCharacterIDs) {
@@ -37,7 +36,7 @@ class Room {
         playerView[otherPlayer.getName()] = player.viewOtherPlayer(otherPlayer);
       });
       player.send({
-        type: TYPES.NOTIFY_CLIENT,
+        type: types.NOTIFY_CLIENT,
         payload: {
           playerView,
           assignedCharacter: player.getCharacter(),
@@ -94,7 +93,7 @@ class Room {
 
   notifyClients() {
     this.send({
-      type: TYPES.NOTIFY_CLIENT,
+      type: types.NOTIFY_CLIENT,
       payload: {
         currentRoom: this.serialise(),
       },

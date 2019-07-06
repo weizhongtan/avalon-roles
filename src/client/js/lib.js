@@ -1,6 +1,5 @@
 import uuid from 'uuid/v4';
-import { serialise, deserialise } from '../../common';
-import TYPES from '../../config';
+import { serialise, deserialise, types } from '../../common';
 
 function createSend(socket, type) {
   return (input = {}) => {
@@ -38,14 +37,14 @@ function createSend(socket, type) {
 export function createChannel() {
   const socket = new WebSocket(window.location.origin.replace('http', 'ws'));
   return {
-    createRoom: createSend(socket, TYPES.CREATE_ROOM),
-    joinRoom: createSend(socket, TYPES.JOIN_ROOM),
-    startGame: createSend(socket, TYPES.START_GAME),
+    createRoom: createSend(socket, types.CREATE_ROOM),
+    joinRoom: createSend(socket, types.JOIN_ROOM),
+    startGame: createSend(socket, types.START_GAME),
     onNotification(cb) {
       socket.addEventListener('message', (event) => {
         if (event.data) {
           const { type, payload } = deserialise(event.data);
-          if (type === TYPES.NOTIFY_CLIENT) {
+          if (type === types.NOTIFY_CLIENT) {
             console.log(type, payload);
             cb(payload);
           }

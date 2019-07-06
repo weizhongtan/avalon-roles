@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Header, Segment, Button, List, Icon, Message } from 'semantic-ui-react';
 
-import { CHARACTERS } from '../../../../config';
+import { characters as CHARACTERS } from '../../../../common';
 import PlayerViewList from './PlayerViewList';
 
 import { getRandomIcon } from '../../lib';

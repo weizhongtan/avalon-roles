@@ -1,6 +1,6 @@
 const Room = require('./Room');
 const PlayerMock = require('./Player');
-const TYPES = require('../config');
+const { types } = require('../common');
 
 jest.mock('./Player');
 
@@ -46,7 +46,7 @@ describe('Room', () => {
       it('notifies all clients when a new player is added', () => {
         room.add(player);
         expect(player.send).toHaveBeenCalledWith({
-          type: TYPES.NOTIFY_CLIENT,
+          type: types.NOTIFY_CLIENT,
           payload: {
             currentRoom: {
               roomId: testID,
@@ -81,7 +81,7 @@ describe('Room', () => {
         room.add(secondPlayer);
         room.remove(secondPlayer);
         expect(player.send).toHaveBeenCalledWith({
-          type: TYPES.NOTIFY_CLIENT,
+          type: types.NOTIFY_CLIENT,
           payload: {
             currentRoom: {
               roomId: testID,

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import CreateRoomForm from './CreateRoomForm';
-import { CHARACTERS } from '../../../../config';
+import { characters as CHARACTERS } from '../../../../common';
 
 const allCharacters = ((characters) => {
   const chars = Object.assign({}, characters);

@@ -1,12 +1,11 @@
 const debug = require('debug')('avalon:app');
 const uuidv4 = require('uuid/v4');
 
-const TYPES = require('../../config');
 const Player = require('../Player');
 const RoomList = require('../RoomList');
 const PlayerList = require('../PlayerList');
 const createHandlers = require('../create-handlers');
-const { deserialise } = require('../../common');
+const { deserialise, types } = require('../../common');
 
 const DISABLE_SESSION = !!process.env.DISABLE_SESSION;
 
@@ -18,7 +17,7 @@ const createAck = (player, ackId) => data => {
   const payload = data instanceof Error ? { err: data.message } : data;
   player.send({
     ackId,
-    type: TYPES.ACK,
+    type: types.ACK,
     payload,
   }, (err) => {
     if (err) {
