@@ -5,42 +5,39 @@ const TYPES = require('../config');
 
 module.exports = ({ roomList, player }) => {
   const handlers = {
-    [TYPES.CREATE_ROOM]: (ack, { roomID, selectedCharacterIDs }) => {
+    [TYPES.CREATE_ROOM]: (ack, { selectedCharacterIDs }) => {
       debug('creating room');
-      if (roomList.get(roomID)) {
-        ack({ err: `room ${roomID} already exists` });
-        return;
-      }
-      const room = new Room(roomID, selectedCharacterIDs);
-      roomList.set(roomID, room);
-      ack({ roomID, selectedCharacterIDs });
+      const room = new Room(selectedCharacterIDs);
+      roomList.addRoom(room);
+      ack({ roomId: room.getId(), selectedCharacterIDs });
     },
-    [TYPES.JOIN_ROOM]: (ack, { roomID, playerName }) => {
-      let wasAdded;
+    [TYPES.JOIN_ROOM]: (ack, { roomId, playerName }) => {
       player.setName(playerName);
-      if (roomList.has(roomID)) {
+      const room = roomList.getRoom(roomId);
+      if (room) {
         // remove player from other rooms
-        roomList.forEach((room) => {
-          room.remove(player);
+        roomList.removePlayer(player);
+        room.add(player);
+        ack({
+          playerName,
+          roomId
         });
-        const room = roomList.get(roomID);
-        wasAdded = room.add(player);
+      } else {
+        ack({
+          err: `room with id ${roomId} does not exist`
+        });
       }
-      ack({
-        playerName,
-        roomID: wasAdded ? roomID : null,
-      });
     },
-    [TYPES.START_GAME]: (ack, { roomID }) => {
-      if (!roomID) {
-        ack({ err: 'roomID not provided' });
+    [TYPES.START_GAME]: (ack, { roomId }) => {
+      if (!roomId) {
+        ack({ err: 'roomId not provided' });
         return;
       }
-      if (!roomList.get(roomID)) {
-        ack({ err: `roomID ${roomID} does not exist` });
+      if (!roomList.get(roomId)) {
+        ack({ err: `roomId ${roomId} does not exist` });
         return;
       }
-      const room = roomList.get(roomID);
+      const room = roomList.get(roomId);
       const res = room.tryStartGame();
       if (!res) {
         ack({ err: 'game could not start' });

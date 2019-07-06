@@ -14,23 +14,23 @@ class JoinRoom extends React.Component {
   };
 
   state = {
-    chosenRoomID: '',
+    chosenRoomId: '',
     playerName: '',
-    chosenRoomIDInvalid: false,
+    chosenRoomIdInvalid: false,
     playerNameInvalid: false,
   };
 
   handleInputChange = (e, { name, value }) => this.setState({ [name]: value });
 
   handleJoinRoom = () => {
-    this.setState({ chosenRoomIDInvalid: !this.state.chosenRoomID.length });
+    this.setState({ chosenRoomIdInvalid: !this.state.chosenRoomId.length });
     this.setState({ playerNameInvalid: !this.state.playerName.length });
-    if (!this.state.chosenRoomID.length || !this.state.playerName.length) {
+    if (!this.state.chosenRoomId.length || !this.state.playerName.length) {
       return;
     }
     this.props.onJoinRoom({
       playerName: this.state.playerName,
-      roomID: this.state.chosenRoomID,
+      roomId: this.state.chosenRoomId,
     });
   };
 
@@ -46,11 +46,11 @@ class JoinRoom extends React.Component {
     const JoinRoomSection = (
       <Form>
         <Form.Input
-          name='chosenRoomID'
-          value={this.state.chosenRoomID}
-          placeholder='Room ID'
+          name='chosenRoomId'
+          value={this.state.chosenRoomId}
+          placeholder='Room Id'
           onChange={this.handleInputChange}
-          error={this.state.chosenRoomIDInvalid}
+          error={this.state.chosenRoomIdInvalid}
         />
         <Form.Input
           name='playerName'
@@ -66,7 +66,7 @@ class JoinRoom extends React.Component {
     return (
       <div>
         <Segment>
-          {this.props.currentRoom.roomID ? PlayViewSection : JoinRoomSection}
+          {this.props.currentRoom.roomId ? PlayViewSection : JoinRoomSection}
         </Segment>
       </div>
     );

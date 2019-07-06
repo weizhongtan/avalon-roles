@@ -1,16 +1,21 @@
 const { knuthShuffle } = require('knuth-shuffle');
 const debug = require('debug')('avalon:Room');
+const uuidv4 = require('uuid/v4');
 
 const TYPES = require('../config');
 const { getCharacterTypeByID } = require('./lib');
 
 class Room {
-  constructor(id, selectedCharacterIDs) {
-    this.roomID = id;
+  constructor(selectedCharacterIDs) {
+    this.roomId = uuidv4().slice(0, 4).toUpperCase();
     this.selectedCharacterIDs = selectedCharacterIDs;
     this.players = new Set();
 
     this.gameStarted = false;
+  }
+
+  getId() {
+    return this.roomId;
   }
 
   tryStartGame() {
@@ -100,7 +105,7 @@ class Room {
   serialise() {
     const players = Array.from(this.players).map(p => p.serialise());
     return {
-      roomID: this.roomID,
+      roomId: this.roomId,
       selectedCharacterIDs: this.selectedCharacterIDs,
       members: players,
     };

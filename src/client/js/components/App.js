@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
-import uuid from 'uuid/v4';
 import 'semantic-ui-css/semantic.min.css';
 
 import Sidebar from './Sidebar';
@@ -17,9 +16,9 @@ class App extends Component {
   };
 
   state = {
-    roomID: null,
+    roomId: null,
     currentRoom: {
-      roomID: null,
+      roomId: null,
       selectedCharacterIDs: [],
       members: [],
     },
@@ -30,8 +29,8 @@ class App extends Component {
 
   componentDidMount = () => {
     this.socket = createChannel();
-    this.socket.onMessage(({ payload }) => {
-      console.log('got message', payload);
+    this.socket.onNotification(({ payload }) => {
+      console.log('got notification', payload);
       const { currentRoom, assignedCharacter, playerView } = payload;
       if (currentRoom) {
         this.setState({ currentRoom });
@@ -46,29 +45,23 @@ class App extends Component {
   };
 
   handleCreateGame = async ({ selectedCharacterIDs, playerName }) => {
-    const roomID = uuid().slice(0, 4).toUpperCase();
-    const res = await this.socket.createRoom({
-      roomID,
+    const { roomId } = await this.socket.createRoom({
       selectedCharacterIDs,
     });
-    if (!res.err) {
-      await this.handleJoinRoom({ roomID, playerName });
-    }
+    await this.handleJoinRoom({ roomId, playerName });
   };
 
-  handleJoinRoom = async ({ roomID, playerName }) => {
-    const res = await this.socket.joinRoom({
-      roomID,
+  handleJoinRoom = async ({ roomId, playerName }) => {
+    await this.socket.joinRoom({
+      roomId,
       playerName,
     });
-    if (!res.err) {
-      this.props.history.push('/join');
-    }
+    this.props.history.push('/join');
   };
 
   handleStartGame = async () => {
     await this.socket.startGame({
-      roomID: this.state.currentRoom.roomID,
+      roomId: this.state.currentRoom.roomId,
     });
   };
 

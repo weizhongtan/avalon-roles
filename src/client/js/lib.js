@@ -4,14 +4,18 @@ import TYPES from '../../config';
 
 async function send(socket, data) {
   const ackID = uuid();
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const ackListener = (event) => {
       if (event.data) {
         const { ackID: _ackID, payload } = deserialise(event.data);
         if (_ackID === ackID) {
-          socket.removeEventListener('message', ackListener);
-          console.log('ack:', payload);
-          resolve(payload);
+          if (payload.err) {
+            reject(payload.err);
+          } else {
+            socket.removeEventListener('message', ackListener);
+            console.log('ack:', payload);
+            resolve(payload);
+          }
         }
       }
     };
@@ -19,7 +23,7 @@ async function send(socket, data) {
     const dataToSend = Object.assign({}, data, {
       ackID,
     });
-    console.log('sending', dataToSend);
+    console.log('sending:', dataToSend);
     socket.send(serialise(dataToSend));
   });
 }
@@ -46,10 +50,7 @@ export function createChannel() {
         payload: data,
       });
     },
-    async onOpen(cb) {
-      socket.addEventListener('open', cb);
-    },
-    async onMessage(cb) {
+    async onNotification(cb) {
       socket.addEventListener('message', (event) => {
         // ignore acks
         if (event.data) {

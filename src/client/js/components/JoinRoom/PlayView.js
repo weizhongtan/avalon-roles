@@ -37,9 +37,9 @@ class PlayView extends Component {
     return (
       <div>
         <Segment>
-          {currentRoom.roomID && (
+          {currentRoom.roomId && (
             <div>
-              <Header block>Current room: {currentRoom.roomID}</Header>
+              <Header block>Current room: {currentRoom.roomId}</Header>
               <Header size='tiny'>Players in this room:</Header>
               <HorizontalList elements={currentRoom.members} />
               <Header size='tiny'>Available characters:</Header>

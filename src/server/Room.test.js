@@ -49,7 +49,7 @@ describe('Room', () => {
           type: TYPES.UPDATE_CLIENT,
           payload: {
             currentRoom: {
-              roomID: testID,
+              roomId: testID,
               selectedCharacterIDs: testCharacters,
               members: [testPlayerName],
             },
@@ -84,7 +84,7 @@ describe('Room', () => {
           type: TYPES.UPDATE_CLIENT,
           payload: {
             currentRoom: {
-              roomID: testID,
+              roomId: testID,
               selectedCharacterIDs: testCharacters,
               members: [testPlayerName],
             },
