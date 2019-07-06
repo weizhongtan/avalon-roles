@@ -28,31 +28,24 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    this.socket = createChannel();
-    this.socket.onNotification(({ payload }) => {
+    this.channel = createChannel();
+    this.channel.onNotification(({ payload }) => {
       console.log('got notification', payload);
-      const { currentRoom, assignedCharacter, playerView } = payload;
-      if (currentRoom) {
-        this.setState({ currentRoom });
-      }
-      if (assignedCharacter) {
-        this.setState({ assignedCharacter });
-      }
-      if (playerView) {
-        this.setState({ viewOfOtherPlayers: playerView });
-      }
+      Object.entries(payload).forEach(([key, val]) => {
+        this.setState({ [key]: val });
+      });
     });
   };
 
   handleCreateGame = async ({ selectedCharacterIDs, playerName }) => {
-    const { roomId } = await this.socket.createRoom({
+    const { roomId } = await this.channel.createRoom({
       selectedCharacterIDs,
     });
     await this.handleJoinRoom({ roomId, playerName });
   };
 
   handleJoinRoom = async ({ roomId, playerName }) => {
-    await this.socket.joinRoom({
+    await this.channel.joinRoom({
       roomId,
       playerName,
     });
@@ -60,9 +53,7 @@ class App extends Component {
   };
 
   handleStartGame = async () => {
-    await this.socket.startGame({
-      roomId: this.state.currentRoom.roomId,
-    });
+    await this.channel.startGame();
   };
 
   render() {

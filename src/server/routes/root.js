@@ -31,16 +31,16 @@ const root = ctx => {
   const handlers = createHandlers({ roomList, player });
 
   ctx.websocket.on('message', (data) => {
-    const { type, payload, ackID } = deserialise(data);
-    if (!ackID) {
-      debug('got message with no ackID, ignoring');
+    const { type, payload, ackId } = deserialise(data);
+    if (!ackId) {
+      debug('got message with no ackId, ignoring');
       return;
     }
     const handler = handlers[type];
     if (typeof handler === 'function') {
       const ack = (message) => {
         player.send({
-          ackID,
+          ackId,
           type: TYPES.ACK,
           payload: message,
         }, (err) => {
