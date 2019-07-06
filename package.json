@@ -13,7 +13,7 @@
     "deploy": "scripty"
   },
   "dependencies": {
-    "debug": "^3.1.0",
+    "debug": "^4.1.1",
     "knuth-shuffle": "^1.0.1",
     "koa": "^2.5.2",
     "koa-route": "^3.2.0",
