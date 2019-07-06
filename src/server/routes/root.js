@@ -1,4 +1,5 @@
 const debug = require('debug')('avalon:app');
+const uuidv4 = require('uuid/v4');
 
 const TYPES = require('../../config');
 const Player = require('../Player');
@@ -7,12 +8,15 @@ const PlayerList = require('../PlayerList');
 const createHandlers = require('../create-handlers');
 const { deserialise } = require('../../common');
 
+const DISABLE_SESSION = !!process.env.DISABLE_SESSION;
+
 const roomList = new RoomList();
 const playerList = new PlayerList();
 
 const root = ctx => {
+  const sessionId = DISABLE_SESSION ? uuidv4() : ctx.session.id;
   // each player is identified by their session id
-  let player = playerList.getPlayer(ctx.session.id);
+  let player = playerList.getPlayer(sessionId);
   if (player) {
     debug('client re-entered', ctx.session);
     player.setActive(true);
@@ -21,7 +25,7 @@ const root = ctx => {
   } else {
     debug('new client entered', ctx.session);
     player = new Player(ctx.websocket);
-    playerList.addPlayer(ctx.session.id, player);
+    playerList.addPlayer(sessionId, player);
   }
 
   const handlers = createHandlers({ roomList, player });
@@ -53,7 +57,7 @@ const root = ctx => {
   });
 
   ctx.websocket.on('close', () => {
-    debug('client', ctx.session.id, 'removing socket channel');
+    debug('client', sessionId, 'removing socket channel');
     player.setActive(false);
     player.setSocket(null);
     const room = roomList.getRoomByPlayer(player);
