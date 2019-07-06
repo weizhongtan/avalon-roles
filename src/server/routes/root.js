@@ -13,6 +13,21 @@ const DISABLE_SESSION = !!process.env.DISABLE_SESSION;
 const roomList = new RoomList();
 const playerList = new PlayerList();
 
+// data should be serialisable data, or an instance of Error
+const createAck = (player, ackId) => data => {
+  const payload = data instanceof Error ? { err: data.message } : data;
+  player.send({
+    ackId,
+    type: TYPES.ACK,
+    payload,
+  }, (err) => {
+    if (err) {
+      debug('Socket connection failed, removing player from all rooms');
+      roomList.removePlayer(player);
+    }
+  });
+};
+
 const root = ctx => {
   const sessionId = DISABLE_SESSION ? uuidv4() : ctx.session.id;
   // each player is identified by their session id
@@ -38,19 +53,7 @@ const root = ctx => {
     }
     const handler = handlers[type];
     if (typeof handler === 'function') {
-      const ack = (message) => {
-        player.send({
-          ackId,
-          type: TYPES.ACK,
-          payload: message,
-        }, (err) => {
-          if (err) {
-            debug('Socket connection failed, removing player from all rooms');
-            roomList.removePlayer(player);
-          }
-        });
-      };
-      handler(ack, payload);
+      handler(createAck(player, ackId), payload);
     } else {
       debug(`couldn't match handler type ${type}`);
     }

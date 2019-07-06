@@ -16,7 +16,7 @@ module.exports = ({ roomList, player }) => {
       const room = roomList.getRoomById(roomId);
       if (room) {
         if (room.getPlayerByName(playerName)) {
-          return ack({ err: errors.DUPLICATE_NAME });
+          return ack(new Error(errors.DUPLICATE_NAME));
         }
         player.setName(playerName);
         // remove player from other rooms
@@ -24,10 +24,10 @@ module.exports = ({ roomList, player }) => {
         if (room.add(player)) {
           ack({ playerName, roomId });
         } else {
-          ack({ err: `could not add to room ${roomId}` });
+          ack(new Error(`could not add to room ${roomId}`));
         }
       } else {
-        ack({ err: `room with id ${roomId} does not exist` });
+        ack(new Error(`room with id ${roomId} does not exist`));
       }
       return null;
     },
@@ -36,7 +36,7 @@ module.exports = ({ roomList, player }) => {
       try {
         room.startGame();
       } catch (err) {
-        ack({ err });
+        ack(err);
       }
     },
   };
