@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+npm version "$1"
+git push heroku master
+git push master

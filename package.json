@@ -10,7 +10,7 @@
     "heroku-postbuild": "npm run build:production",
     "lint": "eslint --fix src",
     "test": "jest",
-    "deploy": "git push heroku master"
+    "deploy": "scripty"
   },
   "dependencies": {
     "debug": "^3.1.0",
@@ -51,7 +51,8 @@
     "nodemon": "^1.18.3",
     "parcel": "^1.12.3",
     "react-test-renderer": "^16.4.1",
-    "sass": "^1.22.3"
+    "sass": "^1.22.3",
+    "scripty": "^1.9.1"
   },
   "repository": {
     "type": "git",
