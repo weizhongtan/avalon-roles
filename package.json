@@ -4,7 +4,7 @@
   "description": "Avalon game organiser",
   "scripts": {
     "start:production": "DEBUG=avalon:* node src/server/index.js",
-    "start": "DEBUG=avalon:* nodemon src/server/index.js --ignore src/client/ --ignore dist --ignore .cache --ignore build",
+    "start": "DEBUG=avalon:* nodemon src/server/index.js --ignore src/client/ --ignore dist --ignore .cache",
     "build:production": "parcel build src/client/index.html",
     "build": "parcel src/client/index.html",
     "heroku-postbuild": "npm run build:production",
