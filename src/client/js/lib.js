@@ -14,6 +14,7 @@ function createSend(socket, type) {
           const { type: _type, ackId: _ackId, payload } = deserialise(event.data);
           if (_ackId === ackId) {
             if (payload.err) {
+              console.log('got error', payload.err);
               reject(payload.err);
             } else {
               socket.removeEventListener('message', ackListener);

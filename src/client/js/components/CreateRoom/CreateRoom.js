@@ -82,7 +82,7 @@ class CreateRoom extends Component {
 
       const inflatedCharacterList = hydrateCharacterList(selectedCharacterList, numberOfPlayers);
       const config = {
-        selectedCharacterIDs: inflatedCharacterList.map(({ id }) => id),
+        selectedCharacterIds: inflatedCharacterList.map(({ id }) => id),
         playerName,
       };
       console.log(config);

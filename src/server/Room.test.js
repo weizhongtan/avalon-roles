@@ -50,7 +50,7 @@ describe('Room', () => {
           payload: {
             currentRoom: {
               roomId: testID,
-              selectedCharacterIDs: testCharacters,
+              selectedCharacterIds: testCharacters,
               members: [testPlayerName],
             },
           },
@@ -85,7 +85,7 @@ describe('Room', () => {
           payload: {
             currentRoom: {
               roomId: testID,
-              selectedCharacterIDs: testCharacters,
+              selectedCharacterIds: testCharacters,
               members: [testPlayerName],
             },
           },

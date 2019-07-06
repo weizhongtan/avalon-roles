@@ -5,7 +5,7 @@ const Player = require('../Player');
 const RoomList = require('../RoomList');
 const PlayerList = require('../PlayerList');
 const createHandlers = require('../create-handlers');
-const { deserialise, types } = require('../../common');
+const { deserialise } = require('../../common');
 
 const DISABLE_SESSION = !!process.env.DISABLE_SESSION;
 
@@ -15,11 +15,7 @@ const playerList = new PlayerList();
 // data should be serialisable data, or an instance of Error
 const createAck = (player, ackId) => data => {
   const payload = data instanceof Error ? { err: data.message } : data;
-  player.send({
-    ackId,
-    type: types.ACK,
-    payload,
-  }, (err) => {
+  player.ack(payload, ackId, (err) => {
     if (err) {
       debug('Socket connection failed, removing player from all rooms');
       roomList.removePlayer(player);
@@ -64,7 +60,7 @@ const root = ctx => {
     player.setSocket(null);
     const room = roomList.getRoomByPlayer(player);
     if (room) {
-      room.notifyClients();
+      room.notify();
     }
   });
 };

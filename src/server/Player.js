@@ -1,12 +1,12 @@
 const uuid = require('uuid/v4');
 
-const { serialise } = require('../common');
+const { serialise, types } = require('../common');
 
 class Player {
   constructor(socket) {
     this.id = uuid();
-    this.name = null;
-    this.character = null;
+    this.setName(null);
+    this.setCharacter(null);
     this.setActive(true);
     this.setSocket(socket);
   }
@@ -31,12 +31,6 @@ class Player {
     return this.name;
   }
 
-  send(data, cb) {
-    if (this.socket) {
-      this.socket.send(serialise(data), cb);
-    }
-  }
-
   setCharacter(character) {
     this.character = character;
   }
@@ -47,6 +41,38 @@ class Player {
 
   viewOtherPlayer(otherPlayer) {
     return this.character.sees(otherPlayer.character);
+  }
+
+  setPlayView(view) {
+    this.playView = view;
+  }
+
+  getPlayView() {
+    return this.playView;
+  }
+
+  notify(payload = {}, cb) {
+    this._send({
+      type: types.NOTIFY_CLIENT,
+      payload: Object.assign({}, payload, {
+        playerName: this.getName(),
+        viewOfOtherPlayers: this.getPlayView()
+      }),
+    }, cb);
+  }
+
+  ack(payload, ackId, cb) {
+    this._send({
+      type: types.ACK,
+      ackId,
+      payload,
+    }, cb);
+  }
+
+  _send(data, cb) {
+    if (this.socket) {
+      this.socket.send(serialise(data), cb);
+    }
   }
 
   serialise() {

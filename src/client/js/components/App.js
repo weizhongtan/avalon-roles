@@ -20,7 +20,7 @@ class App extends Component {
     roomId: null,
     currentRoom: {
       roomId: null,
-      selectedCharacterIDs: [],
+      selectedCharacterIds: [],
       members: [],
     },
     playerName: '',
@@ -35,9 +35,9 @@ class App extends Component {
     });
   };
 
-  handleCreateGame = async ({ selectedCharacterIDs, playerName }) => {
+  handleCreateGame = async ({ selectedCharacterIds, playerName }) => {
     const { roomId } = await this.channel.createRoom({
-      selectedCharacterIDs,
+      selectedCharacterIds,
     });
     await this.handleJoinRoom({ roomId, playerName });
   };
@@ -51,12 +51,13 @@ class App extends Component {
   };
 
   handleStartGame = async () => {
-    const { members, selectedCharacterIDs } = this.state.currentRoom;
-    if (members.length === selectedCharacterIDs.length) {
-      await this.channel.startGame();
-    } else {
-      throw new Error(errors.NOT_ENOUGH_PLAYERS);
-    }
+    const { members, selectedCharacterIds } = this.state.currentRoom;
+    const activeMembers = members.filter(p => p.isActive);
+    // if (activeMembers.length >= selectedCharacterIds.length) {
+    await this.channel.startGame();
+    // } else {
+    //   throw new Error(errors.NOT_ENOUGH_PLAYERS);
+    // }
   };
 
   render() {

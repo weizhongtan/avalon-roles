@@ -35,7 +35,7 @@ class RoomList {
   rejoinPlayer(player) {
     this.rooms.forEach((room, roomId) => {
       if (room.has(player)) {
-        room.notifyClients();
+        room.notify();
         debug('player rejoined room with id: ', roomId);
       }
     });

@@ -9,7 +9,7 @@ import { getRandomIcon } from '../../lib';
 
 const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRoom, onStartGame }) => {
   const characterCounts = {};
-  currentRoom.selectedCharacterIDs.forEach((id) => {
+  currentRoom.selectedCharacterIds.forEach((id) => {
     const { name } = Object.values(CHARACTERS)[id];
     if (characterCounts[name]) {
       characterCounts[name] += 1;
@@ -28,7 +28,8 @@ const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRo
       await onStartGame();
       setError(null);
     } catch (err) {
-      setError(err.message);
+      console.log('got err', err);
+      setError(err);
     }
   };
 

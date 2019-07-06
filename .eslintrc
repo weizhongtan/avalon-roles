@@ -23,7 +23,8 @@
     "object-curly-newline": "off",
     "arrow-parens": "off",
     "arrow-body-style": "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "no-underscore-dangle": "off"
   },
   "globals": {
     "log": false,

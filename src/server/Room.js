@@ -1,66 +1,32 @@
-const { knuthShuffle } = require('knuth-shuffle');
 const debug = require('debug')('avalon:Room');
 const uuidv4 = require('uuid/v4');
 
-const { getCharacterTypeByID } = require('./lib');
-const { errors, types } = require('../common');
+const { types, errors } = require('../common');
+const Game = require('./Game');
 
 class Room {
-  constructor(selectedCharacterIDs) {
+  constructor(selectedCharacterIds) {
     this.roomId = uuidv4().slice(0, 4).toUpperCase();
-    this.selectedCharacterIDs = selectedCharacterIDs;
+    this.selectedCharacterIds = selectedCharacterIds;
     this.players = new Set();
-
-    this.gameStarted = false;
+    this.createGame();
   }
 
   getId() {
     return this.roomId;
   }
 
-  startGame() {
-    if (this.gameStarted) {
-      throw new Error(errors.GAME_IN_PROGRESS);
-    }
-    if (Array.from(this.players).filter(p => p.isActive()).length < this.selectedCharacterIDs.length) {
-      debug('game cannot be started: not enough active players');
-      return false;
-    }
-    this.gameStarted = true;
-    debug('starting new game');
-    this.randomlyAssignCharacters();
-    this.players.forEach((player) => {
-      const playerView = {};
-      const otherPlayers = Array.from(this.players).filter(p => p !== player);
-      otherPlayers.forEach((otherPlayer) => {
-        playerView[otherPlayer.getName()] = player.viewOtherPlayer(otherPlayer);
-      });
-      player.send({
-        type: types.NOTIFY_CLIENT,
-        payload: {
-          playerView,
-          assignedCharacter: player.getCharacter(),
-        },
-      }, (err) => {
-        if (err) {
-          debug('Failed to send data to player');
-          this.remove(player);
-        }
-      });
-    });
-    return true;
+  createGame() {
+    this.game = new Game(this.selectedCharacterIds);
   }
 
-  randomlyAssignCharacters() {
-    this.selectedCharacterIDs = knuthShuffle(this.selectedCharacterIDs);
-    let i = 0;
-    this.players.forEach((player) => {
-      debug(this.selectedCharacterIDs);
-      const characterID = this.selectedCharacterIDs[i++]; // eslint-disable-line
-      const CharacterType = getCharacterTypeByID(characterID);
-      const character = new CharacterType();
-      player.setCharacter(character);
-    });
+  startGame() {
+    const activePlayers = this.getActivePlayers();
+    // if (activePlayers.length < this.selectedCharacterIds.length) {
+    //   throw new Error(errors.NOT_ENOUGH_PLAYERS);
+    // }
+    this.game.addPlayers(activePlayers);
+    this.game.start();
   }
 
   getPlayerByName(name) {
@@ -72,42 +38,30 @@ class Room {
   }
 
   add(player) {
-    const players = Array.from(this.players).filter(p => p.isActive());
-    if (players.length >= this.selectedCharacterIDs.length) {
-      return false;
+    if (this.getActivePlayers().length >= this.selectedCharacterIds.length) {
+      throw new Error('too many players');
     }
-    const wasAdded = !!this.players.add(player);
-    if (wasAdded) {
-      this.notifyClients();
-    }
-    return wasAdded;
+    this.players.add(player);
+    this.notify();
   }
 
   remove(player) {
     const wasRemoved = this.players.delete(player);
     if (wasRemoved) {
-      this.notifyClients();
+      this.notify();
     }
     return wasRemoved;
   }
 
-  notifyClients() {
-    this.send({
-      type: types.NOTIFY_CLIENT,
-      payload: {
-        currentRoom: this.serialise(),
-      },
-    });
+  getActivePlayers() {
+    return Array.from(this.players).filter(p => p.isActive());
   }
 
-  send(message, cb) {
-    this.players.forEach((player) => {
-      const payload = Object.assign({}, message.payload, {
-        playerName: player.getName()
+  notify() {
+    this.players.forEach(player => {
+      player.notify({
+        currentRoom: this.serialise(),
       });
-      player.send(Object.assign({}, message, {
-        payload
-      }), cb);
     });
   }
 
@@ -115,7 +69,7 @@ class Room {
     const players = Array.from(this.players).map(p => p.serialise());
     return {
       roomId: this.roomId,
-      selectedCharacterIDs: this.selectedCharacterIDs,
+      selectedCharacterIds: this.selectedCharacterIds,
       members: players,
     };
   }

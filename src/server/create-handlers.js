@@ -5,11 +5,11 @@ const { errors, types } = require('../common');
 
 module.exports = ({ roomList, player }) => {
   const handlers = {
-    [types.CREATE_ROOM]: (ack, { selectedCharacterIDs }) => {
+    [types.CREATE_ROOM]: (ack, { selectedCharacterIds }) => {
       debug('creating room');
-      const room = new Room(selectedCharacterIDs);
+      const room = new Room(selectedCharacterIds);
       roomList.addRoom(room);
-      ack({ roomId: room.getId(), selectedCharacterIDs });
+      ack({ roomId: room.getId(), selectedCharacterIds });
     },
     [types.JOIN_ROOM]: (ack, { roomId, playerName }) => {
       const room = roomList.getRoomById(roomId);
@@ -20,10 +20,11 @@ module.exports = ({ roomList, player }) => {
         player.setName(playerName);
         // remove player from other rooms
         roomList.removePlayer(player);
-        if (room.add(player)) {
+        try {
+          room.add(player);
           ack({ playerName, roomId });
-        } else {
-          ack(new Error(`could not add to room ${roomId}`));
+        } catch (err) {
+          ack(err);
         }
       } else {
         ack(new Error(`room with id ${roomId} does not exist`));
