@@ -3,3 +3,4 @@
 npm version "$1"
 git push heroku master
 git push master
+git push --tags
