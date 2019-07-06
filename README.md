@@ -10,7 +10,6 @@ Try it here (it may take up to 20 seconds for the server to spin up):
 
 - Fix randomizing icons
 - Pull join room functionality into seperate component
-- Better server side validation
 - Remove empty rooms
 - Prevent rooms being overfilled
 - Fix being unable to [detect socket disconnections](https://github.com/websockets/ws#how-to-detect-and-close-broken-connections)

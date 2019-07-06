@@ -20,5 +20,6 @@ exports.deserialise = (data) => {
 };
 
 exports.errors = {
-  DUPLICATE_NAME: 'DUPLICATE_NAME'
+  DUPLICATE_NAME: 'Sorry, that name is already taken',
+  INVALID_ROOM_ID: 'Room Id does not exist',
 };

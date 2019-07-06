@@ -20,7 +20,7 @@ class JoinRoom extends React.Component {
     playerName: '',
     chosenRoomIdInvalid: false,
     playerNameInvalid: false,
-    duplicatePlayerName: false,
+    errorMessage: null
   };
 
   handleInputChange = (e, { name, value }) => {
@@ -47,9 +47,7 @@ class JoinRoom extends React.Component {
         roomId: this.state.chosenRoomId,
       });
     } catch (err) {
-      if (err === errors.DUPLICATE_NAME) {
-        this.setState({ duplicatePlayerName: true });
-      }
+      this.setState({ errorMessage: err });
     }
   };
 
@@ -66,10 +64,12 @@ class JoinRoom extends React.Component {
     const JoinRoomSection = (
       <Form
       >
-        {this.state.duplicatePlayerName && <Message negative>
-          <Message.Header>Sorry, that name has been taken</Message.Header>
-          <p>Try a different name</p>
-        </Message>}
+        {
+          this.state.errorMessage
+          && <Message negative>
+            <Message.Header>{this.state.errorMessage}</Message.Header>
+          </Message>
+        }
         <Form.Input
           autoFocus
           name='chosenRoomId'

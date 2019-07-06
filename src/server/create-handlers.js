@@ -14,10 +14,10 @@ module.exports = ({ roomList, player }) => {
     },
     [TYPES.JOIN_ROOM]: (ack, { roomId, playerName }) => {
       const room = roomList.getRoomById(roomId);
-      if (room.getPlayerByName(playerName)) {
-        return ack({ err: errors.DUPLICATE_NAME });
-      }
       if (room) {
+        if (room.getPlayerByName(playerName)) {
+          return ack({ err: errors.DUPLICATE_NAME });
+        }
         player.setName(playerName);
         // remove player from other rooms
         roomList.removePlayer(player);

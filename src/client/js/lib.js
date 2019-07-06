@@ -11,6 +11,7 @@ function createSend(socket, type) {
     const ackId = uuid();
     return new Promise((resolve, reject) => {
       const ackListener = (event) => {
+        console.log('got ack', event);
         if (event.data) {
           const { ackId: _ackId, payload } = deserialise(event.data);
           if (_ackId === ackId) {
