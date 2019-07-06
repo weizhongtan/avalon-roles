@@ -11,15 +11,15 @@ const roomList = new RoomList();
 const playerList = new PlayerList();
 
 const root = ctx => {
-  debug('new client entered', ctx.session);
-
   // each player is identified by their session id
   let player = playerList.getPlayer(ctx.session.id);
   if (player) {
+    debug('client re-entered', ctx.session);
     player.setActive(true);
     player.setSocket(ctx.websocket);
     roomList.rejoinPlayer(player);
   } else {
+    debug('new client entered', ctx.session);
     player = new Player(ctx.websocket);
     playerList.addPlayer(ctx.session.id, player);
   }
@@ -53,7 +53,7 @@ const root = ctx => {
   });
 
   ctx.websocket.on('close', () => {
-    debug('player disconnected, removing socket channel');
+    debug('client', ctx.session.id, 'removing socket channel');
     player.setActive(false);
     player.setSocket(null);
     const room = roomList.getRoomByPlayer(player);
