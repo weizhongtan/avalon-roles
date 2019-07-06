@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Segment } from 'semantic-ui-react';
+import { Button, Form, Segment, Message } from 'semantic-ui-react';
 
+import { errors } from '../../../../common';
 import PlayView from './PlayView';
 
 class JoinRoom extends React.Component {
@@ -19,11 +20,20 @@ class JoinRoom extends React.Component {
     playerName: '',
     chosenRoomIdInvalid: false,
     playerNameInvalid: false,
+    duplicatePlayerName: false,
   };
 
-  handleInputChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleInputChange = (e, { name, value }) => {
+    const transformedValue = name === 'chosenRoomId'
+      ? value.toUpperCase().trim().slice(0, 4)
+      : value;
+    this.setState({
+      [name]: transformedValue,
+      [`${name}Invalid`]: false
+    });
+  };
 
-  handleJoinRoom = () => {
+  handleJoinRoom = async () => {
     this.setState({
       chosenRoomIdInvalid: !this.state.chosenRoomId.length,
       playerNameInvalid: !this.state.playerName.length,
@@ -31,10 +41,16 @@ class JoinRoom extends React.Component {
     if (!this.state.chosenRoomId.length || !this.state.playerName.length) {
       return;
     }
-    this.props.onJoinRoom({
-      playerName: this.state.playerName,
-      roomId: this.state.chosenRoomId,
-    });
+    try {
+      await this.props.onJoinRoom({
+        playerName: this.state.playerName,
+        roomId: this.state.chosenRoomId,
+      });
+    } catch (err) {
+      if (err === errors.DUPLICATE_NAME) {
+        this.setState({ duplicatePlayerName: true });
+      }
+    }
   };
 
   render() {
@@ -48,8 +64,14 @@ class JoinRoom extends React.Component {
       />
     );
     const JoinRoomSection = (
-      <Form>
+      <Form
+      >
+        {this.state.duplicatePlayerName && <Message negative>
+          <Message.Header>Sorry, that name has been taken</Message.Header>
+          <p>Try a different name</p>
+        </Message>}
         <Form.Input
+          autoFocus
           name='chosenRoomId'
           value={this.state.chosenRoomId}
           placeholder='Room Id'
@@ -61,7 +83,7 @@ class JoinRoom extends React.Component {
           value={this.state.playerName}
           placeholder='Your Name'
           onChange={this.handleInputChange}
-          error={this.state.playerNameInvalid}
+          error={this.state.playerNameInvalid || this.state.duplicatePlayerName}
         />
         <Button positive fluid onClick={this.handleJoinRoom} content='Join Room' />
       </Form>

@@ -64,6 +64,10 @@ class Room {
     });
   }
 
+  getPlayerByName(name) {
+    return Array.from(this.players).find(p => p.getName() === name);
+  }
+
   has(player) {
     return this.players.has(player);
   }

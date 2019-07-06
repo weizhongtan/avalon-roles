@@ -22,7 +22,7 @@ class App extends Component {
       selectedCharacterIDs: [],
       members: [],
     },
-    playerName: null,
+    playerName: '',
     assignedCharacter: null,
     viewOfOtherPlayers: null,
   };

@@ -1,10 +1,10 @@
 const TYPES = require('./config');
 
-function serialise({
+exports.serialise = ({
   type,
   payload,
   ackId = null,
-}) {
+}) => {
   if (!TYPES[type]) {
     throw new Error(`type ${type} is not supported`);
   }
@@ -13,13 +13,12 @@ function serialise({
     payload,
     ackId,
   });
-}
+};
 
-function deserialise(data) {
+exports.deserialise = (data) => {
   return JSON.parse(data);
-}
+};
 
-module.exports = {
-  serialise,
-  deserialise,
+exports.errors = {
+  DUPLICATE_NAME: 'DUPLICATE_NAME'
 };
