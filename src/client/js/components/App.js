@@ -51,13 +51,17 @@ class App extends Component {
   };
 
   handleStartGame = async () => {
-    const { members, selectedCharacterIds } = this.state.currentRoom;
-    const activeMembers = members.filter(p => p.isActive);
-    // if (activeMembers.length >= selectedCharacterIds.length) {
-    await this.channel.startGame();
-    // } else {
-    //   throw new Error(errors.NOT_ENOUGH_PLAYERS);
-    // }
+    try {
+      const { members, selectedCharacterIds } = this.state.currentRoom;
+      const activeMembers = members.filter(p => p.isActive);
+      if (activeMembers.length >= selectedCharacterIds.length) {
+        await this.channel.startGame();
+      } else {
+        throw new Error(errors.NOT_ENOUGH_PLAYERS);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   render() {

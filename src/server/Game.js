@@ -11,10 +11,10 @@ class Game {
   }
 
   start() {
-    debug('starting new game');
     if (this.isStarted) {
       throw new Error(errors.GAME_IN_PROGRESS);
     }
+    debug('starting new game');
     this.randomlyAssignCharacters();
     this.isStarted = true;
     this.players.forEach((player) => {

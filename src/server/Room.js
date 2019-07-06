@@ -1,7 +1,6 @@
-const debug = require('debug')('avalon:Room');
 const uuidv4 = require('uuid/v4');
 
-const { types, errors } = require('../common');
+const { errors } = require('../common');
 const Game = require('./Game');
 
 class Room {
@@ -22,9 +21,9 @@ class Room {
 
   startGame() {
     const activePlayers = this.getActivePlayers();
-    // if (activePlayers.length < this.selectedCharacterIds.length) {
-    //   throw new Error(errors.NOT_ENOUGH_PLAYERS);
-    // }
+    if (activePlayers.length < this.selectedCharacterIds.length) {
+      throw new Error(errors.NOT_ENOUGH_PLAYERS);
+    }
     this.game.addPlayers(activePlayers);
     this.game.start();
   }

@@ -48,7 +48,13 @@ const root = ctx => {
     }
     const handler = handlers[type];
     if (typeof handler === 'function') {
-      handler(createAck(player, ackId), payload);
+      const ack = createAck(player, ackId);
+      try {
+        ack(handler(payload));
+      } catch (err) {
+        debug(err);
+        ack(err);
+      }
     } else {
       debug(`couldn't match handler type ${type}`);
     }

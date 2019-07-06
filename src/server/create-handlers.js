@@ -5,39 +5,29 @@ const { errors, types } = require('../common');
 
 module.exports = ({ roomList, player }) => {
   const handlers = {
-    [types.CREATE_ROOM]: (ack, { selectedCharacterIds }) => {
+    [types.CREATE_ROOM]: ({ selectedCharacterIds }) => {
       debug('creating room');
       const room = new Room(selectedCharacterIds);
       roomList.addRoom(room);
-      ack({ roomId: room.getId(), selectedCharacterIds });
+      return { roomId: room.getId(), selectedCharacterIds };
     },
-    [types.JOIN_ROOM]: (ack, { roomId, playerName }) => {
+    [types.JOIN_ROOM]: ({ roomId, playerName }) => {
       const room = roomList.getRoomById(roomId);
       if (room) {
         if (room.getPlayerByName(playerName)) {
-          return ack(new Error(errors.DUPLICATE_NAME));
+          throw new Error(errors.DUPLICATE_NAME);
         }
         player.setName(playerName);
         // remove player from other rooms
         roomList.removePlayer(player);
-        try {
-          room.add(player);
-          ack({ playerName, roomId });
-        } catch (err) {
-          ack(err);
-        }
-      } else {
-        ack(new Error(`room with id ${roomId} does not exist`));
+        room.add(player);
+        return { playerName, roomId };
       }
-      return null;
+      throw new Error(`room with id ${roomId} does not exist`);
     },
-    [types.START_GAME]: (ack) => {
+    [types.START_GAME]: () => {
       const room = roomList.getRoomByPlayer(player);
-      try {
-        room.startGame();
-      } catch (err) {
-        ack(err);
-      }
+      room.startGame();
     },
   };
 
