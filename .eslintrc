@@ -3,11 +3,9 @@
   "extends": [
     "airbnb-base",
     "plugin:react/recommended",
-    "plugin:jest/recommended",
-    "plugin:flowtype/recommended"
+    "plugin:jest/recommended"
   ],
   "plugins": [
-    "flowtype",
     "import",
     "babel",
     "jest"
