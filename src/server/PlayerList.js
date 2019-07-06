@@ -2,18 +2,18 @@ const debug = require('debug')('avalon:PlayerList');
 
 class PlayerList {
   constructor() {
-    this.players = new Map();
+    this._players = new Map();
   }
 
   addPlayer(id, player) {
-    this.players.set(id, player);
+    this._players.set(id, player);
     debug('added player with id: ', id);
   }
 
-  getPlayer(id) {
-    if (this.players.has(id)) {
+  getPlayerById(id) {
+    if (this._players.has(id)) {
       debug('matched existing player with id: ', id);
-      return this.players.get(id);
+      return this._players.get(id);
     }
     return null;
   }

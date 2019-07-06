@@ -6,17 +6,17 @@ const { errors } = require('../common');
 
 class Game {
   constructor(charactersIds) {
-    this.isStarted = false;
-    this.charactersIds = charactersIds.slice(0);
+    this._isStarted = false;
+    this._charactersIds = charactersIds.slice(0);
   }
 
   start() {
-    if (this.isStarted) {
+    if (this._isStarted) {
       throw new Error(errors.GAME_IN_PROGRESS);
     }
     debug('starting new game');
     this.randomlyAssignCharacters();
-    this.isStarted = true;
+    this._isStarted = true;
     this.players.forEach((player) => {
       const viewOfOtherPlayers = {};
       const otherPlayers = Array.from(this.players).filter(p => p !== player);
@@ -32,7 +32,7 @@ class Game {
   }
 
   end() {
-    this.isStarted = false;
+    this._isStarted = false;
   }
 
   addPlayers(players) {
@@ -40,7 +40,7 @@ class Game {
   }
 
   randomlyAssignCharacters() {
-    const shuffledCharacterIds = knuthShuffle(this.charactersIds);
+    const shuffledCharacterIds = knuthShuffle(this._charactersIds);
     this.players.forEach((player) => {
       debug(shuffledCharacterIds);
       const characterID = shuffledCharacterIds.pop();

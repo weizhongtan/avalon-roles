@@ -2,41 +2,35 @@ const debug = require('debug')('avalon:RoomList');
 
 class RoomList {
   constructor() {
-    this.rooms = new Map();
+    this._rooms = new Set();
   }
 
   addRoom(room) {
-    this.rooms.set(room.getId(), room);
+    this._rooms.add(room);
   }
 
-  getRoomById(roomId) {
-    return this.rooms.get(roomId);
+  getRoomById(id) {
+    return Array.from(this._rooms).find(room => room.getId() === id);
   }
 
   getRoomByPlayer(player) {
-    let retRoom;
-    this.rooms.forEach(room => {
-      if (room.has(player)) {
-        retRoom = room;
-      }
-    });
-    return retRoom;
+    return Array.from(this._rooms).find(room => room.has(player));
   }
 
-  removePlayer(player) {
-    this.rooms.forEach((room, roomId) => {
+  removePlayerFromRooms(player) {
+    this._rooms.forEach(room => {
       const wasRemoved = room.remove(player);
       if (wasRemoved) {
-        debug('player was removed from', roomId);
+        debug('player was removed from', room.getId());
       }
     });
   }
 
-  rejoinPlayer(player) {
-    this.rooms.forEach((room, roomId) => {
+  notifyRoomWithPlayer(player) {
+    this._rooms.forEach(room => {
       if (room.has(player)) {
         room.notify();
-        debug('player rejoined room with id: ', roomId);
+        debug('player rejoined room with id: ', room.getId());
       }
     });
   }

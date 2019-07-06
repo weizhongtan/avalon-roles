@@ -12,13 +12,13 @@ const DISABLE_SESSION = !!process.env.DISABLE_SESSION;
 const roomList = new RoomList();
 const playerList = new PlayerList();
 
-// data should be serialisable data, or an instance of Error
+// data should be serialisable, or an instance of Error
 const createAck = (player, ackId) => data => {
   const payload = data instanceof Error ? { err: data.message } : data;
   player.ack(payload, ackId, (err) => {
     if (err) {
       debug('Socket connection failed, removing player from all rooms');
-      roomList.removePlayer(player);
+      roomList.removePlayerFromRooms(player);
     }
   });
 };
@@ -26,12 +26,11 @@ const createAck = (player, ackId) => data => {
 const root = ctx => {
   const sessionId = DISABLE_SESSION ? uuidv4() : ctx.session.id;
   // each player is identified by their session id
-  let player = playerList.getPlayer(sessionId);
+  let player = playerList.getPlayerById(sessionId);
   if (player) {
     debug('client re-entered', ctx.session);
-    player.setActive(true);
     player.setSocket(ctx.websocket);
-    roomList.rejoinPlayer(player);
+    roomList.notifyRoomWithPlayer(player);
   } else {
     debug('new client entered', ctx.session);
     player = new Player(ctx.websocket);
@@ -62,7 +61,6 @@ const root = ctx => {
 
   ctx.websocket.on('close', () => {
     debug('client', sessionId, 'removing socket channel');
-    player.setActive(false);
     player.setSocket(null);
     const room = roomList.getRoomByPlayer(player);
     if (room) {

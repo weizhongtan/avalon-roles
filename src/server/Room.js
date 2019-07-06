@@ -5,47 +5,47 @@ const Game = require('./Game');
 
 class Room {
   constructor(selectedCharacterIds) {
-    this.roomId = uuidv4().slice(0, 4).toUpperCase();
-    this.selectedCharacterIds = selectedCharacterIds;
-    this.players = new Set();
+    this._id = uuidv4().slice(0, 4).toUpperCase();
+    this._selectedCharacterIds = selectedCharacterIds;
+    this._players = new Set();
     this.createGame();
   }
 
   getId() {
-    return this.roomId;
+    return this._id;
   }
 
   createGame() {
-    this.game = new Game(this.selectedCharacterIds);
+    this._game = new Game(this._selectedCharacterIds);
   }
 
   startGame() {
     const activePlayers = this.getActivePlayers();
-    if (activePlayers.length < this.selectedCharacterIds.length) {
+    if (activePlayers.length < this._selectedCharacterIds.length) {
       throw new Error(errors.NOT_ENOUGH_PLAYERS);
     }
-    this.game.addPlayers(activePlayers);
-    this.game.start();
+    this._game.addPlayers(activePlayers);
+    this._game.start();
   }
 
   getPlayerByName(name) {
-    return Array.from(this.players).find(p => p.getName() === name);
+    return Array.from(this._players).find(p => p.getName() === name);
   }
 
   has(player) {
-    return this.players.has(player);
+    return this._players.has(player);
   }
 
   add(player) {
-    if (this.getActivePlayers().length >= this.selectedCharacterIds.length) {
+    if (this.getActivePlayers().length >= this._selectedCharacterIds.length) {
       throw new Error('too many players');
     }
-    this.players.add(player);
+    this._players.add(player);
     this.notify();
   }
 
   remove(player) {
-    const wasRemoved = this.players.delete(player);
+    const wasRemoved = this._players.delete(player);
     if (wasRemoved) {
       this.notify();
     }
@@ -53,11 +53,11 @@ class Room {
   }
 
   getActivePlayers() {
-    return Array.from(this.players).filter(p => p.isActive());
+    return Array.from(this._players).filter(p => p.isActive());
   }
 
   notify() {
-    this.players.forEach(player => {
+    this._players.forEach(player => {
       player.notify({
         currentRoom: this.serialise(),
       });
@@ -65,10 +65,10 @@ class Room {
   }
 
   serialise() {
-    const players = Array.from(this.players).map(p => p.serialise());
+    const players = Array.from(this._players).map(p => p.serialise());
     return {
-      roomId: this.roomId,
-      selectedCharacterIds: this.selectedCharacterIds,
+      roomId: this._id,
+      selectedCharacterIds: this._selectedCharacterIds,
       members: players,
     };
   }

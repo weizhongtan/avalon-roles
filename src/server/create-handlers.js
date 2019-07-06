@@ -19,11 +19,11 @@ module.exports = ({ roomList, player }) => {
         }
         player.setName(playerName);
         // remove player from other rooms
-        roomList.removePlayer(player);
+        roomList.removePlayerFromRooms(player);
         room.add(player);
         return { playerName, roomId };
       }
-      throw new Error(`room with id ${roomId} does not exist`);
+      throw new Error(errors.INVALID_ROOM_ID);
     },
     [types.START_GAME]: () => {
       const room = roomList.getRoomByPlayer(player);

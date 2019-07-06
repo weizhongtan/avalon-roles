@@ -1,22 +1,14 @@
-const uuid = require('uuid/v4');
-
 const { serialise, types } = require('../common');
 
 class Player {
   constructor(socket) {
-    this.id = uuid();
     this.setName(null);
     this.setCharacter(null);
-    this.setActive(true);
     this.setSocket(socket);
   }
 
-  setActive(value) {
-    this.active = value;
-  }
-
   isActive() {
-    return this.active;
+    return !!this.socket;
   }
 
   setSocket(websocket) {
@@ -24,31 +16,31 @@ class Player {
   }
 
   setName(name) {
-    this.name = name;
+    this._name = name;
   }
 
   getName() {
-    return this.name;
+    return this._name;
   }
 
   setCharacter(character) {
-    this.character = character;
+    this._character = character;
   }
 
   getCharacter() {
-    return this.character;
+    return this._character;
   }
 
   viewOtherPlayer(otherPlayer) {
-    return this.character.sees(otherPlayer.character);
+    return this._character.sees(otherPlayer.getCharacter());
   }
 
   setPlayView(view) {
-    this.playView = view;
+    this._playView = view;
   }
 
   getPlayView() {
-    return this.playView;
+    return this._playView;
   }
 
   notify(payload = {}, cb) {
@@ -77,7 +69,7 @@ class Player {
 
   serialise() {
     return {
-      name: this.name,
+      name: this._name,
       isActive: this.isActive()
     };
   }
