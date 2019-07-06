@@ -9,8 +9,18 @@ class RoomList {
     this.rooms.set(room.getId(), room);
   }
 
-  getRoom(roomId) {
+  getRoomById(roomId) {
     return this.rooms.get(roomId);
+  }
+
+  findRoomByPlayer(player) {
+    let retRoom;
+    this.rooms.forEach(room => {
+      if (room.has(player)) {
+        retRoom = room;
+      }
+    });
+    return retRoom;
   }
 
   removePlayer(player) {

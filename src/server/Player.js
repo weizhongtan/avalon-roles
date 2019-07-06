@@ -34,10 +34,12 @@ class Player {
   }
 
   send(data, cb) {
-    this.socket.send(serialise(data), cb);
+    if (this.isActive()) {
+      this.socket.send(serialise(data), cb);
+    }
   }
 
-  assignCharacter(character) {
+  setCharacter(character) {
     this.character = character;
   }
 

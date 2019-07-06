@@ -101,10 +101,10 @@ describe('Room', () => {
 
       it('assigns a character to each player', () => {
         room.randomlyAssignCharacters();
-        expect(player.assignCharacter).toHaveBeenCalledTimes(1);
-        expect(secondPlayer.assignCharacter).toHaveBeenCalledTimes(1);
-        const playerCharacter = player.assignCharacter.mock.calls[0];
-        const secondPlayerCharacter = secondPlayer.assignCharacter.mock.calls[0];
+        expect(player.setCharacter).toHaveBeenCalledTimes(1);
+        expect(secondPlayer.setCharacter).toHaveBeenCalledTimes(1);
+        const playerCharacter = player.setCharacter.mock.calls[0];
+        const secondPlayerCharacter = secondPlayer.setCharacter.mock.calls[0];
         expect(playerCharacter).not.toBe(secondPlayerCharacter);
       });
     });

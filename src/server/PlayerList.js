@@ -12,7 +12,7 @@ class PlayerList {
 
   getPlayer(id) {
     if (this.players.has(id)) {
-      debug('found player with id: ', id);
+      debug('matched existing player with id: ', id);
       return this.players.get(id);
     }
     return null;

@@ -13,7 +13,7 @@ module.exports = ({ roomList, player }) => {
     },
     [TYPES.JOIN_ROOM]: (ack, { roomId, playerName }) => {
       player.setName(playerName);
-      const room = roomList.getRoom(roomId);
+      const room = roomList.getRoomById(roomId);
       if (room) {
         // remove player from other rooms
         roomList.removePlayer(player);

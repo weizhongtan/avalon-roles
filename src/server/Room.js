@@ -60,7 +60,7 @@ class Room {
       const characterID = this.selectedCharacterIDs[i++]; // eslint-disable-line
       const CharacterType = getCharacterTypeByID(characterID);
       const character = new CharacterType();
-      player.assignCharacter(character);
+      player.setCharacter(character);
     });
   }
 
@@ -103,7 +103,9 @@ class Room {
   }
 
   serialise() {
-    const players = Array.from(this.players).map(p => p.serialise());
+    const players = Array.from(this.players)
+      .filter(p => p.isActive())
+      .map(p => p.serialise());
     return {
       roomId: this.roomId,
       selectedCharacterIDs: this.selectedCharacterIDs,

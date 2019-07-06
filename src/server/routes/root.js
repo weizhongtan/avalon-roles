@@ -46,13 +46,18 @@ const root = ctx => {
         });
       };
       handler(ack, payload);
+    } else {
+      debug(`couldn't match handler type ${type}`);
     }
-    debug(`couldn't match handler type ${type}`);
   });
 
   ctx.websocket.on('close', () => {
     debug('player disconnected, setting to inactive');
     player.setActive(false);
+    const room = roomList.findRoomByPlayer(player);
+    if (room) {
+      room.updateClients();
+    }
   });
 };
 
