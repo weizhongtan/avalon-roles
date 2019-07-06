@@ -6,8 +6,7 @@
         "targets": "> 0.25%, not dead"
       }
     ],
-    "@babel/preset-react",
-    "@babel/preset-flow"
+    "@babel/preset-react"
   ],
   "plugins": [
     "@babel/plugin-transform-runtime",
