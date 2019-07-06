@@ -22,4 +22,6 @@ exports.deserialise = (data) => {
 exports.errors = {
   DUPLICATE_NAME: 'Sorry, that name is already taken',
   INVALID_ROOM_ID: 'Room Id does not exist',
+  GAME_IN_PROGRESS: 'This game is already in progress',
+  NOT_ENOUGH_PLAYERS: 'Not enough players',
 };

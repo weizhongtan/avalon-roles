@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Header, Segment, Button, List, Icon } from 'semantic-ui-react';
+import { Header, Segment, Button, List, Icon, Message } from 'semantic-ui-react';
 
 import { CHARACTERS } from '../../../../config';
 import PlayerViewList from './PlayerViewList';
@@ -20,6 +20,17 @@ const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRo
 
   const characterStrings = Object.entries(characterCounts)
     .map(([key, val]) => (val > 1 ? `${key} x${val}` : key));
+
+  const [errorMessage, setError] = useState(null);
+
+  const handleStartGame = async () => {
+    try {
+      await onStartGame();
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   return (
     <div>
@@ -54,9 +65,13 @@ const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRo
                 </List.Item>
               ))}
             </List>
+            {errorMessage
+              && <Message negative>
+                <Message.Header>{errorMessage}</Message.Header>
+              </Message>}
             <Button
               content='Start game'
-              onClick={onStartGame}
+              onClick={handleStartGame}
             />
           </div>
         )}

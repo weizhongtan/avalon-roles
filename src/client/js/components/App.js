@@ -9,6 +9,7 @@ import JoinRoom from './JoinRoom/JoinRoom';
 import CreateRoom from './CreateRoom/CreateRoom';
 
 import { createChannel } from '../lib';
+import { errors } from '../../../common';
 
 class App extends Component {
   static propTypes = {
@@ -50,7 +51,12 @@ class App extends Component {
   };
 
   handleStartGame = async () => {
-    await this.channel.startGame();
+    const { members, selectedCharacterIDs } = this.state.currentRoom;
+    if (members.length === selectedCharacterIDs.length) {
+      await this.channel.startGame();
+    } else {
+      throw new Error(errors.NOT_ENOUGH_PLAYERS);
+    }
   };
 
   render() {

@@ -33,9 +33,10 @@ module.exports = ({ roomList, player }) => {
     },
     [TYPES.START_GAME]: (ack) => {
       const room = roomList.getRoomByPlayer(player);
-      const res = room.tryStartGame();
-      if (!res) {
-        ack({ err: 'game could not start' });
+      try {
+        room.startGame();
+      } catch (err) {
+        ack({ err });
       }
     },
   };

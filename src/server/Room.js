@@ -4,7 +4,7 @@ const uuidv4 = require('uuid/v4');
 
 const TYPES = require('../config');
 const { getCharacterTypeByID } = require('./lib');
-const { serialise } = require('../common');
+const { errors } = require('../common');
 
 class Room {
   constructor(selectedCharacterIDs) {
@@ -19,10 +19,9 @@ class Room {
     return this.roomId;
   }
 
-  tryStartGame() {
+  startGame() {
     if (this.gameStarted) {
-      debug('game cannot be started: game is already in progress');
-      return false;
+      throw new Error(errors.GAME_IN_PROGRESS);
     }
     if (Array.from(this.players).filter(p => p.isActive()).length < this.selectedCharacterIDs.length) {
       debug('game cannot be started: not enough active players');
