@@ -49,6 +49,7 @@ class App extends Component {
       roomId,
       playerName,
     });
+    this.setState({ playerName });
     this.props.history.push('/join');
   };
 
@@ -62,6 +63,7 @@ class App extends Component {
         <Route exact path="/" component={Home}/>
         <Route exact path="/join" render={() => (
           <JoinRoom
+            playerName={this.state.playerName}
             onJoinRoom={this.handleJoinRoom}
             currentRoom={this.state.currentRoom}
             assignedCharacter={this.state.assignedCharacter}

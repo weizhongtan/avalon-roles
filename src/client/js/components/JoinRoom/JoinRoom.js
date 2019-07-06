@@ -6,6 +6,7 @@ import PlayView from './PlayView';
 
 class JoinRoom extends React.Component {
   static propTypes = {
+    playerName: PropTypes.string.isRequired,
     onJoinRoom: PropTypes.func.isRequired,
     onStartGame: PropTypes.func.isRequired,
     assignedCharacter: PropTypes.object,
@@ -23,8 +24,10 @@ class JoinRoom extends React.Component {
   handleInputChange = (e, { name, value }) => this.setState({ [name]: value });
 
   handleJoinRoom = () => {
-    this.setState({ chosenRoomIdInvalid: !this.state.chosenRoomId.length });
-    this.setState({ playerNameInvalid: !this.state.playerName.length });
+    this.setState({
+      chosenRoomIdInvalid: !this.state.chosenRoomId.length,
+      playerNameInvalid: !this.state.playerName.length,
+    });
     if (!this.state.chosenRoomId.length || !this.state.playerName.length) {
       return;
     }
@@ -37,6 +40,7 @@ class JoinRoom extends React.Component {
   render() {
     const PlayViewSection = (
       <PlayView
+        playerName={this.props.playerName}
         assignedCharacter={this.props.assignedCharacter}
         viewOfOtherPlayers={this.props.viewOfOtherPlayers}
         currentRoom={this.props.currentRoom}

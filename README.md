@@ -8,6 +8,8 @@ Try it here (it may take up to 20 seconds for the server to spin up):
 
 ## Todo
 
+- Prevent duplicate names
+- Fix randomizing icons
 - Pull join room functionality into seperate component
 - Form validation
 - Better server side validation
