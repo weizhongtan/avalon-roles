@@ -1,5 +1,4 @@
 const uuid = require('uuid/v4');
-const debug = require('debug')('avalon:Player');
 
 const { serialise } = require('../common');
 
@@ -8,12 +7,11 @@ class Player {
     this.id = uuid();
     this.name = null;
     this.character = null;
-    this.active = true;
-    this.socket = socket;
+    this.setActive(true);
+    this.setSocket(socket);
   }
 
   setActive(value) {
-    debug('player active flag set:', value);
     this.active = value;
   }
 
@@ -34,7 +32,7 @@ class Player {
   }
 
   send(data, cb) {
-    if (this.isActive()) {
+    if (this.socket) {
       this.socket.send(serialise(data), cb);
     }
   }

@@ -16,6 +16,7 @@ const root = ctx => {
   // each player is identified by their session id
   let player = playerList.getPlayer(ctx.session.id);
   if (player) {
+    player.setActive(true);
     player.setSocket(ctx.websocket);
     roomList.rejoinPlayer(player);
   } else {
@@ -52,9 +53,10 @@ const root = ctx => {
   });
 
   ctx.websocket.on('close', () => {
-    debug('player disconnected, setting to inactive');
+    debug('player disconnected, removing socket channel');
     player.setActive(false);
-    const room = roomList.findRoomByPlayer(player);
+    player.setSocket(null);
+    const room = roomList.getRoomByPlayer(player);
     if (room) {
       room.updateClients();
     }

@@ -13,7 +13,7 @@ class RoomList {
     return this.rooms.get(roomId);
   }
 
-  findRoomByPlayer(player) {
+  getRoomByPlayer(player) {
     let retRoom;
     this.rooms.forEach(room => {
       if (room.has(player)) {
@@ -35,7 +35,6 @@ class RoomList {
   rejoinPlayer(player) {
     this.rooms.forEach((room, roomId) => {
       if (room.has(player)) {
-        player.setActive(true);
         room.updateClients();
         debug('player rejoined room with id: ', roomId);
       }
