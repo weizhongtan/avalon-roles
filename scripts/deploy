@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
+set -e
 
 npm version "$1"
-git push heroku master
-git push && git push --tags
+git push && git push --tags && git push heroku master
