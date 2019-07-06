@@ -29,11 +29,8 @@ class App extends Component {
 
   componentDidMount = () => {
     this.channel = createChannel();
-    this.channel.onNotification(({ payload }) => {
-      console.log('got notification', payload);
-      Object.entries(payload).forEach(([key, val]) => {
-        this.setState({ [key]: val });
-      });
+    this.channel.onNotification(payload => {
+      this.setState(payload);
     });
   };
 
@@ -49,7 +46,6 @@ class App extends Component {
       roomId,
       playerName,
     });
-    this.setState({ playerName });
     this.props.history.push('/join');
   };
 

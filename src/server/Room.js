@@ -4,6 +4,7 @@ const uuidv4 = require('uuid/v4');
 
 const TYPES = require('../config');
 const { getCharacterTypeByID } = require('./lib');
+const { serialise } = require('../common');
 
 class Room {
   constructor(selectedCharacterIDs) {
@@ -37,7 +38,7 @@ class Room {
         playerView[otherPlayer.getName()] = player.viewOtherPlayer(otherPlayer);
       });
       player.send({
-        type: TYPES.UPDATE_CLIENT,
+        type: TYPES.NOTIFY_CLIENT,
         payload: {
           playerView,
           assignedCharacter: player.getCharacter(),
@@ -79,7 +80,7 @@ class Room {
     }
     const wasAdded = !!this.players.add(player);
     if (wasAdded) {
-      this.updateClients();
+      this.notifyClients();
     }
     return wasAdded;
   }
@@ -87,14 +88,14 @@ class Room {
   remove(player) {
     const wasRemoved = this.players.delete(player);
     if (wasRemoved) {
-      this.updateClients();
+      this.notifyClients();
     }
     return wasRemoved;
   }
 
-  updateClients() {
+  notifyClients() {
     this.send({
-      type: TYPES.UPDATE_CLIENT,
+      type: TYPES.NOTIFY_CLIENT,
       payload: {
         currentRoom: this.serialise(),
       },
@@ -103,14 +104,17 @@ class Room {
 
   send(message, cb) {
     this.players.forEach((player) => {
-      player.send(message, cb);
+      const payload = Object.assign({}, message.payload, {
+        playerName: player.getName()
+      });
+      player.send(Object.assign({}, message, {
+        payload
+      }), cb);
     });
   }
 
   serialise() {
-    const players = Array.from(this.players)
-      .filter(p => p.isActive())
-      .map(p => p.serialise());
+    const players = Array.from(this.players).map(p => p.serialise());
     return {
       roomId: this.roomId,
       selectedCharacterIDs: this.selectedCharacterIDs,

@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header, Segment, Button } from 'semantic-ui-react';
+import { Header, Segment, Button, List, Icon } from 'semantic-ui-react';
 
 import { CHARACTERS } from '../../../../config';
-import HorizontalList from './HorizontalList';
 import PlayerViewList from './PlayerViewList';
+
+import { getRandomIcon } from '../../lib';
 
 const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRoom, onStartGame }) => {
   const characterCounts = {};
@@ -28,9 +29,31 @@ const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRo
             <Header block>Your name: {playerName}</Header>
             <Header block>Current room: {currentRoom.roomId}</Header>
             <Header size='tiny'>Players in this room:</Header>
-            <HorizontalList elements={currentRoom.members} />
+            <List horizontal relaxed>
+              {currentRoom.members.map(({ name, isActive }) => (
+                <List.Item key={name}>
+                  <List.Content>
+                    <List.Header style={{
+                      color: isActive ? 'black' : 'grey'
+                    }}>{name}</List.Header>
+                    <List.Description>
+                      {!isActive ? 'is inactive' : ''}
+                    </List.Description>
+                  </List.Content>
+                </List.Item>
+              ))}
+            </List>
             <Header size='tiny'>Available characters:</Header>
-            <HorizontalList elements={characterStrings} />
+            <List horizontal relaxed>
+              {characterStrings.map(character => (
+                <List.Item key={character}>
+                  <Icon name={getRandomIcon()} />
+                  <List.Content>
+                    <List.Header>{character}</List.Header>
+                  </List.Content>
+                </List.Item>
+              ))}
+            </List>
             <Button
               content='Start game'
               onClick={onStartGame}

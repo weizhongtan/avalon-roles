@@ -62,7 +62,7 @@ const root = ctx => {
     player.setSocket(null);
     const room = roomList.getRoomByPlayer(player);
     if (room) {
-      room.updateClients();
+      room.notifyClients();
     }
   });
 };

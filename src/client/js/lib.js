@@ -11,15 +11,14 @@ function createSend(socket, type) {
     const ackId = uuid();
     return new Promise((resolve, reject) => {
       const ackListener = (event) => {
-        console.log('got ack', event);
         if (event.data) {
-          const { ackId: _ackId, payload } = deserialise(event.data);
+          const { type: _type, ackId: _ackId, payload } = deserialise(event.data);
           if (_ackId === ackId) {
             if (payload.err) {
               reject(payload.err);
             } else {
               socket.removeEventListener('message', ackListener);
-              console.log('ack:', payload);
+              console.log(_type, payload);
               resolve(payload);
             }
           }
@@ -45,12 +44,11 @@ export function createChannel() {
     onNotification(cb) {
       socket.addEventListener('message', (event) => {
         if (event.data) {
-          const data = deserialise(event.data);
-          // ignore acks
-          if (data.ackId) {
-            return;
+          const { type, payload } = deserialise(event.data);
+          if (type === TYPES.NOTIFY_CLIENT) {
+            console.log(type, payload);
+            cb(payload);
           }
-          cb(data);
         }
       });
     },

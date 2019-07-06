@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Segment, Message } from 'semantic-ui-react';
 
-import { errors } from '../../../../common';
 import PlayView from './PlayView';
 
 class JoinRoom extends React.Component {

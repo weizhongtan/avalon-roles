@@ -50,7 +50,10 @@ class Player {
   }
 
   serialise() {
-    return this.name;
+    return {
+      name: this.name,
+      isActive: this.isActive()
+    };
   }
 }
 
