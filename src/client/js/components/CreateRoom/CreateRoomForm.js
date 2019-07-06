@@ -13,20 +13,28 @@ const options = [
   { text: 10, value: 10 },
 ];
 
-const CreateRoomForm = ({ characters, numberOfPlayers, onPlayerNameChange, playerName, onToggleCharacter, onCreateGame, onNumberOfPlayersChange, hasAttemptedSubmit }) => {
+const CreateRoomForm = ({
+  characters,
+  numberOfPlayers,
+  onPlayerNameChange,
+  playerName,
+  onToggleCharacter,
+  onCreateGame,
+  onNumberOfPlayersChange,
+  hasAttemptedSubmit,
+}) => {
   const ToggleableCharacters = (
     <Button.Group vertical fluid labeled icon>
-      {Object.entries(characters)
-        .map(([char, { active, name, isGood }]) => (
-          <CharacterToggle
-            name={char}
-            key={char}
-            content={name}
-            onToggle={onToggleCharacter}
-            active={active}
-            isGood={isGood}
-          />
-        ))}
+      {Object.entries(characters).map(([char, { active, name, isGood }]) => (
+        <CharacterToggle
+          name={char}
+          key={char}
+          content={name}
+          onToggle={onToggleCharacter}
+          active={active}
+          isGood={isGood}
+        />
+      ))}
     </Button.Group>
   );
 
@@ -34,19 +42,19 @@ const CreateRoomForm = ({ characters, numberOfPlayers, onPlayerNameChange, playe
     <Segment>
       <Form>
         <Form.Dropdown
-          label='Number of players'
+          label="Number of players"
           selection
-          name='numberOfPlayers'
+          name="numberOfPlayers"
           onChange={onNumberOfPlayersChange}
           options={options}
           value={numberOfPlayers}
         />
-        <Header content='Select characters' size='tiny' />
+        <Header content="Select characters" size="tiny" />
         {ToggleableCharacters}
         <Divider />
         <Form.Input
-          name='playerName'
-          placeholder='Your Name'
+          name="playerName"
+          placeholder="Your Name"
           onChange={onPlayerNameChange}
           error={playerName === '' && hasAttemptedSubmit}
           value={playerName}
@@ -55,12 +63,23 @@ const CreateRoomForm = ({ characters, numberOfPlayers, onPlayerNameChange, playe
         <Button
           fluid
           positive
-          content='Create and join room'
+          content="Create and join room"
           onClick={onCreateGame}
         />
       </Form>
     </Segment>
   );
+};
+
+CreateRoomForm.propTypes = {
+  characters: PropTypes.shape({}).isRequired,
+  numberOfPlayers: PropTypes.number.isRequired,
+  onPlayerNameChange: PropTypes.func.isRequired,
+  playerName: PropTypes.string.isRequired,
+  onToggleCharacter: PropTypes.func.isRequired,
+  onCreateGame: PropTypes.func.isRequired,
+  onNumberOfPlayersChange: PropTypes.func.isRequired,
+  hasAttemptedSubmit: PropTypes.bool.isRequired,
 };
 
 export default CreateRoomForm;

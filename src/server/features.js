@@ -1,3 +1,3 @@
 module.exports = {
-  session: !process.env.DISABLE_SESSION
+  session: !process.env.DISABLE_SESSION,
 };

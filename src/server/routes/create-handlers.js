@@ -7,7 +7,10 @@ module.exports = ({ roomList, player }) => {
       log('creating room');
       const room = new Room(selectedCharacterIds);
       roomList.addRoom(room);
-      return { roomId: room.getId(), selectedCharacterIds };
+      return {
+        roomId: room.getId(),
+        selectedCharacterIds,
+      };
     },
     [types.JOIN_ROOM]: ({ roomId, playerName }) => {
       const room = roomList.getRoomById(roomId);
@@ -19,7 +22,10 @@ module.exports = ({ roomList, player }) => {
         // remove player from other rooms
         roomList.removePlayerFromRooms(player);
         room.add(player);
-        return { playerName, roomId };
+        return {
+          playerName,
+          roomId,
+        };
       }
       throw new Error(errors.INVALID_ROOM_ID);
     },

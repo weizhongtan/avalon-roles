@@ -3,7 +3,6 @@ const serve = require('koa-static');
 const websockify = require('koa-websocket');
 const route = require('koa-route');
 
-
 const { session, setSessionId } = require('./middleware/session');
 const { log } = require('../common');
 const channel = require('./routes/channel');
@@ -11,7 +10,11 @@ const features = require('./features');
 
 const app = websockify(new Koa());
 
-app.use(serve('./dist', { defer: true }));
+app.use(
+  serve('./dist', {
+    defer: true,
+  })
+);
 
 app.keys = ['avalon-secret'];
 

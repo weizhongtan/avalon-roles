@@ -22,28 +22,35 @@ class SlidingSidebar extends Component {
         <Sidebar.Pushable as={Segment} style={{ overflow: 'hidden' }}>
           <Sidebar
             as={Menu}
-            animation='push'
+            animation="push"
             inverted
             onHide={this.handleSidebarHide}
             visible={visible}
-            direction='top'
+            direction="top"
             widths={2}
           >
-            <Menu.Item as={NavLink} to='/join' onClick={this.handleSidebarHide}>
-              <Icon name='plus' />
+            <Menu.Item as={NavLink} to="/join" onClick={this.handleSidebarHide}>
+              <Icon name="plus" />
               Join a game
             </Menu.Item>
-            <Menu.Item as={NavLink} to='/create' onClick={this.handleSidebarHide}>
-              <Icon name='cog' />
+            <Menu.Item
+              as={NavLink}
+              to="/create"
+              onClick={this.handleSidebarHide}
+            >
+              <Icon name="cog" />
               Create a game
             </Menu.Item>
           </Sidebar>
 
-          <Sidebar.Pusher >
-            <Button icon='bars' fluid attached='bottom' onClick={this.handleButtonClick} />
-            <Segment vertical>
-              {this.props.children}
-            </Segment>
+          <Sidebar.Pusher>
+            <Button
+              icon="bars"
+              fluid
+              attached="bottom"
+              onClick={this.handleButtonClick}
+            />
+            <Segment vertical>{this.props.children}</Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </div>

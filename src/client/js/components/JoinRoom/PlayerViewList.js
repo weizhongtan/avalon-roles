@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const PlayerViewItem = ({ otherPlayer, viewedAs }) => (
-  <li>{otherPlayer} is {viewedAs || 'unknown.'}</li>
+  <li>
+    {otherPlayer} is {viewedAs || 'unknown.'}
+  </li>
 );
 
 PlayerViewItem.propTypes = {

@@ -8,7 +8,8 @@
     "build:production": "parcel build src/client/index.html",
     "build": "parcel src/client/index.html",
     "heroku-postbuild": "npm run build:production",
-    "lint": "eslint --fix src",
+    "lint": "eslint src",
+    "prettier": "prettier --write 'src/**/*.js'",
     "test": "jest",
     "deploy": "scripty"
   },
@@ -42,18 +43,24 @@
     "babel-eslint": "^9.0.0",
     "babel-jest": "^24.8.0",
     "eslint": "^5.1.0",
-    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jest": "^21.18.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.10.0",
     "jest": "^24.8.0",
     "node-sass": "^4.12.0",
     "nodemon": "^1.18.3",
     "parcel": "^1.12.3",
+    "prettier": "1.18.2",
     "react-test-renderer": "^16.4.1",
     "sass": "^1.22.3",
     "scripty": "^1.9.1"
+  },
+  "xo": {
+    "space": 2,
+    "prettier": true
   },
   "repository": {
     "type": "git",

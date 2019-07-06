@@ -6,8 +6,13 @@ import LinkButton from './LinkButton/LinkButton';
 const Home = () => (
   <Segment>
     <Button.Group labeled vertical icon fluid>
-      <LinkButton text='Join a game' iconName='plus' linkTo='/join' primary/>
-      <LinkButton text='Create a game' iconName='cog' linkTo='/create' secondary/>
+      <LinkButton text="Join a game" iconName="plus" linkTo="/join" primary />
+      <LinkButton
+        text="Create a game"
+        iconName="cog"
+        linkTo="/create"
+        secondary
+      />
     </Button.Group>
   </Segment>
 );

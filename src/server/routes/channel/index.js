@@ -13,7 +13,7 @@ const playerList = new PlayerList();
 // data should be serialisable, or an instance of Error
 const createAck = (player, ackId) => data => {
   const payload = data instanceof Error ? { err: data.message } : data;
-  player.ack(payload, ackId, (err) => {
+  player.ack(payload, ackId, err => {
     if (err) {
       log('Socket connection failed, removing player from all rooms');
       roomList.removePlayerFromRooms(player);
@@ -37,7 +37,7 @@ const channel = ctx => {
 
   const handlers = createHandlers({ roomList, player });
 
-  ctx.websocket.on('message', (data) => {
+  ctx.websocket.on('message', data => {
     const { type, payload, ackId } = deserialise(data);
     if (!ackId) {
       log('got message with no ackId, ignoring');

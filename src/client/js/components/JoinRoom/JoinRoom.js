@@ -19,16 +19,20 @@ class JoinRoom extends React.Component {
     playerName: '',
     chosenRoomIdInvalid: false,
     playerNameInvalid: false,
-    errorMessage: null
+    errorMessage: null,
   };
 
   handleInputChange = (e, { name, value }) => {
-    const transformedValue = name === 'chosenRoomId'
-      ? value.toUpperCase().trim().slice(0, 4)
-      : value;
+    const transformedValue =
+      name === 'chosenRoomId'
+        ? value
+            .toUpperCase()
+            .trim()
+            .slice(0, 4)
+        : value;
     this.setState({
       [name]: transformedValue,
-      [`${name}Invalid`]: false
+      [`${name}Invalid`]: false,
     });
   };
 
@@ -61,30 +65,33 @@ class JoinRoom extends React.Component {
       />
     );
     const JoinRoomSection = (
-      <Form
-      >
-        {
-          this.state.errorMessage
-          && <Message negative>
+      <Form>
+        {this.state.errorMessage && (
+          <Message negative>
             <Message.Header>{this.state.errorMessage}</Message.Header>
           </Message>
-        }
+        )}
         <Form.Input
           autoFocus
-          name='chosenRoomId'
+          name="chosenRoomId"
           value={this.state.chosenRoomId}
-          placeholder='Room Id'
+          placeholder="Room Id"
           onChange={this.handleInputChange}
           error={this.state.chosenRoomIdInvalid}
         />
         <Form.Input
-          name='playerName'
+          name="playerName"
           value={this.state.playerName}
-          placeholder='Your Name'
+          placeholder="Your Name"
           onChange={this.handleInputChange}
           error={this.state.playerNameInvalid || this.state.duplicatePlayerName}
         />
-        <Button positive fluid onClick={this.handleJoinRoom} content='Join Room' />
+        <Button
+          positive
+          fluid
+          onClick={this.handleJoinRoom}
+          content="Join Room"
+        />
       </Form>
     );
 

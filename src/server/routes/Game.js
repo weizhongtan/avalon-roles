@@ -16,11 +16,13 @@ class Game {
     log('starting new game');
     this.randomlyAssignCharacters();
     this._isStarted = true;
-    this.players.forEach((player) => {
+    this.players.forEach(player => {
       const viewOfOtherPlayers = {};
       const otherPlayers = Array.from(this.players).filter(p => p !== player);
-      otherPlayers.forEach((otherPlayer) => {
-        viewOfOtherPlayers[otherPlayer.getName()] = player.viewOtherPlayer(otherPlayer);
+      otherPlayers.forEach(otherPlayer => {
+        viewOfOtherPlayers[otherPlayer.getName()] = player.viewOtherPlayer(
+          otherPlayer
+        );
       });
       player.setPlayView({
         viewOfOtherPlayers,
@@ -40,7 +42,7 @@ class Game {
 
   randomlyAssignCharacters() {
     const shuffledCharacterIds = knuthShuffle(this._charactersIds);
-    this.players.forEach((player) => {
+    this.players.forEach(player => {
       log(shuffledCharacterIds);
       const characterID = shuffledCharacterIds.pop();
       const CharacterType = getCharacterTypeByID(characterID);

@@ -1,30 +1,17 @@
 {
   "parser": "babel-eslint",
   "extends": [
-    "airbnb-base",
+    "prettier",
     "plugin:react/recommended",
     "plugin:jest/recommended"
   ],
-  "plugins": [
-    "import",
-    "babel",
-    "jest"
-  ],
+  "plugins": ["prettier", "import", "babel", "jest"],
   "env": {
     "browser": true,
     "node": true
   },
   "rules": {
-    "indent": ["error", 2],
-    "linebreak-style": "error",
-    "max-len": "off",
-    "no-console": ["off"],
-    "babel/semi": 1,
-    "object-curly-newline": "off",
-    "arrow-parens": "off",
-    "arrow-body-style": "off",
-    "comma-dangle": "off",
-    "no-underscore-dangle": "off"
+    "prettier/prettier": "error"
   },
   "globals": {
     "log": false,

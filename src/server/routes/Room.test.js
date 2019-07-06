@@ -45,16 +45,19 @@ describe('Room', () => {
       });
       it('notifies all clients when a new player is added', () => {
         room.add(player);
-        expect(player.send).toHaveBeenCalledWith({
-          type: types.NOTIFY_CLIENT,
-          payload: {
-            currentRoom: {
-              roomId: testID,
-              selectedCharacterIds: testCharacters,
-              members: [testPlayerName],
+        expect(player.send).toHaveBeenCalledWith(
+          {
+            type: types.NOTIFY_CLIENT,
+            payload: {
+              currentRoom: {
+                roomId: testID,
+                selectedCharacterIds: testCharacters,
+                members: [testPlayerName],
+              },
             },
           },
-        }, undefined); // no callback provided
+          undefined
+        ); // no callback provided
       });
       it('does not add the player if the room is full', () => {
         room.add(player);
@@ -80,16 +83,19 @@ describe('Room', () => {
       it('notifies all clients when a new player is removed', () => {
         room.add(secondPlayer);
         room.remove(secondPlayer);
-        expect(player.send).toHaveBeenCalledWith({
-          type: types.NOTIFY_CLIENT,
-          payload: {
-            currentRoom: {
-              roomId: testID,
-              selectedCharacterIds: testCharacters,
-              members: [testPlayerName],
+        expect(player.send).toHaveBeenCalledWith(
+          {
+            type: types.NOTIFY_CLIENT,
+            payload: {
+              currentRoom: {
+                roomId: testID,
+                selectedCharacterIds: testCharacters,
+                members: [testPlayerName],
+              },
             },
           },
-        }, undefined); // no callback provided
+          undefined
+        ); // no callback provided
       });
     });
 

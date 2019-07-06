@@ -6,8 +6,9 @@ import App from './components/App';
 
 const AppWithRouter = withRouter(App);
 
-ReactDOM.render(((
+ReactDOM.render(
   <HashRouter>
     <AppWithRouter />
-  </HashRouter>
-)), document.getElementById('root'));
+  </HashRouter>,
+  document.getElementById('root')
+);

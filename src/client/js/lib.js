@@ -3,15 +3,20 @@ import { serialise, deserialise, types } from '../../common';
 
 function createSend(socket, type) {
   return (input = {}) => {
-    const data = Object.assign({}, {
-      type,
-      payload: input
-    });
+    const data = Object.assign(
+      {},
+      {
+        type,
+        payload: input,
+      }
+    );
     const ackId = uuid();
     return new Promise((resolve, reject) => {
-      const ackListener = (event) => {
+      const ackListener = event => {
         if (event.data) {
-          const { type: _type, ackId: _ackId, payload } = deserialise(event.data);
+          const { type: _type, ackId: _ackId, payload } = deserialise(
+            event.data
+          );
           if (_ackId === ackId) {
             if (payload.err) {
               console.log('got error', payload.err);
@@ -42,7 +47,7 @@ export function createChannel() {
     joinRoom: createSend(socket, types.JOIN_ROOM),
     startGame: createSend(socket, types.START_GAME),
     onNotification(cb) {
-      socket.addEventListener('message', (event) => {
+      socket.addEventListener('message', event => {
         if (event.data) {
           const { type, payload } = deserialise(event.data);
           if (type === types.NOTIFY_CLIENT) {

@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Header, Segment, Button, List, Icon, Message } from 'semantic-ui-react';
+import {
+  Header,
+  Segment,
+  Button,
+  List,
+  Icon,
+  Message,
+} from 'semantic-ui-react';
 
 import { characters as CHARACTERS } from '../../../../common';
 import PlayerViewList from './PlayerViewList';
 
 import { getRandomIcon } from '../../lib';
 
-const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRoom, onStartGame }) => {
+const PlayView = ({
+  playerName,
+  assignedCharacter,
+  viewOfOtherPlayers,
+  currentRoom,
+  onStartGame,
+}) => {
   const characterCounts = {};
-  currentRoom.selectedCharacterIds.forEach((id) => {
+  currentRoom.selectedCharacterIds.forEach(id => {
     const { name } = Object.values(CHARACTERS)[id];
     if (characterCounts[name]) {
       characterCounts[name] += 1;
@@ -18,8 +31,9 @@ const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRo
     }
   });
 
-  const characterStrings = Object.entries(characterCounts)
-    .map(([key, val]) => (val > 1 ? `${key} x${val}` : key));
+  const characterStrings = Object.entries(characterCounts).map(([key, val]) =>
+    val > 1 ? `${key} x${val}` : key
+  );
 
   const [errorMessage, setError] = useState(null);
 
@@ -40,14 +54,18 @@ const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRo
           <div>
             <Header block>Your name: {playerName}</Header>
             <Header block>Current room: {currentRoom.roomId}</Header>
-            <Header size='tiny'>Players in this room:</Header>
+            <Header size="tiny">Players in this room:</Header>
             <List horizontal relaxed>
               {currentRoom.members.map(({ name, isActive }) => (
                 <List.Item key={name}>
                   <List.Content>
-                    <List.Header style={{
-                      color: isActive ? 'black' : 'grey'
-                    }}>{name}</List.Header>
+                    <List.Header
+                      style={{
+                        color: isActive ? 'black' : 'grey',
+                      }}
+                    >
+                      {name}
+                    </List.Header>
                     <List.Description>
                       {!isActive ? 'is inactive' : ''}
                     </List.Description>
@@ -55,7 +73,7 @@ const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRo
                 </List.Item>
               ))}
             </List>
-            <Header size='tiny'>Available characters:</Header>
+            <Header size="tiny">Available characters:</Header>
             <List horizontal relaxed>
               {characterStrings.map(character => (
                 <List.Item key={character}>
@@ -66,14 +84,12 @@ const PlayView = ({ playerName, assignedCharacter, viewOfOtherPlayers, currentRo
                 </List.Item>
               ))}
             </List>
-            {errorMessage
-              && <Message negative>
+            {errorMessage && (
+              <Message negative>
                 <Message.Header>{errorMessage}</Message.Header>
-              </Message>}
-            <Button
-              content='Start game'
-              onClick={handleStartGame}
-            />
+              </Message>
+            )}
+            <Button content="Start game" onClick={handleStartGame} />
           </div>
         )}
       </Segment>

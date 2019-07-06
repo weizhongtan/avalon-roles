@@ -19,11 +19,7 @@ exports.characters = {
   OBERON: { id: 7, name: 'Oberon', isGood: false },
 };
 
-exports.serialise = ({
-  type,
-  payload,
-  ackId = null,
-}) => {
+exports.serialise = ({ type, payload, ackId = null }) => {
   if (!exports.types[type]) {
     throw new Error(`type ${type} is not supported`);
   }
@@ -34,7 +30,7 @@ exports.serialise = ({
   });
 };
 
-exports.deserialise = (data) => {
+exports.deserialise = data => {
   return JSON.parse(data);
 };
 
@@ -49,9 +45,13 @@ exports.log = s => {
   const orig = Error.prepareStackTrace;
   Error.prepareStackTrace = (err, stack) => stack;
   const callSite = new Error().stack[1];
-  const path = callSite.getFileName().replace('.js', '').split('/');
+  const path = callSite
+    .getFileName()
+    .replace('.js', '')
+    .split('/');
   const index = path.findIndex(part => part === 'index');
-  const location = index === -1 ? path[path.length - 1] : path.slice(index - 1).join('/');
+  const location =
+    index === -1 ? path[path.length - 1] : path.slice(index - 1).join('/');
   debug(`avalon:${location}`)(s);
   Error.prepareStackTrace = orig;
 };

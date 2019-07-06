@@ -5,7 +5,9 @@ const Game = require('./Game');
 
 class Room {
   constructor(selectedCharacterIds) {
-    this._id = uuidv4().slice(0, 4).toUpperCase();
+    this._id = uuidv4()
+      .slice(0, 4)
+      .toUpperCase();
     this._selectedCharacterIds = selectedCharacterIds;
     this._players = new Set();
     this.createGame();

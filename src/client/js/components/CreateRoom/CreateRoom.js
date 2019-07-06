@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import CreateRoomForm from './CreateRoomForm';
 import { characters as CHARACTERS } from '../../../../common';
 
-const allCharacters = ((characters) => {
+const allCharacters = (characters => {
   const chars = Object.assign({}, characters);
-  Object.keys(chars).forEach((char) => {
+  Object.keys(chars).forEach(char => {
     const defaultActive = ['MERLIN'].includes(char);
     chars[char].active = defaultActive;
   });
@@ -36,7 +36,7 @@ function hydrateCharacterList(list, numberOfPlayers) {
     selectedCharacters.push(CHARACTERS.STANDARD_GOOD);
   }
   for (let i = 0; i < badToAddCount; i += 1) {
-    const char = (i === 0) ? CHARACTERS.ASSASIN : CHARACTERS.STANDARD_EVIL;
+    const char = i === 0 ? CHARACTERS.ASSASIN : CHARACTERS.STANDARD_EVIL;
     selectedCharacters.push(char);
   }
 
@@ -58,17 +58,22 @@ class CreateRoom extends Component {
   handleInputChange = (e, args) => {
     const { name, value } = args;
     switch (name) {
-    case 'numberOfPlayers':
-    case 'playerName':
-      this.setState({ [name]: value });
-      break;
-    default: {
-      this.setState((({ includedCharacters }) => {
-        const updatedincludedCharacters = Object.assign({}, includedCharacters);
-        updatedincludedCharacters[name].active = !updatedincludedCharacters[name].active;
-        return { includedCharacters: updatedincludedCharacters };
-      }));
-    }
+      case 'numberOfPlayers':
+      case 'playerName':
+        this.setState({ [name]: value });
+        break;
+      default: {
+        this.setState(({ includedCharacters }) => {
+          const updatedincludedCharacters = Object.assign(
+            {},
+            includedCharacters
+          );
+          updatedincludedCharacters[name].active = !updatedincludedCharacters[
+            name
+          ].active;
+          return { includedCharacters: updatedincludedCharacters };
+        });
+      }
     }
   };
 
@@ -80,7 +85,10 @@ class CreateRoom extends Component {
         .map(([, val]) => val)
         .filter(({ active }) => active);
 
-      const inflatedCharacterList = hydrateCharacterList(selectedCharacterList, numberOfPlayers);
+      const inflatedCharacterList = hydrateCharacterList(
+        selectedCharacterList,
+        numberOfPlayers
+      );
       const config = {
         selectedCharacterIds: inflatedCharacterList.map(({ id }) => id),
         playerName,

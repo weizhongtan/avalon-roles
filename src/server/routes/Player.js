@@ -44,21 +44,27 @@ class Player {
   }
 
   notify(payload = {}, cb) {
-    this._send({
-      type: types.NOTIFY_CLIENT,
-      payload: Object.assign({}, payload, {
-        playerName: this.getName(),
-        viewOfOtherPlayers: this.getPlayView()
-      }),
-    }, cb);
+    this._send(
+      {
+        type: types.NOTIFY_CLIENT,
+        payload: Object.assign({}, payload, {
+          playerName: this.getName(),
+          viewOfOtherPlayers: this.getPlayView(),
+        }),
+      },
+      cb
+    );
   }
 
   ack(payload, ackId, cb) {
-    this._send({
-      type: types.ACK,
-      ackId,
-      payload,
-    }, cb);
+    this._send(
+      {
+        type: types.ACK,
+        ackId,
+        payload,
+      },
+      cb
+    );
   }
 
   _send(data, cb) {
@@ -70,7 +76,7 @@ class Player {
   serialise() {
     return {
       name: this._name,
-      isActive: this.isActive()
+      isActive: this.isActive(),
     };
   }
 }

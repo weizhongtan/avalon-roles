@@ -67,22 +67,26 @@ class App extends Component {
   render() {
     return (
       <Sidebar>
-        <Route exact path="/" component={Home}/>
-        <Route exact path="/join" render={() => (
-          <JoinRoom
-            playerName={this.state.playerName}
-            onJoinRoom={this.handleJoinRoom}
-            currentRoom={this.state.currentRoom}
-            assignedCharacter={this.state.assignedCharacter}
-            viewOfOtherPlayers={this.state.viewOfOtherPlayers}
-            onStartGame={this.handleStartGame}
-          />
-        )} />
-        <Route exact path="/create" render={() => (
-          <CreateRoom
-            onCreateGame={this.handleCreateGame}
-          />
-        )}/>
+        <Route exact path="/" component={Home} />
+        <Route
+          exact
+          path="/join"
+          render={() => (
+            <JoinRoom
+              playerName={this.state.playerName}
+              onJoinRoom={this.handleJoinRoom}
+              currentRoom={this.state.currentRoom}
+              assignedCharacter={this.state.assignedCharacter}
+              viewOfOtherPlayers={this.state.viewOfOtherPlayers}
+              onStartGame={this.handleStartGame}
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/create"
+          render={() => <CreateRoom onCreateGame={this.handleCreateGame} />}
+        />
       </Sidebar>
     );
   }
