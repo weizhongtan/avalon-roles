@@ -69,7 +69,8 @@ class Room {
   }
 
   add(player) {
-    if (this.players.size >= this.selectedCharacterIDs.length) {
+    const players = Array.from(this.players).filter(p => p.isActive());
+    if (players.length >= this.selectedCharacterIDs.length) {
       return false;
     }
     const wasAdded = !!this.players.add(player);

@@ -17,27 +17,24 @@ module.exports = ({ roomList, player }) => {
       if (room) {
         // remove player from other rooms
         roomList.removePlayer(player);
-        room.add(player);
-        ack({
-          playerName,
-          roomId
-        });
+        if (room.add(player)) {
+          ack({
+            playerName,
+            roomId
+          });
+        } else {
+          ack({
+            err: `could not add to room ${roomId}`
+          });
+        }
       } else {
         ack({
           err: `room with id ${roomId} does not exist`
         });
       }
     },
-    [TYPES.START_GAME]: (ack, { roomId }) => {
-      if (!roomId) {
-        ack({ err: 'roomId not provided' });
-        return;
-      }
-      if (!roomList.get(roomId)) {
-        ack({ err: `roomId ${roomId} does not exist` });
-        return;
-      }
-      const room = roomList.get(roomId);
+    [TYPES.START_GAME]: (ack) => {
+      const room = roomList.getRoomByPlayer(player);
       const res = room.tryStartGame();
       if (!res) {
         ack({ err: 'game could not start' });
