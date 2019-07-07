@@ -9,7 +9,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 
-import { characters as CHARACTERS } from '../../../../common';
+import { characters as CHARACTERS, log } from '../../../../common';
 import PlayerViewList from './PlayerViewList';
 
 import { getRandomIcon } from '../../lib';
@@ -42,7 +42,7 @@ const PlayView = ({
       await onStartGame();
       setError(null);
     } catch (err) {
-      console.log('got err', err);
+      log('got err', err);
       setError(err);
     }
   };

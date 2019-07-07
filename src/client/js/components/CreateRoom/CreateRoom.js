@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import CreateRoomForm from './CreateRoomForm';
-import { characters as CHARACTERS } from '../../../../common';
+import { characters as CHARACTERS, log } from '../../../../common';
 
 const allCharacters = (characters => {
   const chars = Object.assign({}, characters);
@@ -93,7 +93,7 @@ class CreateRoom extends Component {
         selectedCharacterIds: inflatedCharacterList.map(({ id }) => id),
         playerName,
       };
-      console.log(config);
+      log(config);
       await this.props.onCreateGame(config);
     }
   };

@@ -1,4 +1,4 @@
-const debug = require('debug');
+exports.log = require('./logger');
 
 exports.types = {
   JOIN_ROOM: 'JOIN_ROOM',
@@ -39,19 +39,4 @@ exports.errors = {
   INVALID_ROOM_ID: 'Room Id does not exist',
   GAME_IN_PROGRESS: 'This game is already in progress',
   NOT_ENOUGH_PLAYERS: 'Not enough players',
-};
-
-exports.log = s => {
-  const orig = Error.prepareStackTrace;
-  Error.prepareStackTrace = (err, stack) => stack;
-  const callSite = new Error().stack[1];
-  const path = callSite
-    .getFileName()
-    .replace('.js', '')
-    .split('/');
-  const index = path.findIndex(part => part === 'index');
-  const location =
-    index === -1 ? path[path.length - 1] : path.slice(index - 1).join('/');
-  debug(`avalon:${location}`)(s);
-  Error.prepareStackTrace = orig;
 };

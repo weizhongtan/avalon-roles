@@ -1,5 +1,5 @@
 import uuid from 'uuid/v4';
-import { serialise, deserialise, types } from '../../common';
+import { serialise, deserialise, types, log } from '../../common';
 
 function createSend(socket, type) {
   return (input = {}) => {
@@ -19,11 +19,11 @@ function createSend(socket, type) {
           );
           if (_ackId === ackId) {
             if (payload.err) {
-              console.log('got error', payload.err);
+              log('got error', payload.err);
               reject(payload.err);
             } else {
               socket.removeEventListener('message', ackListener);
-              console.log(_type, payload);
+              log(_type, payload);
               resolve(payload);
             }
           }
@@ -33,7 +33,7 @@ function createSend(socket, type) {
       const dataToSend = Object.assign({}, data, {
         ackId,
       });
-      console.log('sending:', dataToSend);
+      log('sending:', dataToSend);
       socket.send(serialise(dataToSend));
     });
   };
@@ -51,7 +51,7 @@ export function createChannel() {
         if (event.data) {
           const { type, payload } = deserialise(event.data);
           if (type === types.NOTIFY_CLIENT) {
-            console.log(type, payload);
+            log(type, payload);
             cb(payload);
           }
         }
