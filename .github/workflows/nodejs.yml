@@ -15,7 +15,7 @@ jobs:
         node-version: 10
     - name: npm install, build, and test
       run: |
-        npm ci
+        npm ci --ignore-scripts
         npm run build:production
         npm test
       env:
